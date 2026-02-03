@@ -40,7 +40,7 @@ export function CollapsibleNavItem({ item }: CollapsibleNavItemProps) {
               <MenuIcon icon={item.icon} />
               <span className="flex-1 truncate">{item.label}</span>
               <i
-                className="ri-arrow-down-s-line ml-auto size-4 shrink-0 transition-transform group-data-open/collapsible:rotate-180"
+                className="ri-arrow-down-s-line ml-auto shrink-0 transition-transform group-data-open/collapsible:rotate-180"
                 aria-hidden
               />
             </CollapsibleTrigger>
@@ -84,7 +84,7 @@ function CollapsibleSubItem({
 
 function SubLinkItem({ item }: { item: MenuItem }) {
   const path = item.path ?? "/";
-  const match = useMatch({ path, end: path === "/" });
+  const match = useMatch({ path, end: true });
   const isActive = Boolean(match);
 
   return (
@@ -131,8 +131,8 @@ function NestedCollapsibleItem({
               {depth < 5 && (
                 <i
                   className={cn(
-                    "ri-arrow-down-s-line ml-auto size-4 shrink-0 transition-transform",
-                    chevronClass
+                    "ri-arrow-down-s-line ml-auto shrink-0 transition-transform",
+                    chevronClass,
                   )}
                   aria-hidden
                 />

@@ -9,22 +9,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { RiShieldCheckLine, RiUserLine } from "@remixicon/react";
+import { RiUserLine } from "@remixicon/react";
+import { Link } from "react-router-dom";
 
 export function AppHeader() {
   return (
     <header className="bg-background border-border sticky top-0 z-50 flex w-full items-center border-b">
       <div className="flex h-(--header-height) w-full items-center gap-2 px-4">
         <SidebarTrigger className="-ml-1 md:flex" />
-        <a
-          href="/"
-          className="flex items-center gap-2 font-semibold text-foreground no-underline"
-        >
-          <RiShieldCheckLine className="size-6 shrink-0 text-primary" />
+        <Link to="/" className="flex items-center gap-1">
+          <span className="text-primary">NMB</span>
           <span className="hidden truncate sm:inline-block">
             Insurance Management System
           </span>
-        </a>
+        </Link>
         <div className="ml-auto flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger

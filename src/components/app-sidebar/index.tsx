@@ -8,61 +8,18 @@ import {
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
+import SIDEBAR_MENU_ITEMS from "@/lib/constants/sidebar-menu-items";
 import type { MenuItem } from "@/lib/types/menu";
 import { cn } from "@/lib/utils";
+import { RiCloseLine } from "@remixicon/react";
 import * as React from "react";
+import { Button } from "../ui/button";
 import { NavItem } from "./nav-item";
 
-/**
- * Dynamic sidebar menu configuration.
- * - Items with a `path` are links.
- * - Items with `children` become collapsible (expanded sidebar) or dropdown (collapsed sidebar).
- */
-const SIDEBAR_MENU_ITEMS: MenuItem[] = [
-  {
-    path: "/",
-    label: "Dashboard",
-    icon: "ri-dashboard-line",
-  },
-  {
-    label: "Insurance",
-    icon: "ri-shield-check-line",
-    children: [
-      {
-        path: "/insurance/policies",
-        label: "Policies",
-        icon: "ri-file-list-line",
-      },
-      {
-        path: "/insurance/claims",
-        label: "Claims",
-        icon: "ri-file-list-line",
-      },
-    ],
-  },
-  {
-    label: "More",
-    icon: "ri-settings-line",
-    children: [
-      {
-        path: "/users",
-        label: "Users",
-        icon: "ri-user-line",
-      },
-      {
-        path: "/settings",
-        label: "Settings",
-        icon: "ri-settings-line",
-      },
-    ],
-  },
-];
-
-export interface AppSidebarProps
-  extends Omit<
-    React.ComponentProps<typeof Sidebar>,
-    "variant" | "collapsible"
-  > {
+export interface AppSidebarProps extends Omit<
+  React.ComponentProps<typeof Sidebar>,
+  "variant" | "collapsible"
+> {
   variant?: "sidebar" | "floating" | "inset";
   collapsible?: "offcanvas" | "icon" | "none";
 }
@@ -73,7 +30,7 @@ export function AppSidebar({
   className,
   ...props
 }: AppSidebarProps) {
-  const { isMobile } = useSidebar();
+  const { isMobile, toggleSidebar } = useSidebar();
 
   return (
     <Sidebar
@@ -81,13 +38,22 @@ export function AppSidebar({
       collapsible={collapsible}
       className={cn(
         "top-(--header-height)! h-[calc(100svh-var(--header-height))]!",
-        className
+        className,
       )}
       {...props}
     >
       {isMobile && (
-        <SidebarHeader className="bg-background h-(--header-height)! flex justify-center">
+        <SidebarHeader className="bg-background h-(--header-height)! flex justify-between items-center flex-row">
           <span className="text-lg font-semibold text-primary">NMB</span>
+
+          <Button
+            onClick={toggleSidebar}
+            variant="ghost"
+            size="icon"
+            className="text-foreground"
+          >
+            <RiCloseLine />
+          </Button>
         </SidebarHeader>
       )}
       <SidebarContent>
