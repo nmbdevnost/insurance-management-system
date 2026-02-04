@@ -1,0 +1,32 @@
+# Dependencies
+node_modules
+package-lock.json
+
+# Build Outputs
+dist
+build
+out
+
+# Environment files
+.env
+.env.sample
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Coverage files
+coverage
+*.lcov
+
+# Public/Static files
+public
+static
+
+# Minified files
+*.min.js
+*.min.css
