@@ -7,89 +7,180 @@ import {
   TableRow,
 } from "@/shared/components/ui/table";
 import { cn } from "@/shared/lib/utils";
+import { calculatePinnedOffset } from "@/shared/lib/utils/data-table";
 import { useDataTable } from "@/shared/providers/data-table-provider";
-import { RiInbox2Line } from "@remixicon/react";
+import { RiInbox2Line, RiLoader4Line } from "@remixicon/react";
 import { flexRender, type Column } from "@tanstack/react-table";
 import type { CSSProperties } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 const DataTable = ({ className }: { className?: string }) => {
   const { table } = useDataTable();
+  const headerRef = useRef<HTMLTableRowElement>(null);
+  const [columnWidths, setColumnWidths] = useState<Record<string, number>>({});
+  const [isMeasured, setIsMeasured] = useState(false);
+  const isMountedRef = useRef(false);
 
-  const getCommonPinningStyles = (column: Column<unknown>): CSSProperties => {
-    const isPinned = column.getIsPinned();
-    const isLastLeftPinnedColumn =
-      isPinned === "left" && column.getIsLastColumn("left");
-    const isFirstRightPinnedColumn =
-      isPinned === "right" && column.getIsFirstColumn("right");
+  // const measureTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    const leftStart = column.getStart("left");
-    const rightAfter = column.getAfter("right");
+  const allColumns = table.getAllColumns();
 
-    // Calculate width based on next column position
-    let width: number | undefined;
-    if (isPinned === "left") {
-      const allColumns = table.getAllLeafColumns();
-      const leftPinnedColumns = allColumns.filter(
-        (col: Column<unknown>) => col.getIsPinned() === "left"
-      );
-      const currentColumnIndex = leftPinnedColumns.findIndex(
-        (col: Column<unknown>) => col.id === column.id
-      );
-      const nextColumn = leftPinnedColumns[currentColumnIndex + 1];
+  const measureWidths = useCallback(() => {
+    if (!headerRef.current || !isMountedRef.current) return;
 
-      if (nextColumn) {
-        const nextColumnLeft = nextColumn.getStart("left");
-        width = nextColumnLeft - leftStart;
+    const headerGroups = table.getHeaderGroups();
+    if (!headerGroups.length) return;
+
+    const headers = headerRef.current.querySelectorAll("th");
+    const widths: Record<string, number> = {};
+
+    headers.forEach((header, index) => {
+      const columnId = headerGroups[0]?.headers[index]?.column.id;
+      if (columnId) {
+        widths[columnId] = header.getBoundingClientRect().width;
       }
-    } else if (isPinned === "right") {
-      const allColumns = table.getAllLeafColumns();
-      const rightPinnedColumns = allColumns.filter(
-        (col: Column<unknown>) => col.getIsPinned() === "right"
-      );
-      console.log(
-        "🚀 ~ rightPinnedColumns:",
-        rightPinnedColumns.map((c) => c.id)
-      );
-      const currentColumnIndex = rightPinnedColumns.findIndex(
-        (col: Column<unknown>) => col.id === column.id
-      );
-      console.log(
-        "🚀 ~ currentColumnIndex:",
-        currentColumnIndex,
-        "column.id:",
-        column.id
-      );
-      const nextColumn = rightPinnedColumns[currentColumnIndex + 1];
-      console.log("🚀 ~ nextColumn:", nextColumn?.id);
+    });
 
-      if (nextColumn) {
-        const nextColumnRight = nextColumn.getAfter("right");
-        width = rightAfter - nextColumnRight;
-      }
+    // Only update if widths actually changed
+    setColumnWidths((prev) => {
+      const hasChanged = Object.keys(widths).some(
+        (key) => prev[key] !== widths[key]
+      );
+      return hasChanged ? widths : prev;
+    });
+
+    if (isMountedRef.current) {
+      setIsMeasured(true);
     }
+  }, [table]);
 
-    console.log("🚀 ~ getCommonPinningStyles ~ width:", width);
+  const columnStyles = useMemo(() => {
+    const styles: Record<string, CSSProperties> = {};
 
-    return {
-      boxShadow: isLastLeftPinnedColumn
-        ? "-4px 0 4px -5px gray inset"
-        : isFirstRightPinnedColumn
-          ? "4px 0 4px -5px gray inset"
-          : undefined,
-      left: isPinned === "left" ? `${leftStart}px` : undefined,
-      right: isPinned === "right" ? `${rightAfter}px` : undefined,
-      position: isPinned ? "sticky" : "relative",
-      width: width ? `${width}px` : undefined,
-      zIndex: isPinned ? 1 : 0,
+    allColumns.forEach((column) => {
+      const isPinned = column.getIsPinned();
+
+      const isLastLeftPinnedColumn =
+        isPinned === "left" && column.getIsLastColumn("left");
+      const isFirstRightPinnedColumn =
+        isPinned === "right" && column.getIsFirstColumn("right");
+
+      let leftOffset = 0;
+      let rightOffset = 0;
+
+      if (isPinned === "left") {
+        leftOffset = calculatePinnedOffset(
+          column,
+          table.getLeftLeafColumns(),
+          columnWidths,
+          "left"
+        );
+      }
+
+      if (isPinned === "right") {
+        rightOffset = calculatePinnedOffset(
+          column,
+          table.getRightLeafColumns(),
+          columnWidths,
+          "right"
+        );
+      }
+
+      const size = column.getSize();
+      const derivedColumnWidth = columnWidths[column.id];
+      const columnWidth =
+        isPinned && derivedColumnWidth ? derivedColumnWidth : size;
+
+      styles[column.id] = {
+        boxShadow: isLastLeftPinnedColumn
+          ? "-4px 0px 0px -3px var(--border) inset"
+          : isFirstRightPinnedColumn
+            ? "4px 0px 0px -3px var(--border) inset"
+            : undefined,
+        left: isPinned === "left" ? `${leftOffset}px` : undefined,
+        right: isPinned === "right" ? `${rightOffset}px` : undefined,
+        position: isPinned ? "sticky" : "relative",
+        width: columnWidth,
+        minWidth: size === 150 ? undefined : columnWidth,
+
+        zIndex: isPinned ? 1 : 0,
+      };
+    });
+
+    return styles;
+  }, [columnWidths, table, allColumns]);
+
+  const getCommonPinningStyles = useCallback(
+    (column: Column<unknown>): CSSProperties => {
+      return columnStyles[column.id] || {};
+    },
+    [columnStyles]
+  );
+
+  useEffect(() => {
+    isMountedRef.current = true;
+
+    const initialTimeout = setTimeout(() => {
+      measureWidths();
+    }, 0);
+
+    return () => {
+      isMountedRef.current = false;
+      clearTimeout(initialTimeout);
     };
-  };
+  }, [measureWidths]);
+
+  // Debounced measure function
+  // const debouncedMeasure = useCallback(() => {
+  //   if (measureTimeoutRef.current) {
+  //     clearTimeout(measureTimeoutRef.current);
+  //   }
+  //   measureTimeoutRef.current = setTimeout(() => {
+  //     measureWidths();
+  //   }, 150);
+  // }, [measureWidths]);
+
+  // useEffect(() => {
+  //   // Initial measurement (slight delay to ensure DOM is ready)
+  //   const initialTimeout = setTimeout(() => {
+  //     measureWidths();
+  //   }, 0);
+
+  //   // Debounced resize listener
+  //   // window.addEventListener("resize", debouncedMeasure);
+
+  //   // // ResizeObserver for the table header
+  //   // const resizeObserver = new ResizeObserver(debouncedMeasure);
+  //   // if (headerRef.current) {
+  //   //   resizeObserver.observe(headerRef.current);
+  //   // }
+
+  //   return () => {
+  //     clearTimeout(initialTimeout);
+  //     if (measureTimeoutRef.current) {
+  //       clearTimeout(measureTimeoutRef.current);
+  //     }
+  //     // window.removeEventListener("resize", debouncedMeasure);
+  //     // resizeObserver.disconnect();
+  //   };
+  // }, [measureWidths]);
 
   return (
-    <div className={cn("overflow-hidden rounded-xl border", className)}>
-      <Table>
+    <div
+      className={cn("relative overflow-hidden rounded-xl border", className)}
+    >
+      {!isMeasured && (
+        <div className="bg-background/50 absolute inset-0 z-50 flex items-center justify-center">
+          <span className="text-muted-foreground flex items-center gap-1 text-sm">
+            <RiLoader4Line className="animate-spin" /> Loading...
+          </span>
+        </div>
+      )}
+
+      <Table className={cn(!isMeasured && "opacity-0")}>
         <TableHeader className="bg-muted">
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} ref={headerRef}>
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead
@@ -123,7 +214,6 @@ const DataTable = ({ className }: { className?: string }) => {
                     style={{ ...getCommonPinningStyles(cell.column) }}
                     className="bg-background"
                   >
-                    {/* <div className="bg-background group-hover:bg-muted/50 pointer-events-none absolute inset-0 -z-10"></div> */}
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
