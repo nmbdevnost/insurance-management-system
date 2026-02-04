@@ -1,5 +1,5 @@
-import { Checkbox } from "@/components/ui/checkbox";
-import type { Insurance } from "@/lib/types/insurance";
+import { Checkbox } from "@/shared/components/ui/checkbox";
+import type { Insurance } from "@/shared/lib/types/insurance";
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import ExpiredInsuranceActions from "./actions";

@@ -1,15 +1,15 @@
-import DataTable from "@/components/data-table";
-import DataTablePagination from "@/components/data-table/data-table-pagination";
-import DataTableToolbar from "@/components/data-table/data-table-toolbar";
-import { Card } from "@/components/ui/card";
-import { DEFAULT_TABLE_PARAMS } from "@/lib/constants/data-table";
-import type { Insurance } from "@/lib/types/insurance";
-import type { FilterConfig } from "@/lib/types/table";
-import { generateQueryParams } from "@/lib/utils/query-params";
+import DataTable from "@/shared/components/data-table";
+import DataTablePagination from "@/shared/components/data-table/data-table-pagination";
+import DataTableToolbar from "@/shared/components/data-table/data-table-toolbar";
+import { Card } from "@/shared/components/ui/card";
+import { DEFAULT_TABLE_PARAMS } from "@/shared/lib/constants/data-table";
+import type { Insurance } from "@/shared/lib/types/insurance";
+import type { FilterConfig } from "@/shared/lib/types/table";
+import { generateQueryParams } from "@/shared/lib/utils/query-params";
 import {
   DataTableProvider,
   type TableParams,
-} from "@/providers/data-table-provider";
+} from "@/shared/providers/data-table-provider";
 import { format } from "date-fns";
 import { useMemo, useState } from "react";
 import expiredInsuranceColumns from "./columns";

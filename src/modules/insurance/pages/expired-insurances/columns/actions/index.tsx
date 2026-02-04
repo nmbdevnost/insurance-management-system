@@ -1,5 +1,5 @@
-import { TooltipProvider } from "@/components/ui/tooltip";
-import type { Insurance } from "@/lib/types/insurance";
+import { TooltipProvider } from "@/shared/components/ui/tooltip";
+import type { Insurance } from "@/shared/lib/types/insurance";
 import ExpiredInsuranceForceAction from "./force-action";
 import ExpiredInsuranceReleaseHoldAction from "./release-hold-action";
 import ExpiredInsuranceRenewAction from "./renew-action";

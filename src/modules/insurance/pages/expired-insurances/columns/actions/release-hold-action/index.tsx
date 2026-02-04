@@ -7,10 +7,10 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import type { Insurance } from "@/lib/types/insurance";
+} from "@/shared/components/ui/alert-dialog";
+import { Button } from "@/shared/components/ui/button";
+import { TooltipContent, TooltipTrigger } from "@/shared/components/ui/tooltip";
+import type { Insurance } from "@/shared/lib/types/insurance";
 import { Tooltip } from "@base-ui/react";
 import { RiStopCircleLine } from "@remixicon/react";
 import { useState } from "react";

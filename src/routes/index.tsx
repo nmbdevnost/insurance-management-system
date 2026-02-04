@@ -1,7 +1,7 @@
-import { AppLayout } from "@/components/layout";
 import { DashboardPage } from "@/modules/dashboard/pages";
-import ReportsPage from "@/modules/insurance/pages/reports";
+import { ReportsPage } from "@/modules/insurance/pages";
 import insuranceRoutes from "@/modules/insurance/routes";
+import { AppLayout } from "@/shared/components/layout";
 import type { RouteObject } from "react-router-dom";
 
 const routes: RouteObject[] = [
@@ -15,7 +15,7 @@ const routes: RouteObject[] = [
       },
       ...insuranceRoutes,
       {
-        path: "/reports",
+        path: "/report",
         element: <ReportsPage />,
       },
     ],

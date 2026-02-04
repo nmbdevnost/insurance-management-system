@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import type { Insurance } from "@/lib/types/insurance";
+} from "@/shared/components/ui/dialog";
+import { TooltipContent, TooltipTrigger } from "@/shared/components/ui/tooltip";
+import type { Insurance } from "@/shared/lib/types/insurance";
 import { Tooltip } from "@base-ui/react";
 import { RiEyeLine } from "@remixicon/react";
 import { useState } from "react";
