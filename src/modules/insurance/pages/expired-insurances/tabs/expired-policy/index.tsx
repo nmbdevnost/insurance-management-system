@@ -2,7 +2,12 @@ import type { ExpiredPolicy } from "@/modules/insurance/types/policies";
 import DataTable from "@/shared/components/data-table";
 import DataTablePagination from "@/shared/components/data-table/data-table-pagination";
 import DataTableToolbar from "@/shared/components/data-table/data-table-toolbar";
-import { Card } from "@/shared/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/shared/components/ui/card";
 import { DEFAULT_TABLE_PARAMS } from "@/shared/lib/constants/data-table";
 import type { FilterConfig } from "@/shared/lib/types/table";
 import { generateQueryParams } from "@/shared/lib/utils/query-params";
@@ -132,18 +137,19 @@ const ExpiredPolicyTab = () => {
         pageCount={5}
         tableParams={tableParams}
         onTableParamsChange={setTableParams}
-        className="gap-0"
       >
-        <Card className="rounded-b-none p-2">
-          <DataTableToolbar filters={filters} />
-        </Card>
+        <Card className="gap-0">
+          <CardHeader className="mb-4">
+            <DataTableToolbar filters={filters} />
+          </CardHeader>
 
-        <Card className="rounded-none p-0">
-          <DataTable className="rounded-none border-none" />
-        </Card>
+          <CardContent className="p-0">
+            <DataTable className="rounded-none border-x-0" />
+          </CardContent>
 
-        <Card className="rounded-t-none p-2">
-          <DataTablePagination />
+          <CardFooter className="bg-background">
+            <DataTablePagination className="w-full" />
+          </CardFooter>
         </Card>
       </DataTableProvider>
     </>

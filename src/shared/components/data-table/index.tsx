@@ -23,8 +23,6 @@ const DataTable = ({ className }: { className?: string }) => {
 
   // const measureTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const allColumns = table.getAllColumns();
-
   const measureWidths = useCallback(() => {
     if (!headerRef.current || !isMountedRef.current) return;
 
@@ -57,7 +55,7 @@ const DataTable = ({ className }: { className?: string }) => {
   const columnStyles = useMemo(() => {
     const styles: Record<string, CSSProperties> = {};
 
-    allColumns.forEach((column) => {
+    table.getAllColumns().forEach((column) => {
       const isPinned = column.getIsPinned();
 
       const isLastLeftPinnedColumn =
@@ -108,7 +106,7 @@ const DataTable = ({ className }: { className?: string }) => {
     });
 
     return styles;
-  }, [columnWidths, table, allColumns]);
+  }, [columnWidths, table]);
 
   const getCommonPinningStyles = useCallback(
     (column: Column<unknown>): CSSProperties => {
@@ -166,9 +164,7 @@ const DataTable = ({ className }: { className?: string }) => {
   // }, [measureWidths]);
 
   return (
-    <div
-      className={cn("relative overflow-hidden rounded-xl border", className)}
-    >
+    <div className={cn("relative overflow-auto rounded-xl border", className)}>
       {!isMeasured && (
         <div className="bg-background/50 absolute inset-0 z-50 flex items-center justify-center">
           <span className="text-muted-foreground flex items-center gap-1 text-sm">

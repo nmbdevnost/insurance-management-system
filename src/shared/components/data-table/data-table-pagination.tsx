@@ -14,12 +14,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { cn } from "@/shared/lib/utils";
 
-const DataTablePagination = () => {
+const DataTablePagination = ({ className }: { className?: string }) => {
   const { table } = useDataTable();
 
   return (
-    <div className="flex flex-col-reverse flex-wrap-reverse items-center justify-between gap-4 px-2 md:flex-row">
+    <div
+      className={cn(
+        "flex flex-col-reverse flex-wrap-reverse items-center justify-between gap-4 px-2 md:flex-row",
+        className
+      )}
+    >
       <div className="text-muted-foreground flex-1 text-sm">
         {table.getFilteredSelectedRowModel().rows.length} of{" "}
         {table.getFilteredRowModel().rows.length} row(s) selected.
