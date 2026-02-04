@@ -4,11 +4,22 @@ import {
   useReactTable,
   type ColumnDef,
   type ColumnFiltersState,
+  type ColumnPinningState,
   type PaginationState,
   type SortingState,
   type Table,
 } from "@tanstack/react-table";
-import { createContext, useCallback, useContext, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
+
+export type ColumnMetaWithPinning = {
+  pin?: "left" | "right";
+};
 
 export type RowSelectionState = Record<string, boolean>;
 
@@ -205,6 +216,32 @@ export function DataTableProvider<TData>({
     [getCurrentParams, onTableParamsChange, pagination]
   );
 
+  const filterPinned = useCallback(
+    (
+      pinnedDirection: ColumnMetaWithPinning["pin"],
+      columns: DataTableProviderProps<TData>["columns"]
+    ) => {
+      const filteredColumns =
+        columns?.filter(
+          (col) =>
+            (col.meta as ColumnMetaWithPinning)?.pin === pinnedDirection &&
+            ("accessorKey" in col || "id" in col)
+        ) || [];
+
+      return filteredColumns?.map((col) => {
+        return "accessorKey" in col ? col.accessorKey : col.id!;
+      });
+    },
+    []
+  );
+
+  const getPinnedColumns = useMemo(() => {
+    const leftPinned = filterPinned("left", columns);
+    const rightPinned = filterPinned("right", columns);
+
+    return { left: leftPinned, right: rightPinned };
+  }, [filterPinned, columns]);
+
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
@@ -217,8 +254,10 @@ export function DataTableProvider<TData>({
       sorting,
       pagination,
       rowSelection,
+      columnPinning: getPinnedColumns as ColumnPinningState,
     },
 
+    enableColumnPinning: true,
     enableRowSelection,
     enableMultiRowSelection,
 
