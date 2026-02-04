@@ -61,7 +61,7 @@ export type DataTableProviderProps<TData> = {
 };
 
 const DataTableContext = createContext<DataTableContextValue<unknown> | null>(
-  null,
+  null
 );
 
 export function useDataTable<TData>(): DataTableContextValue<TData> {
@@ -102,7 +102,7 @@ export function DataTableProvider<TData>({
       globalFilter,
       ...overrides,
     }),
-    [pagination, sorting, columnFilters, globalFilter],
+    [pagination, sorting, columnFilters, globalFilter]
   );
 
   /**
@@ -114,7 +114,7 @@ export function DataTableProvider<TData>({
     (value: string) => {
       onTableParamsChange(getCurrentParams({ globalFilter: value }));
     },
-    [getCurrentParams, onTableParamsChange],
+    [getCurrentParams, onTableParamsChange]
   );
 
   /**
@@ -127,15 +127,15 @@ export function DataTableProvider<TData>({
     (
       updater:
         | ColumnFiltersState
-        | ((old: ColumnFiltersState) => ColumnFiltersState),
+        | ((old: ColumnFiltersState) => ColumnFiltersState)
     ) => {
       const newColumnFilters =
         typeof updater === "function" ? updater(columnFilters) : updater;
       onTableParamsChange(
-        getCurrentParams({ columnFilters: newColumnFilters }),
+        getCurrentParams({ columnFilters: newColumnFilters })
       );
     },
-    [getCurrentParams, onTableParamsChange, columnFilters],
+    [getCurrentParams, onTableParamsChange, columnFilters]
   );
 
   /**
@@ -150,7 +150,7 @@ export function DataTableProvider<TData>({
         typeof updater === "function" ? updater(sorting) : updater;
       onTableParamsChange(getCurrentParams({ sorting: newSorting }));
     },
-    [getCurrentParams, onTableParamsChange, sorting],
+    [getCurrentParams, onTableParamsChange, sorting]
   );
 
   /**
@@ -162,7 +162,7 @@ export function DataTableProvider<TData>({
    */
   const handlePaginationChange = useCallback(
     (
-      updater: PaginationState | ((old: PaginationState) => PaginationState),
+      updater: PaginationState | ((old: PaginationState) => PaginationState)
     ) => {
       // React Table sends PaginationState, so we need to extract just pageIndex and pageSize
       const basePagination: PaginationState =
@@ -181,7 +181,7 @@ export function DataTableProvider<TData>({
 
       onTableParamsChange(getCurrentParams({ pagination: newPagination }));
     },
-    [getCurrentParams, onTableParamsChange, pagination],
+    [getCurrentParams, onTableParamsChange, pagination]
   );
 
   /**
@@ -193,16 +193,16 @@ export function DataTableProvider<TData>({
     (
       updater:
         | CustomPaginationState
-        | ((old: CustomPaginationState) => CustomPaginationState),
+        | ((old: CustomPaginationState) => CustomPaginationState)
     ) => {
       const newCustomPagination =
         typeof updater === "function" ? updater(pagination) : updater;
 
       onTableParamsChange(
-        getCurrentParams({ pagination: newCustomPagination }),
+        getCurrentParams({ pagination: newCustomPagination })
       );
     },
-    [getCurrentParams, onTableParamsChange, pagination],
+    [getCurrentParams, onTableParamsChange, pagination]
   );
 
   // eslint-disable-next-line react-hooks/incompatible-library
@@ -253,7 +253,7 @@ export function DataTableProvider<TData>({
     <DataTableContext.Provider
       value={contextValue as unknown as DataTableContextValue<unknown>}
     >
-      <div className={cn("w-full grid gap-4", className)}>{children}</div>
+      <div className={cn("grid w-full gap-4", className)}>{children}</div>
     </DataTableContext.Provider>
   );
 }

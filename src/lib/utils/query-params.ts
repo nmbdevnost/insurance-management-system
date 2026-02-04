@@ -12,7 +12,7 @@ export function generateQueryParams(tableParams: TableParams) {
       acc[filter.id] = filter.value;
       return acc;
     },
-    {} as Record<string, unknown>,
+    {} as Record<string, unknown>
   );
 
   return {

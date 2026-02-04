@@ -36,7 +36,7 @@ export function CollapsibleNavItem({ item }: CollapsibleNavItemProps) {
         <SidebarMenuButton
           isActive={expanded || isChildActive}
           render={
-            <CollapsibleTrigger className="flex w-full items-center gap-2 cursor-pointer transition-colors duration-150">
+            <CollapsibleTrigger className="flex w-full cursor-pointer items-center gap-2 transition-colors duration-150">
               <MenuIcon icon={item.icon} />
               <span className="flex-1 truncate">{item.label}</span>
               <i
@@ -47,7 +47,7 @@ export function CollapsibleNavItem({ item }: CollapsibleNavItemProps) {
           }
         />
         <CollapsibleContent>
-          <SidebarMenuSub className="pr-0 mr-0">
+          <SidebarMenuSub className="mr-0 pr-0">
             {children.map((child) => (
               <CollapsibleSubItem
                 key={getItemKey(child)}
@@ -132,7 +132,7 @@ function NestedCollapsibleItem({
                 <i
                   className={cn(
                     "ri-arrow-down-s-line ml-auto shrink-0 transition-transform",
-                    chevronClass,
+                    chevronClass
                   )}
                   aria-hidden
                 />
@@ -141,7 +141,7 @@ function NestedCollapsibleItem({
           }
         />
         <CollapsibleContent>
-          <SidebarMenuSub className="pr-0 mr-0">
+          <SidebarMenuSub className="mr-0 pr-0">
             {children.map((child) => (
               <CollapsibleSubItem
                 key={getItemKey(child)}

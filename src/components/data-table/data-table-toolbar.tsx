@@ -18,10 +18,10 @@ const DataTableToolbar = ({
     useDataTable();
 
   return (
-    <div className="w-full flex items-center gap-2 flex-wrap">
+    <div className="flex w-full flex-wrap items-center gap-2">
       {searchEnabled && (
         <SearchInput
-          className="flex-1 min-w-[200px]"
+          className="min-w-[200px] flex-1"
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
         />
@@ -30,11 +30,11 @@ const DataTableToolbar = ({
       <div className="flex items-center gap-2">
         {filters?.map((filter) => {
           const columFilter = columnFilters.find(
-            (columnFilter) => columnFilter.id === filter.id,
+            (columnFilter) => columnFilter.id === filter.id
           );
 
           const selectedOption = filter.options?.find(
-            (option) => option.value === columFilter?.value,
+            (option) => option.value === columFilter?.value
           );
 
           return (
@@ -44,13 +44,13 @@ const DataTableToolbar = ({
               onValueChange={(value) =>
                 setColumnFilters((prev) => {
                   const existingFilter = prev.find(
-                    (columnFilter) => columnFilter.id === filter.id,
+                    (columnFilter) => columnFilter.id === filter.id
                   );
                   if (existingFilter) {
                     return prev.map((columnFilter) =>
                       columnFilter.id === filter.id
                         ? { ...columnFilter, value }
-                        : columnFilter,
+                        : columnFilter
                     );
                   }
                   return [...prev, { id: filter.id, value }];

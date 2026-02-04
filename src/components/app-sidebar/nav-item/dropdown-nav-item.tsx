@@ -40,7 +40,10 @@ export function DropdownNavItem({ item, tooltip }: DropdownNavItemProps) {
         >
           <MenuIcon icon={item.icon} />
           <span>{item.label}</span>
-          <i className="ri-arrow-right-s-line ml-auto size-4 -rotate-90" aria-hidden />
+          <i
+            className="ri-arrow-right-s-line ml-auto size-4 -rotate-90"
+            aria-hidden
+          />
         </DropdownMenuTrigger>
         <DropdownMenuContent
           className="w-[--radix-popper-anchor-width] min-w-48 rounded-lg"
@@ -88,7 +91,7 @@ function DropdownNavChild({ item }: { item: MenuItem }) {
   if (hasChildren(item)) {
     return (
       <DropdownMenuSub>
-        <DropdownMenuSubTrigger className="gap-2 [&_i]:size-4 [&_i]:shrink-0 [&_svg]:size-4 [&_svg]:shrink-0 transition-colors duration-150">
+        <DropdownMenuSubTrigger className="gap-2 transition-colors duration-150 [&_i]:size-4 [&_i]:shrink-0 [&_svg]:size-4 [&_svg]:shrink-0">
           <MenuIcon icon={item.icon} />
           {item.label}
         </DropdownMenuSubTrigger>

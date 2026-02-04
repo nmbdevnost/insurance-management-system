@@ -19,13 +19,13 @@ const DataTablePagination = () => {
   const { table } = useDataTable();
 
   return (
-    <div className="flex items-center justify-between px-2 flex-col-reverse gap-4 md:flex-row flex-wrap-reverse">
+    <div className="flex flex-col-reverse flex-wrap-reverse items-center justify-between gap-4 px-2 md:flex-row">
       <div className="text-muted-foreground flex-1 text-sm">
         {table.getFilteredSelectedRowModel().rows.length} of{" "}
         {table.getFilteredRowModel().rows.length} row(s) selected.
       </div>
 
-      <div className="flex items-center space-x-6 lg:space-x-8 flex-wrap">
+      <div className="flex flex-wrap items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
           <p className="text-sm font-medium">Rows per page</p>
           <Select

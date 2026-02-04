@@ -25,6 +25,78 @@ const expiredInsurances: Insurance[] = [
     status: "auto-deduct in 2d",
     policy: "POL-784512",
   },
+  {
+    id: "1adi213-asdalskd-qwewoueyqrf",
+    loan_number: "L28492",
+    customer: "Sita Thapa",
+    insurance_expiry_date: "2026-02-14",
+    days_left: 10,
+    status: "ok",
+    policy: "POL-784512",
+  },
+  {
+    id: "asdasd-asdalskd-qwewoueyqrf",
+    loan_number: "L28492",
+    customer: "Sita Thapa",
+    insurance_expiry_date: "2026-02-14",
+    days_left: 10,
+    status: "ok",
+    policy: "POL-784512",
+  },
+  {
+    id: "rtterytr-asdalskd-qwewoueyqrf",
+    loan_number: "L28492",
+    customer: "Sita Thapa",
+    insurance_expiry_date: "2026-02-14",
+    days_left: 10,
+    status: "ok",
+    policy: "POL-784512",
+  },
+  {
+    id: "995490-asdalskd-qwewoueyqrf",
+    loan_number: "L28492",
+    customer: "Sita Thapa",
+    insurance_expiry_date: "2026-02-14",
+    days_left: 10,
+    status: "ok",
+    policy: "POL-784512",
+  },
+  {
+    id: "pgohjhkl-asdalskd-qwewoueyqrf",
+    loan_number: "L28492",
+    customer: "Sita Thapa",
+    insurance_expiry_date: "2026-02-14",
+    days_left: 10,
+    status: "ok",
+    policy: "POL-784512",
+  },
+  {
+    id: "czxcvjas-asdalskd-qwewoueyqrf",
+    loan_number: "L28492",
+    customer: "Sita Thapa",
+    insurance_expiry_date: "2026-02-14",
+    days_left: 10,
+    status: "ok",
+    policy: "POL-784512",
+  },
+  {
+    id: "asdlkcvx-asdalskd-qwewoueyqrf",
+    loan_number: "L28492",
+    customer: "Sita Thapa",
+    insurance_expiry_date: "2026-02-14",
+    days_left: 10,
+    status: "ok",
+    policy: "POL-784512",
+  },
+  {
+    id: "aaxcxc-asdalskd-qwewoueyqrf",
+    loan_number: "L28492",
+    customer: "Sita Thapa",
+    insurance_expiry_date: "2026-02-14",
+    days_left: 10,
+    status: "ok",
+    policy: "POL-784512",
+  },
 ];
 
 const ExpiredInsurancesPage = () => {
@@ -33,7 +105,7 @@ const ExpiredInsurancesPage = () => {
 
   const queryParams = useMemo(
     () => generateQueryParams(tableParams),
-    [tableParams],
+    [tableParams]
   );
   console.log("🚀 ~ ExpiredInsurancesPage ~ queryParams:", queryParams);
 
@@ -72,7 +144,7 @@ const ExpiredInsurancesPage = () => {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-4">
+      <div className="grid gap-4 lg:grid-cols-3">
         <StatCard
           title="Urgent (<= 7 days)"
           value="10"

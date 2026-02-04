@@ -1,5 +1,6 @@
 import type { RouteObject } from "react-router-dom";
 import {
+  BulkUploadPage,
   ExpiredInsurancesPage,
   InsurancesPage,
   NewInsurancePage,
@@ -22,6 +23,10 @@ const insuranceRoutes: RouteObject[] = [
         element: <ExpiredInsurancesPage />,
       },
     ],
+  },
+  {
+    path: "/bulk-upload",
+    element: <BulkUploadPage />,
   },
 ];
 

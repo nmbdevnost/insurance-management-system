@@ -28,14 +28,14 @@ export function AppHeader() {
             <DropdownMenuTrigger
               render={<Button variant="ghost" className="h-full py-1" />}
             >
-              <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted">
-                <RiUserLine className="size-4 text-muted-foreground" />
+              <div className="bg-muted flex size-8 shrink-0 items-center justify-center rounded-full">
+                <RiUserLine className="text-muted-foreground size-4" />
               </div>
               <div className="hidden flex-col items-start text-left sm:flex">
-                <span className="text-sm font-medium leading-tight">
+                <span className="text-sm leading-tight font-medium">
                   Sandeep Shrestha
                 </span>
-                <span className="text-xs text-muted-foreground leading-tight">
+                <span className="text-muted-foreground text-xs leading-tight">
                   sandeep.shrestha@gmail.com
                 </span>
               </div>

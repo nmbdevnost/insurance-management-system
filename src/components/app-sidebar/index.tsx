@@ -38,13 +38,13 @@ export function AppSidebar({
       collapsible={collapsible}
       className={cn(
         "top-(--header-height)! h-[calc(100svh-var(--header-height))]!",
-        className,
+        className
       )}
       {...props}
     >
       {isMobile && (
-        <SidebarHeader className="bg-background h-(--header-height)! flex justify-between items-center flex-row">
-          <span className="text-lg font-semibold text-primary">NMB</span>
+        <SidebarHeader className="bg-background flex h-(--header-height)! flex-row items-center justify-between">
+          <span className="text-primary text-lg font-semibold">NMB</span>
 
           <Button
             onClick={toggleSidebar}

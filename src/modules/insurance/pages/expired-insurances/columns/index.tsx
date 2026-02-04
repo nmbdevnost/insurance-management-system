@@ -1,3 +1,4 @@
+import { Checkbox } from "@/components/ui/checkbox";
 import type { Insurance } from "@/lib/types/insurance";
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
@@ -5,6 +6,26 @@ import ExpiredInsuranceActions from "./actions";
 import ExpiredInsuranceStatusBadge from "./status-badge";
 
 const expiredInsuranceColumns: ColumnDef<Insurance>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        indeterminate={table.getIsSomePageRowsSelected()}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "loan_number",
     header: "Loan#",
@@ -19,7 +40,7 @@ const expiredInsuranceColumns: ColumnDef<Insurance>[] = [
     cell: ({ row }) => (
       <div>
         <p>{format(new Date(row.original.insurance_expiry_date), "PPP")}</p>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           Policy: {row.original.policy}
         </p>
       </div>

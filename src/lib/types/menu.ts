@@ -25,7 +25,7 @@ export function hasChildren(item: MenuItem): boolean {
 /** Check if any descendant (child or nested) has an active path for the given pathname. */
 export function hasActiveChild(
   children: MenuItem[],
-  pathname: string,
+  pathname: string
 ): boolean {
   return children.some((child) => {
     if (child.path) {
