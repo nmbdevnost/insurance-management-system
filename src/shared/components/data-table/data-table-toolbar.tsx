@@ -1,9 +1,9 @@
 import type { FilterConfig } from "@/shared/lib/types/table";
 import { useDataTable } from "@/shared/providers/data-table-provider";
+import { RiCloseLine } from "@remixicon/react";
 import SearchInput from "../search-input";
 import { Button } from "../ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
-import { Skeleton } from "../ui/skeleton";
+import { DataTableDropdownFilter } from "./data-table-filters";
 
 type DataTableToolbarProps = {
   filters?: FilterConfig[];
@@ -16,6 +16,13 @@ const DataTableToolbar = ({
 }: DataTableToolbarProps) => {
   const { globalFilter, setGlobalFilter, columnFilters, setColumnFilters } =
     useDataTable();
+
+  const hasAppliedFilters = columnFilters.length > 0 || globalFilter.length > 0;
+
+  const handleReset = () => {
+    setColumnFilters([]);
+    setGlobalFilter("");
+  };
 
   return (
     <div className="flex w-full flex-wrap items-center gap-2">
@@ -38,10 +45,11 @@ const DataTableToolbar = ({
           );
 
           return (
-            <Select
-              key={filter.label}
-              value={columFilter?.value ?? ""}
-              onValueChange={(value) =>
+            <DataTableDropdownFilter
+              {...filter}
+              options={filter.options ?? []}
+              selectedValue={selectedOption ? [selectedOption.value] : []}
+              onValueChange={(_id, value) => {
                 setColumnFilters((prev) => {
                   const existingFilter = prev.find(
                     (columnFilter) => columnFilter.id === filter.id
@@ -49,40 +57,23 @@ const DataTableToolbar = ({
                   if (existingFilter) {
                     return prev.map((columnFilter) =>
                       columnFilter.id === filter.id
-                        ? { ...columnFilter, value }
+                        ? { ...columnFilter, value: value[0] }
                         : columnFilter
                     );
                   }
-                  return [...prev, { id: filter.id, value }];
-                })
-              }
-            >
-              <SelectTrigger render={<Button variant="outline" />}>
-                {selectedOption ? (
-                  <span>{selectedOption.label}</span>
-                ) : (
-                  <span>{filter.label}</span>
-                )}
-              </SelectTrigger>
-
-              <SelectContent>
-                {filter.optionsLoading ? (
-                  <div className="flex w-full flex-col gap-1 p-1">
-                    <Skeleton className="h-7" />
-                    <Skeleton className="h-7" />
-                    <Skeleton className="h-7" />
-                  </div>
-                ) : (
-                  filter.options?.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))
-                )}
-              </SelectContent>
-            </Select>
+                  return [...prev, { id: filter.id, value: value[0] }];
+                });
+              }}
+            />
           );
         })}
+
+        {hasAppliedFilters && (
+          <Button variant="ghost" onClick={handleReset}>
+            <RiCloseLine />
+            Clear
+          </Button>
+        )}
       </div>
     </div>
   );

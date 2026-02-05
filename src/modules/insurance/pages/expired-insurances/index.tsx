@@ -1,6 +1,11 @@
-import { Tabs, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/shared/components/ui/tabs";
 import { format } from "date-fns";
-import { Activity, useState } from "react";
+import { useState } from "react";
 import ExpiredLoanTab from "./tabs/expired-loan";
 import ExpiredPolicyTab from "./tabs/expired-policy";
 import LoanNotExpiredTab from "./tabs/loan-not-expired";
@@ -42,17 +47,17 @@ const ExpiredIsurancePage = () => {
           </TabsTrigger>
         </TabsList>
 
-        <Activity mode={tab === "expired-policy" ? "visible" : "hidden"}>
+        <TabsContent value="expired-policy">
           <ExpiredPolicyTab />
-        </Activity>
+        </TabsContent>
 
-        <Activity mode={tab === "expired-loan" ? "visible" : "hidden"}>
+        <TabsContent value="expired-loan">
           <ExpiredLoanTab />
-        </Activity>
+        </TabsContent>
 
-        <Activity mode={tab === "loan-not-expired" ? "visible" : "hidden"}>
+        <TabsContent value="loan-not-expired">
           <LoanNotExpiredTab />
-        </Activity>
+        </TabsContent>
       </Tabs>
     </>
   );

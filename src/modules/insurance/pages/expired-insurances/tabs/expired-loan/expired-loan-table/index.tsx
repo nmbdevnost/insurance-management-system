@@ -16,16 +16,6 @@ const ExpiredLoanTable = () => {
       ],
       type: "select",
     },
-    {
-      id: "branch",
-      label: "Branch",
-      options: [
-        { label: "Auto-Deduct", value: "auto-deduct" },
-        { label: "Manual-Deduct", value: "manual-deduct" },
-        { label: "No-Deduct", value: "no-deduct" },
-      ],
-      type: "select",
-    },
   ];
 
   return (

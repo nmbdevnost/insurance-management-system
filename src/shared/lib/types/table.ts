@@ -7,4 +7,5 @@ export type FilterConfig = {
   optionsLoading?: boolean;
   type: "select" | "search" | "date" | "range";
   placeholder?: string;
+  disableSearch?: boolean;
 };

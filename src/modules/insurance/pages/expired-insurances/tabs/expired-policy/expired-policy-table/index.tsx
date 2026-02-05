@@ -20,6 +20,7 @@ const ExpiredPolicyTable = () => {
         { label: "No-Deduct", value: "no-deduct" },
       ],
       type: "select",
+      disableSearch: true,
     },
     {
       id: "branch",
@@ -30,6 +31,7 @@ const ExpiredPolicyTable = () => {
         { label: "No-Deduct", value: "no-deduct" },
       ],
       type: "select",
+      disableSearch: true,
     },
   ];
 

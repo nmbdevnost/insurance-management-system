@@ -24,3 +24,12 @@ export function formatDate(date?: Date | string, formatString = "PPP"): string {
 
   return formattedDate;
 }
+
+export function formatString(str: string, capitalize = true) {
+  return str
+    .replace(/([a-z])([A-Z])/g, "$1 $2") // Add space before capital letters (caseId -> case Id)
+    .replace(/([a-zA-Z])(\d)/g, "$1 $2") // Add space before numbers (case123 -> case 123)
+    .replace(/\b\w/g, (letter) =>
+      capitalize ? letter.toUpperCase() : letter.toLowerCase()
+    );
+}
