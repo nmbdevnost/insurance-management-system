@@ -1,22 +1,13 @@
-import type { ExpiredPolicy } from "@/modules/insurance/types/policies";
-import DataTable from "@/shared/components/data-table";
-import DataTablePagination from "@/shared/components/data-table/data-table-pagination";
-import DataTableToolbar from "@/shared/components/data-table/data-table-toolbar";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/shared/components/ui/card";
+import type { ExpiredPolicy } from "@/shared/lib/types/policies";
 import { DEFAULT_TABLE_PARAMS } from "@/shared/lib/constants/data-table";
-import type { FilterConfig } from "@/shared/lib/types/table";
 import { generateQueryParams } from "@/shared/lib/utils/query-params";
 import {
   DataTableProvider,
   type TableParams,
 } from "@/shared/providers/data-table-provider";
 import { useMemo, useState } from "react";
-import expiredPolicyColumns from "./columns";
+import ExpiredPolicyTable from "./expired-policy-table";
+import expiredPolicyColumns from "./expired-policy-table/columns";
 
 const expiredPolicies: ExpiredPolicy[] = [
   {
@@ -106,29 +97,6 @@ const ExpiredPolicyTab = () => {
   );
   console.log("🚀 ~ ExpiredIsurancePage ~ queryParams:", queryParams);
 
-  const filters: FilterConfig[] = [
-    {
-      id: "status",
-      label: "Status",
-      options: [
-        { label: "Auto-Deduct", value: "auto-deduct" },
-        { label: "Manual-Deduct", value: "manual-deduct" },
-        { label: "No-Deduct", value: "no-deduct" },
-      ],
-      type: "select",
-    },
-    {
-      id: "branch",
-      label: "Branch",
-      options: [
-        { label: "Auto-Deduct", value: "auto-deduct" },
-        { label: "Manual-Deduct", value: "manual-deduct" },
-        { label: "No-Deduct", value: "no-deduct" },
-      ],
-      type: "select",
-    },
-  ];
-
   return (
     <>
       <DataTableProvider
@@ -138,19 +106,7 @@ const ExpiredPolicyTab = () => {
         tableParams={tableParams}
         onTableParamsChange={setTableParams}
       >
-        <Card className="gap-0">
-          <CardHeader className="mb-4">
-            <DataTableToolbar filters={filters} />
-          </CardHeader>
-
-          <CardContent className="p-0">
-            <DataTable className="rounded-none border-x-0" />
-          </CardContent>
-
-          <CardFooter className="bg-background">
-            <DataTablePagination className="w-full" />
-          </CardFooter>
-        </Card>
+        <ExpiredPolicyTable />
       </DataTableProvider>
     </>
   );

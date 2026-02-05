@@ -3,15 +3,24 @@
  * Extend with date, currency, or other formatters as needed.
  */
 
-export function formatCurrency(value: number, currency = "USD"): string {
-  return new Intl.NumberFormat("en-US", {
+import { format } from "date-fns";
+
+export function formatCurrency(
+  value: number,
+  options?: Intl.NumberFormatOptions & {
+    locale?: string;
+  }
+): string {
+  return new Intl.NumberFormat(options?.locale ?? "ne-NP", {
     style: "currency",
-    currency,
+    currencyDisplay: "narrowSymbol",
+    ...options,
+    currency: options?.currency ?? "NPR",
   }).format(value);
 }
 
-export function formatDate(date: Date | string): string {
-  return new Intl.DateTimeFormat("en-US", {
-    dateStyle: "medium",
-  }).format(typeof date === "string" ? new Date(date) : date);
+export function formatDate(date?: Date | string, formatString = "PPP"): string {
+  const formattedDate = date ? format(new Date(date), formatString) : "-";
+
+  return formattedDate;
 }

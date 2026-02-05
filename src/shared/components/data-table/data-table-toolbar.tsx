@@ -21,7 +21,7 @@ const DataTableToolbar = ({
     <div className="flex w-full flex-wrap items-center gap-2">
       {searchEnabled && (
         <SearchInput
-          className="min-w-50 flex-1"
+          className="max-w-sm"
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
         />

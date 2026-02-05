@@ -1,15 +1,13 @@
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/shared/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { format } from "date-fns";
+import { Activity, useState } from "react";
 import ExpiredLoanTab from "./tabs/expired-loan";
 import ExpiredPolicyTab from "./tabs/expired-policy";
 import LoanNotExpiredTab from "./tabs/loan-not-expired";
 
 const ExpiredIsurancePage = () => {
+  const [tab, setTab] = useState("expired-policy");
+
   return (
     <>
       <div className="flex items-center justify-between">
@@ -22,25 +20,7 @@ const ExpiredIsurancePage = () => {
         </div>
       </div>
 
-      {/* <div className="grid gap-4 lg:grid-cols-3">
-        <StatCard
-          title="Urgent (<= 7 days)"
-          value="10"
-          className="border-l-4 border-red-500"
-        />
-        <StatCard
-          title="Reminder (8-30 days)"
-          value="10"
-          className="border-l-4 border-yellow-500"
-        />
-        <StatCard
-          title="Expired (> 30 days)"
-          value="10"
-          className="border-l-4 border-green-500"
-        />
-      </div> */}
-
-      <Tabs defaultValue="expired-policy" className="gap-0">
+      <Tabs className="gap-0" value={tab} onValueChange={setTab}>
         <TabsList className="ml-4 rounded-b-none border">
           <TabsTrigger
             className="data-active:bg-primary data-active:text-primary-foreground!"
@@ -62,17 +42,17 @@ const ExpiredIsurancePage = () => {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="expired-policy">
+        <Activity mode={tab === "expired-policy" ? "visible" : "hidden"}>
           <ExpiredPolicyTab />
-        </TabsContent>
+        </Activity>
 
-        <TabsContent value="expired-loan">
+        <Activity mode={tab === "expired-loan" ? "visible" : "hidden"}>
           <ExpiredLoanTab />
-        </TabsContent>
+        </Activity>
 
-        <TabsContent value="loan-not-expired">
+        <Activity mode={tab === "loan-not-expired" ? "visible" : "hidden"}>
           <LoanNotExpiredTab />
-        </TabsContent>
+        </Activity>
       </Tabs>
     </>
   );
