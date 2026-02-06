@@ -15,14 +15,17 @@ export function generateQueryParams(tableParams: TableParams) {
     {} as Record<string, unknown>
   );
 
+  const sorting = tableParams.sorting || [];
+  const sortBy = sorting[0];
+
   return {
     page: tableParams.pagination.page,
     pageSize: tableParams.pagination.pageSize,
 
-    search: tableParams.globalFilter,
+    search: tableParams.globalFilter || undefined,
 
-    sortBy: tableParams.sorting[0]?.id,
-    sortOrder: tableParams.sorting[0]?.desc ? "desc" : "asc",
+    sortBy,
+    sortOrder: sortBy ? (sortBy.desc ? "desc" : "asc") : undefined,
 
     ...filterParams,
   };

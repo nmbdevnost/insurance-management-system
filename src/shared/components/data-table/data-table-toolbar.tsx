@@ -20,8 +20,8 @@ const DataTableToolbar = ({
   const hasAppliedFilters = columnFilters.length > 0 || globalFilter.length > 0;
 
   const handleReset = () => {
-    setColumnFilters([]);
     setGlobalFilter("");
+    setColumnFilters([]);
   };
 
   return (
@@ -36,34 +36,12 @@ const DataTableToolbar = ({
 
       <div className="flex items-center gap-2">
         {filters?.map((filter) => {
-          const columFilter = columnFilters.find(
-            (columnFilter) => columnFilter.id === filter.id
-          );
-
-          const selectedOption = filter.options?.find(
-            (option) => option.value === columFilter?.value
-          );
-
           return (
             <DataTableDropdownFilter
-              {...filter}
-              options={filter.options ?? []}
-              selectedValue={selectedOption ? [selectedOption.value] : []}
-              onValueChange={(_id, value) => {
-                setColumnFilters((prev) => {
-                  const existingFilter = prev.find(
-                    (columnFilter) => columnFilter.id === filter.id
-                  );
-                  if (existingFilter) {
-                    return prev.map((columnFilter) =>
-                      columnFilter.id === filter.id
-                        ? { ...columnFilter, value: value[0] }
-                        : columnFilter
-                    );
-                  }
-                  return [...prev, { id: filter.id, value: value[0] }];
-                });
-              }}
+              key={filter.id}
+              filter={filter}
+              columnFilters={columnFilters}
+              onColumnFiltersChange={setColumnFilters}
             />
           );
         })}

@@ -7,7 +7,20 @@ import {
   CardFooter,
   CardHeader,
 } from "@/shared/components/ui/card";
+import type { DropdownOption } from "@/shared/lib/types/dropdown";
 import type { FilterConfig } from "@/shared/lib/types/table";
+
+// Branch Options
+const branchOptions: DropdownOption[] = [
+  { label: "Kathmandu Branch", value: "kathmandu" },
+  { label: "Pokhara Branch", value: "pokhara" },
+  { label: "Biratnagar Branch", value: "biratnagar" },
+  { label: "Butwal Branch", value: "butwal" },
+  { label: "Dhangadhi Branch", value: "dhangadhi" },
+  { label: "Chitwan Branch", value: "chitwan" },
+  { label: "Lalitpur Branch", value: "lalitpur" },
+  { label: "Birgunj Branch", value: "birgunj" },
+];
 
 const ExpiredPolicyTable = () => {
   const filters: FilterConfig[] = [
@@ -25,13 +38,10 @@ const ExpiredPolicyTable = () => {
     {
       id: "branch",
       label: "Branch",
-      options: [
-        { label: "Auto-Deduct", value: "auto-deduct" },
-        { label: "Manual-Deduct", value: "manual-deduct" },
-        { label: "No-Deduct", value: "no-deduct" },
-      ],
+      options: branchOptions,
       type: "select",
-      disableSearch: true,
+      mode: "multiple",
+      loading: false,
     },
   ];
 

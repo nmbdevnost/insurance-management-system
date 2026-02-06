@@ -1,9 +1,8 @@
 "use client";
 
-import * as React from "react";
 import { Command as CommandPrimitive } from "cmdk";
+import * as React from "react";
 
-import { cn } from "@/shared/lib/utils/index";
 import {
   Dialog,
   DialogContent,
@@ -15,7 +14,8 @@ import {
   InputGroup,
   InputGroupAddon,
 } from "@/shared/components/ui/input-group";
-import { RiSearchLine, RiCheckLine } from "@remixicon/react";
+import { cn } from "@/shared/lib/utils/index";
+import { RiCheckLine, RiSearchLine } from "@remixicon/react";
 
 function Command({
   className,
@@ -186,11 +186,11 @@ function CommandShortcut({
 export {
   Command,
   CommandDialog,
-  CommandInput,
-  CommandList,
   CommandEmpty,
   CommandGroup,
+  CommandInput,
   CommandItem,
-  CommandShortcut,
+  CommandList,
   CommandSeparator,
+  CommandShortcut,
 };

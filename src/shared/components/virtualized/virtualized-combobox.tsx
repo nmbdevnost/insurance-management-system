@@ -1,4 +1,4 @@
-import useDialog from "@/shared/hooks/use-dialog";
+import useControlledState from "@/shared/hooks/use-controlled-state";
 import { cn } from "@/shared/lib/utils";
 import type { ComponentProps } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -11,7 +11,7 @@ const VirtualizedCombobox = ({
   onOpenChange,
   trigger,
   autoWidth = true,
-  modal = true,
+  modal = false,
   className,
   commandProps,
 }: {
@@ -23,13 +23,14 @@ const VirtualizedCombobox = ({
   modal?: boolean;
   commandProps: VirtualizedCommandProps;
 }) => {
-  const { open: openHook, onOpenChange: onOpenChangeHook } = useDialog({
-    open,
-    onOpenChange,
+  const { value, onChange } = useControlledState({
+    value: open,
+    onChange: onOpenChange,
+    defaultValue: false,
   });
 
   return (
-    <Popover modal={modal} open={openHook} onOpenChange={onOpenChangeHook}>
+    <Popover modal={modal} open={value} onOpenChange={onChange}>
       {trigger && <PopoverTrigger render={trigger} />}
 
       <PopoverContent

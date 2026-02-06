@@ -4,8 +4,10 @@ export type FilterConfig = {
   id: string;
   label: string;
   options?: DropdownOption[];
-  optionsLoading?: boolean;
+  loading?: boolean;
   type: "select" | "search" | "date" | "range";
   placeholder?: string;
   disableSearch?: boolean;
+  mode?: "single" | "multiple";
+  disabled?: boolean;
 };

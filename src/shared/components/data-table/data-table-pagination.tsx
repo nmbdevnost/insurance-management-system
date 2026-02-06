@@ -1,4 +1,5 @@
 import { PAGINATION_PAGE_SIZES } from "@/shared/lib/constants/data-table";
+import { cn } from "@/shared/lib/utils";
 import { useDataTable } from "@/shared/providers/data-table-provider";
 import {
   RiArrowLeftLine,
@@ -14,10 +15,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { cn } from "@/shared/lib/utils";
 
 const DataTablePagination = ({ className }: { className?: string }) => {
-  const { table } = useDataTable();
+  const { table, setPagination } = useDataTable();
 
   return (
     <div
@@ -37,7 +37,12 @@ const DataTablePagination = ({ className }: { className?: string }) => {
           <Select
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
-              table.setPageSize(Number(value));
+              setPagination((prev) => ({
+                ...prev,
+                page: 1,
+                pageIndex: 0,
+                pageSize: Number(value),
+              }));
             }}
           >
             <SelectTrigger className="h-8 w-17.5">

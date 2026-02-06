@@ -2,7 +2,7 @@ import type { DropdownOption } from "@/shared/lib/types/dropdown";
 import { cn } from "@/shared/lib/utils";
 import { Tooltip } from "@base-ui/react";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { Checkbox } from "../ui/checkbox";
 import {
   Command,
@@ -11,7 +11,9 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  CommandShortcut,
 } from "../ui/command";
+import { Skeleton } from "../ui/skeleton";
 import { TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 
 export type VirtualizedCommandProps = {
@@ -23,8 +25,8 @@ export type VirtualizedCommandProps = {
   disableSearch?: boolean;
   overscan?: number;
   mode?: "single" | "multiple";
-  selectedOption?: DropdownOption[];
-  onValueChange?: (options: DropdownOption[]) => void;
+  selectedOption?: DropdownOption | DropdownOption[];
+  onValueChange?: (option: DropdownOption[] | DropdownOption | null) => void;
 };
 
 const VirtualizedCommand = ({
@@ -35,22 +37,16 @@ const VirtualizedCommand = ({
   loading,
   disableSearch,
   mode = "single",
-  selectedOption = [],
+  selectedOption,
   onValueChange,
   overscan = 5,
 }: VirtualizedCommandProps) => {
-  const isMultiple = mode === "multiple";
-
+  // actual options available after search
   const [filteredOptions, setFilteredOptions] =
     useState<DropdownOption[]>(options);
 
+  // virtualization
   const parentRef = useRef<HTMLDivElement>(null);
-
-  // Sync filteredOptions when options prop changes
-  useEffect(() => {
-    setFilteredOptions(options);
-  }, [options]);
-
   // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
     count: filteredOptions.length,
@@ -59,8 +55,22 @@ const VirtualizedCommand = ({
     overscan,
   });
 
+  // options to be displayed
   const virtualOptions = virtualizer.getVirtualItems();
 
+  const isMultiple = mode === "multiple";
+
+  const isAllSelected = useMemo(() => {
+    if (!isMultiple) return false;
+
+    const selectedOptions = (selectedOption as DropdownOption[]) || [];
+
+    return filteredOptions.every((option) =>
+      selectedOptions.some((item) => item.value === option.value)
+    );
+  }, [isMultiple, filteredOptions, selectedOption]);
+
+  // custom function to handle search
   const handleSearch = useCallback(
     (search: string) => {
       if (!search) {
@@ -78,95 +88,68 @@ const VirtualizedCommand = ({
     [options]
   );
 
+  // util function to get if an option is selected or not
   const getIsOptionSelected = useCallback(
     (value: string) => {
-      return selectedOption.some((item) => item.value === value);
+      if (!isMultiple) {
+        const selectedValue = (selectedOption as DropdownOption)?.value;
+        return selectedValue === value;
+      } else {
+        const selectedOptions = (selectedOption as DropdownOption[]) || [];
+        return selectedOptions?.some((item) => item.value === value);
+      }
     },
-    [selectedOption]
+    [selectedOption, isMultiple]
   );
 
-  const getSelectAllState = useCallback(() => {
-    if (!isMultiple) return { checked: false, indeterminate: false };
+  // const getIsAllSelected = useCallback(() => {
+  //   if (!isMultiple) return false;
 
-    if (selectedOption.length === 0) {
-      return { checked: false, indeterminate: false };
-    }
-    if (filteredOptions.length === 0) {
-      return { checked: false, indeterminate: false };
-    }
+  //   const selectedOptions = (selectedOption as DropdownOption[]) || [];
 
-    // Count how many filtered options are selected
-    const selectedCount = filteredOptions.filter((option) =>
-      selectedOption.some((item) => item.value === option.value)
-    ).length;
+  //   return filteredOptions.every((option) =>
+  //     selectedOptions.some((item) => item.value === option.value)
+  //   );
+  // }, [filteredOptions, selectedOption, isMultiple]);
 
-    if (selectedCount === 0) {
-      return { checked: false, indeterminate: false };
-    } else if (selectedCount === filteredOptions.length) {
-      return { checked: true, indeterminate: false };
-    } else {
-      return { checked: false, indeterminate: true };
-    }
-  }, [filteredOptions, selectedOption, isMultiple]);
-
+  // toggles an option selection
   const handleToggle = useCallback(
     (option: DropdownOption) => {
       if (!onValueChange) return;
 
       const isSelected = getIsOptionSelected(option.value);
 
-      if (!isMultiple) {
-        // Single mode: only one item in array, or empty array
+      if (isMultiple) {
+        const selectedOptions = (selectedOption as DropdownOption[]) || [];
+
         if (isSelected) {
-          onValueChange([]);
-        } else {
-          onValueChange([option]);
-        }
-      } else {
-        // Multiple mode: add/remove from array
-        if (isSelected) {
-          const newSelections = selectedOption.filter(
-            (item) => item.value !== option.value
+          // filter selected option
+          const newSelections = selectedOptions.filter(
+            (selectedOption) => option.value !== selectedOption.value
           );
           onValueChange(newSelections);
         } else {
-          const newSelections = [...selectedOption, option];
+          // add selected option
+          const newSelections = [...selectedOptions, option];
           onValueChange(newSelections);
         }
+      } else {
+        onValueChange(isSelected ? null : option);
       }
     },
     [onValueChange, isMultiple, selectedOption, getIsOptionSelected]
   );
 
+  // toggles selection for all filtered options
   const handleToggleAll = useCallback(() => {
     if (!onValueChange || !isMultiple) return;
 
-    const { checked } = getSelectAllState();
-
-    if (checked) {
-      // Deselect all filtered options
-      const filteredValues = new Set(filteredOptions.map((opt) => opt.value));
-      const newSelections = selectedOption.filter(
-        (item) => !filteredValues.has(item.value)
-      );
-      onValueChange(newSelections);
+    if (isAllSelected) {
+      onValueChange([]);
     } else {
-      // Select all filtered options
-      const selectedValues = new Set(selectedOption.map((opt) => opt.value));
-      const newOptions = filteredOptions.filter(
-        (opt) => !selectedValues.has(opt.value)
-      );
-      onValueChange([...selectedOption, ...newOptions]);
+      onValueChange(filteredOptions);
     }
-  }, [
-    onValueChange,
-    isMultiple,
-    getSelectAllState,
-    filteredOptions,
-    selectedOption,
-  ]);
-
-  const selectAllState = getSelectAllState();
+  }, [onValueChange, isMultiple, isAllSelected, filteredOptions]);
 
   return (
     <Command shouldFilter={false}>
@@ -190,7 +173,11 @@ const VirtualizedCommand = ({
         }}
       >
         {loading ? (
-          <></>
+          <CommandGroup>
+            <Skeleton className="mb-1 h-8 w-full" />
+            <Skeleton className="mb-1 h-8 w-full" />
+            <Skeleton className="h-8 w-full" />
+          </CommandGroup>
         ) : (
           <>
             <CommandEmpty>
@@ -201,15 +188,27 @@ const VirtualizedCommand = ({
               {isMultiple && filteredOptions.length > 0 && (
                 <CommandItem
                   onSelect={handleToggleAll}
-                  className="cursor-pointer"
+                  className={cn(
+                    "command-item:hidden cursor-pointer",
+                    isAllSelected && "bg-muted/50"
+                  )}
                 >
-                  <div className="flex items-center gap-2">
-                    <Checkbox
-                      checked={selectAllState.checked}
-                      indeterminate={selectAllState.indeterminate}
-                    />
-                    <span className="font-medium">Select All</span>
-                  </div>
+                  <Checkbox
+                    checked={isAllSelected}
+                    indeterminate={
+                      (selectedOption as DropdownOption[])?.length > 0 &&
+                      (selectedOption as DropdownOption[])?.length <
+                        filteredOptions.length
+                    }
+                  />
+                  <span className="font-medium">Select All</span>
+
+                  <CommandShortcut className="tracking-normal">
+                    <p>
+                      {(selectedOption as DropdownOption[])?.length} of{" "}
+                      {filteredOptions.length}
+                    </p>
+                  </CommandShortcut>
                 </CommandItem>
               )}
 
@@ -234,17 +233,16 @@ const VirtualizedCommand = ({
                         key={filteredOption.value}
                         value={filteredOption.value}
                         onSelect={() => handleToggle(filteredOption)}
+                        data-checked={!isMultiple && isSelected}
                         className={cn(
                           "absolute top-0 left-0 w-full cursor-pointer",
-                          isSelected && "bg-muted/50",
-                          !isMultiple && "justify-between"
+                          isSelected && "bg-muted/50"
                         )}
                         style={{
                           height: `${virtualRow.size}px`,
                           transform: `translateY(${virtualRow.start}px)`,
                           userSelect: "none",
                         }}
-                        data-checked={isSelected && !isMultiple}
                       >
                         {isMultiple && (
                           <Checkbox
@@ -255,8 +253,8 @@ const VirtualizedCommand = ({
 
                         <Tooltip.Root>
                           <TooltipTrigger>
-                            <div className="grid min-w-0">
-                              <span className="truncate">
+                            <div className="min-w-0">
+                              <span className="block truncate">
                                 {filteredOption.label}
                               </span>
                             </div>

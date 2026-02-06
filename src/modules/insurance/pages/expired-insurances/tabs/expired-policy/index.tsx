@@ -1,5 +1,5 @@
-import type { ExpiredPolicy } from "@/shared/lib/types/policies";
 import { DEFAULT_TABLE_PARAMS } from "@/shared/lib/constants/data-table";
+import type { ExpiredPolicy } from "@/shared/lib/types/policies";
 import { generateQueryParams } from "@/shared/lib/utils/query-params";
 import {
   DataTableProvider,
@@ -95,7 +95,7 @@ const ExpiredPolicyTab = () => {
     () => generateQueryParams(tableParams),
     [tableParams]
   );
-  console.log("🚀 ~ ExpiredIsurancePage ~ queryParams:", queryParams);
+  console.log("🚀 ~ ExpiredPolicyTab ~ queryParams:", queryParams);
 
   return (
     <>

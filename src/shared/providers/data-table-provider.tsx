@@ -64,7 +64,7 @@ export type DataTableProviderProps<TData> = {
   children: React.ReactNode;
   pageCount: number;
   totalRows?: number;
-  onTableParamsChange: (params: TableParams) => void;
+  onTableParamsChange: React.Dispatch<React.SetStateAction<TableParams>>;
   enableRowSelection?: boolean;
   enableMultiRowSelection?: boolean;
   tableParams: TableParams;
@@ -100,32 +100,18 @@ export function DataTableProvider<TData>({
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
   /**
-   * Returns the current table parameters (pagination, sorting, filters, search).
-   * Optionally accepts overrides to merge with current state before returning.
-   * @param overrides - Partial table parameters to override current values
-   * @returns Complete TableParams object with current or overridden values
-   */
-  const getCurrentParams = useCallback(
-    (overrides?: Partial<TableParams>): TableParams => ({
-      pagination,
-      sorting,
-      columnFilters,
-      globalFilter,
-      ...overrides,
-    }),
-    [pagination, sorting, columnFilters, globalFilter]
-  );
-
-  /**
    * Handles changes to the global search filter.
    * Updates the global filter state and notifies parent component of parameter changes.
    * @param value - The new global filter string to apply
    */
   const handleGlobalFilterChange = useCallback(
     (value: string) => {
-      onTableParamsChange(getCurrentParams({ globalFilter: value }));
+      onTableParamsChange((prev) => ({
+        ...prev,
+        globalFilter: value,
+      }));
     },
-    [getCurrentParams, onTableParamsChange]
+    [onTableParamsChange]
   );
 
   /**
@@ -142,11 +128,13 @@ export function DataTableProvider<TData>({
     ) => {
       const newColumnFilters =
         typeof updater === "function" ? updater(columnFilters) : updater;
-      onTableParamsChange(
-        getCurrentParams({ columnFilters: newColumnFilters })
-      );
+
+      onTableParamsChange((prev) => ({
+        ...prev,
+        columnFilters: newColumnFilters,
+      }));
     },
-    [getCurrentParams, onTableParamsChange, columnFilters]
+    [onTableParamsChange, columnFilters]
   );
 
   /**
@@ -159,9 +147,9 @@ export function DataTableProvider<TData>({
     (updater: SortingState | ((old: SortingState) => SortingState)) => {
       const newSorting =
         typeof updater === "function" ? updater(sorting) : updater;
-      onTableParamsChange(getCurrentParams({ sorting: newSorting }));
+      onTableParamsChange((prev) => ({ ...prev, sorting: newSorting }));
     },
-    [getCurrentParams, onTableParamsChange, sorting]
+    [onTableParamsChange, sorting]
   );
 
   /**
@@ -190,9 +178,9 @@ export function DataTableProvider<TData>({
         page: basePagination.pageIndex + 1,
       };
 
-      onTableParamsChange(getCurrentParams({ pagination: newPagination }));
+      onTableParamsChange((prev) => ({ ...prev, pagination: newPagination }));
     },
-    [getCurrentParams, onTableParamsChange, pagination]
+    [onTableParamsChange, pagination]
   );
 
   /**
@@ -209,11 +197,12 @@ export function DataTableProvider<TData>({
       const newCustomPagination =
         typeof updater === "function" ? updater(pagination) : updater;
 
-      onTableParamsChange(
-        getCurrentParams({ pagination: newCustomPagination })
-      );
+      onTableParamsChange((prev) => ({
+        ...prev,
+        pagination: newCustomPagination,
+      }));
     },
-    [getCurrentParams, onTableParamsChange, pagination]
+    [onTableParamsChange, pagination]
   );
 
   const filterPinned = useCallback(
