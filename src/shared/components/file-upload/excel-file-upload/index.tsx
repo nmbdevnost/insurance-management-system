@@ -1,14 +1,13 @@
 "use client";
 
-import { Button } from "@/shared/components/ui/button";
-
 import {
   formatBytes,
   type FileWithPreview,
 } from "@/shared/hooks/use-file-upload";
 import { cn } from "@/shared/lib/utils";
 import { useFileUpload } from "@/shared/providers/file-upload-provider";
-import { RiDeleteBinLine, RiUploadLine } from "@remixicon/react";
+import { RiUploadLine } from "@remixicon/react";
+import { Separator } from "../../ui/separator";
 
 export interface ExcelFileUploadItem extends FileWithPreview {
   progress: number;
@@ -17,7 +16,7 @@ export interface ExcelFileUploadItem extends FileWithPreview {
 }
 
 export default function ExcelFileUpload({ className }: { className?: string }) {
-  const { maxSize, maxFiles, uploadFiles, fileUploadState, fileUploadActions } =
+  const { maxSize, maxFiles, fileUploadState, fileUploadActions } =
     useFileUpload();
 
   const { isDragging } = fileUploadState;
@@ -29,8 +28,29 @@ export default function ExcelFileUpload({ className }: { className?: string }) {
     handleDrop,
     getInputProps,
     openFileDialog,
-    clearFiles,
   } = fileUploadActions;
+
+  // Get accepted file types from input props
+  const getAcceptedFileTypes = (): string => {
+    const inputProps = getInputProps();
+    const accept = inputProps.accept;
+
+    if (!accept) return "All files";
+
+    const types = accept.split(",").map((type) => type.trim());
+    const formattedTypes = types.map((type) => {
+      if (type.startsWith(".")) {
+        return type.toUpperCase();
+      }
+      if (type.endsWith("/*")) {
+        const baseType = type.split("/")[0];
+        return baseType.charAt(0).toUpperCase() + baseType.slice(1) + " files";
+      }
+      return type;
+    });
+
+    return formattedTypes.join(", ");
+  };
 
   return (
     <div className={cn("w-full space-y-4", className)}>
@@ -64,39 +84,41 @@ export default function ExcelFileUpload({ className }: { className?: string }) {
               Drop files here or{" "}
               <button
                 type="button"
-                onClick={openFileDialog}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openFileDialog();
+                }}
                 className="text-primary cursor-pointer underline-offset-4 hover:underline"
               >
                 browse files
               </button>
             </p>
-            {maxSize && (
-              <>
-                <p className="text-muted-foreground text-xs">
-                  Maximum file size: {formatBytes(maxSize)}{" "}
-                  {maxFiles && `• Maximum files: ${maxFiles}`}
-                </p>
-              </>
-            )}
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <p className="text-muted-foreground text-xs">
+                Supported file types: {getAcceptedFileTypes()}
+              </p>
+
+              {maxSize && (
+                <>
+                  <Separator orientation="vertical" />
+                  <p className="text-muted-foreground text-xs">
+                    Maximum file size: {formatBytes(maxSize)}
+                  </p>
+                </>
+              )}
+
+              {maxFiles && (
+                <>
+                  <Separator orientation="vertical" />
+                  <p className="text-muted-foreground text-xs">
+                    Maximum files: {maxFiles}
+                  </p>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Files Table */}
-      {uploadFiles.length > 0 && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-medium">
-              Files ({uploadFiles.length})
-            </h3>
-
-            <Button onClick={clearFiles} variant="outline" size="sm">
-              <RiDeleteBinLine />
-              Remove all
-            </Button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
