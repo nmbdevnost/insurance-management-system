@@ -1,6 +1,7 @@
 import { cn } from "@/shared/lib/utils";
 import {
   getCoreRowModel,
+  getPaginationRowModel,
   useReactTable,
   type ColumnDef,
   type ColumnFiltersState,
@@ -38,19 +39,19 @@ export type DataTableContextValue<TData> = {
   totalRows?: number;
 
   // search
-  globalFilter: string;
+  globalFilter?: string;
   setGlobalFilter: (value: string) => void;
 
   // filters
-  columnFilters: ColumnFiltersState;
+  columnFilters?: ColumnFiltersState;
   setColumnFilters: React.Dispatch<React.SetStateAction<ColumnFiltersState>>;
 
   // sorting
-  sorting: SortingState;
+  sorting?: SortingState;
   setSorting: React.Dispatch<React.SetStateAction<SortingState>>;
 
   // pagination
-  pagination: CustomPaginationState;
+  pagination?: CustomPaginationState;
   setPagination: React.Dispatch<React.SetStateAction<CustomPaginationState>>;
 
   // selection
@@ -62,12 +63,12 @@ export type DataTableProviderProps<TData> = {
   columns: ColumnDef<TData>[];
   data: TData[];
   children: React.ReactNode;
-  pageCount: number;
+  pageCount?: number;
   totalRows?: number;
-  onTableParamsChange: React.Dispatch<React.SetStateAction<TableParams>>;
+  onTableParamsChange?: React.Dispatch<React.SetStateAction<TableParams>>;
   enableRowSelection?: boolean;
   enableMultiRowSelection?: boolean;
-  tableParams: TableParams;
+  tableParams?: TableParams;
   className?: string;
 };
 
@@ -95,7 +96,19 @@ export function DataTableProvider<TData>({
   tableParams,
   className,
 }: DataTableProviderProps<TData>) {
-  const { columnFilters, globalFilter, pagination, sorting } = tableParams;
+  const { columnFilters, globalFilter, pagination, sorting } =
+    tableParams || {};
+
+  // Determine if pagination is controlled
+  const isControlledPagination = !!pagination && !!onTableParamsChange;
+
+  // Local state for uncontrolled pagination
+  const [internalPagination, setInternalPagination] =
+    useState<CustomPaginationState>({
+      pageIndex: 0,
+      pageSize: 10,
+      page: 1,
+    });
 
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
@@ -106,7 +119,7 @@ export function DataTableProvider<TData>({
    */
   const handleGlobalFilterChange = useCallback(
     (value: string) => {
-      onTableParamsChange((prev) => ({
+      onTableParamsChange?.((prev) => ({
         ...prev,
         globalFilter: value,
       }));
@@ -126,6 +139,8 @@ export function DataTableProvider<TData>({
         | ColumnFiltersState
         | ((old: ColumnFiltersState) => ColumnFiltersState)
     ) => {
+      if (!columnFilters || !onTableParamsChange) return;
+
       const newColumnFilters =
         typeof updater === "function" ? updater(columnFilters) : updater;
 
@@ -145,6 +160,8 @@ export function DataTableProvider<TData>({
    */
   const handleSortingChange = useCallback(
     (updater: SortingState | ((old: SortingState) => SortingState)) => {
+      if (!sorting || !onTableParamsChange) return;
+
       const newSorting =
         typeof updater === "function" ? updater(sorting) : updater;
       onTableParamsChange((prev) => ({ ...prev, sorting: newSorting }));
@@ -156,36 +173,54 @@ export function DataTableProvider<TData>({
    * Handles changes to table pagination (page index and page size).
    * Accepts either a new pagination state or an updater function for functional updates.
    * Automatically calculates the page number (pageIndex + 1) and includes it in the state.
-   * Notifies parent component after updating the pagination state.
+   * Supports both controlled and uncontrolled modes.
    * @param updater - New pagination state or function that receives old state and returns new state
    */
   const handlePaginationChange = useCallback(
     (
       updater: PaginationState | ((old: PaginationState) => PaginationState)
     ) => {
-      // React Table sends PaginationState, so we need to extract just pageIndex and pageSize
-      const basePagination: PaginationState =
-        typeof updater === "function"
-          ? updater({
-              pageIndex: pagination.pageIndex,
-              pageSize: pagination.pageSize,
-            })
-          : updater;
+      if (isControlledPagination && pagination && onTableParamsChange) {
+        // Controlled mode
+        const basePagination: PaginationState =
+          typeof updater === "function"
+            ? updater({
+                pageIndex: pagination.pageIndex,
+                pageSize: pagination.pageSize,
+              })
+            : updater;
 
-      // Enhance with the page number
-      const newPagination: CustomPaginationState = {
-        ...basePagination,
-        page: basePagination.pageIndex + 1,
-      };
+        const newPagination: CustomPaginationState = {
+          ...basePagination,
+          page: basePagination.pageIndex + 1,
+        };
 
-      onTableParamsChange((prev) => ({ ...prev, pagination: newPagination }));
+        onTableParamsChange((prev) => ({ ...prev, pagination: newPagination }));
+      } else {
+        // Uncontrolled mode
+        setInternalPagination((prev) => {
+          const basePagination: PaginationState =
+            typeof updater === "function"
+              ? updater({
+                  pageIndex: prev.pageIndex,
+                  pageSize: prev.pageSize,
+                })
+              : updater;
+
+          return {
+            ...basePagination,
+            page: basePagination.pageIndex + 1,
+          };
+        });
+      }
     },
-    [onTableParamsChange, pagination]
+    [isControlledPagination, onTableParamsChange, pagination]
   );
 
   /**
    * Wrapper for external consumers to set pagination with CustomPaginationState.
    * Converts CustomPaginationState to PaginationState for React Table compatibility.
+   * Supports both controlled and uncontrolled modes.
    * @param updater - New custom pagination state or function that receives old state and returns new state
    */
   const handleCustomPaginationChange = useCallback(
@@ -194,15 +229,23 @@ export function DataTableProvider<TData>({
         | CustomPaginationState
         | ((old: CustomPaginationState) => CustomPaginationState)
     ) => {
-      const newCustomPagination =
-        typeof updater === "function" ? updater(pagination) : updater;
+      if (isControlledPagination && pagination && onTableParamsChange) {
+        // Controlled mode
+        const newCustomPagination =
+          typeof updater === "function" ? updater(pagination) : updater;
 
-      onTableParamsChange((prev) => ({
-        ...prev,
-        pagination: newCustomPagination,
-      }));
+        onTableParamsChange((prev) => ({
+          ...prev,
+          pagination: newCustomPagination,
+        }));
+      } else {
+        // Uncontrolled mode
+        setInternalPagination((prev) => {
+          return typeof updater === "function" ? updater(prev) : updater;
+        });
+      }
     },
-    [onTableParamsChange, pagination]
+    [isControlledPagination, onTableParamsChange, pagination]
   );
 
   const filterPinned = useCallback(
@@ -231,6 +274,11 @@ export function DataTableProvider<TData>({
     return { left: leftPinned, right: rightPinned };
   }, [filterPinned, columns]);
 
+  // Use controlled pagination if available, otherwise use internal state
+  const activePagination = isControlledPagination
+    ? pagination
+    : internalPagination;
+
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
@@ -241,7 +289,7 @@ export function DataTableProvider<TData>({
       globalFilter,
       columnFilters,
       sorting,
-      pagination,
+      pagination: activePagination,
       rowSelection,
       columnPinning: getPinnedColumns as ColumnPinningState,
     },
@@ -256,8 +304,13 @@ export function DataTableProvider<TData>({
     onPaginationChange: handlePaginationChange,
     onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
+    // Include pagination row model for uncontrolled mode
+    getPaginationRowModel: isControlledPagination
+      ? undefined
+      : getPaginationRowModel(),
 
-    manualPagination: true,
+    // Manual controls based on mode
+    manualPagination: isControlledPagination,
     manualSorting: true,
     manualFiltering: true,
   });
@@ -271,7 +324,7 @@ export function DataTableProvider<TData>({
     setColumnFilters: handleColumnFiltersChange,
     sorting,
     setSorting: handleSortingChange,
-    pagination,
+    pagination: activePagination,
     setPagination: handleCustomPaginationChange,
     rowSelection,
     setRowSelection,

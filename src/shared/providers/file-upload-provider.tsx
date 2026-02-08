@@ -57,41 +57,60 @@ const FileUploadProvider = ({
   showProgress,
   onUploadFilesChange,
 }: FileUploadProviderProps) => {
+  const convertToUploadItems = (files: FileWithPreview[]): FileUploadItem[] => {
+    return files.map((file) => {
+      // Check if this file already exists in uploadFiles
+      const existingFile = uploadFiles.find(
+        (existing) => existing.id === file.id
+      );
+
+      if (existingFile) {
+        // Preserve existing file status and progress
+        return {
+          ...existingFile,
+          ...file, // Update any changed properties from the file
+        };
+      } else {
+        // New file - set to uploading
+        return {
+          ...file,
+          progress: showProgress ? 0 : 100,
+          status: showProgress
+            ? ("uploading" as const)
+            : ("completed" as const),
+        };
+      }
+    });
+  };
+
   const [fileUploadState, fileUploadActions] = useFileUploadHook({
     maxFiles,
     maxSize,
     accept,
     multiple: maxFiles ? maxFiles > 1 : true,
     initialFiles: [],
-    onFilesChange: (newFiles) => {
-      // Convert to upload items when files change, preserving existing status
-      const newUploadFiles = newFiles.map((file) => {
-        // Check if this file already exists in uploadFiles
-        const existingFile = uploadFiles.find(
-          (existing) => existing.id === file.id
-        );
-
-        if (existingFile) {
-          // Preserve existing file status and progress
-          return {
-            ...existingFile,
-            ...file, // Update any changed properties from the file
-          };
-        } else {
-          // New file - set to uploading
-          return {
-            ...file,
-            progress: showProgress ? 0 : 100,
-            status: showProgress
-              ? ("uploading" as const)
-              : ("completed" as const),
-          };
-        }
-      });
-
+    onFilesAdded: (addedFiles) => {
+      const allFiles = [...fileUploadState.files, ...addedFiles];
+      const newUploadFiles = convertToUploadItems(allFiles);
       onUploadFilesChange?.(newUploadFiles);
     },
   });
+
+  // Wrap removeFile to notify parent
+  const handleRemoveFile = (id: string) => {
+    fileUploadActions.removeFile(id);
+
+    // Calculate what the new files will be after removal
+    const newFiles = fileUploadState.files.filter((file) => file.id !== id);
+    const newUploadFiles = convertToUploadItems(newFiles);
+    onUploadFilesChange?.(newUploadFiles);
+  };
+
+  // Wrap clearFiles to notify parent
+  const handleClearFiles = () => {
+    fileUploadActions.clearFiles();
+    onUploadFilesChange?.([]);
+  };
 
   const retryUpload = (fileId: string) => {
     // TODO: implement retry upload
@@ -106,7 +125,11 @@ const FileUploadProvider = ({
         maxFiles,
         uploadFiles,
         fileUploadState,
-        fileUploadActions,
+        fileUploadActions: {
+          ...fileUploadActions,
+          removeFile: handleRemoveFile,
+          clearFiles: handleClearFiles,
+        },
         retryUpload,
       }}
     >

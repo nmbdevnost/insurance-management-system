@@ -11,20 +11,17 @@ import { formatBytes } from "@/shared/hooks/use-file-upload";
 import { cn } from "@/shared/lib/utils";
 import { getFileIcon, getFileTypeLabel } from "@/shared/lib/utils/file-upload";
 import { useFileUpload } from "@/shared/providers/file-upload-provider";
-import {
-  RiDeleteBinLine,
-  RiDownloadLine,
-  RiRestartLine,
-} from "@remixicon/react";
+import { RiDeleteBinLine, RiDownloadLine } from "@remixicon/react";
 import { Link } from "react-router-dom";
 import { Button } from "../../ui/button";
+import InsuranceStatusBadge from "@/modules/insurance/components/status-badge";
 
 const UploadedFilesTable = ({
   actionsDisabled,
 }: {
   actionsDisabled?: boolean;
 }) => {
-  const { uploadFiles, fileUploadActions, retryUpload } = useFileUpload();
+  const { uploadFiles, fileUploadActions } = useFileUpload();
 
   if (uploadFiles.length === 0) {
     return null;
@@ -115,8 +112,14 @@ const UploadedFilesTable = ({
                     </div>
                     <p className="flex items-center gap-1 truncate text-sm font-medium">
                       {fileItem.file.name}
+                      {fileItem.status === "completed" && (
+                        <InsuranceStatusBadge status="ready" />
+                      )}
                       {fileItem.status === "error" && (
-                        <Badge variant="destructive">Error</Badge>
+                        <InsuranceStatusBadge status="error" />
+                      )}
+                      {fileItem.status === "uploading" && (
+                        <InsuranceStatusBadge status="pending" />
                       )}
                     </p>
                   </div>
@@ -140,34 +143,21 @@ const UploadedFilesTable = ({
                         size="icon"
                         className="size-8"
                         render={<Link to={fileItem.preview} target="_blank" />}
+                        nativeButton={false}
                         disabled={actionsDisabled}
                       >
                         <RiDownloadLine className="size-3.5" />
                       </Button>
                     )}
-                    {fileItem.status === "error" ? (
-                      <Button
-                        onClick={() => retryUpload(fileItem.id)}
-                        size="icon"
-                        variant="destructive"
-                        className="text-destructive/80 hover:text-destructive size-8"
-                        disabled={actionsDisabled}
-                      >
-                        <RiRestartLine className="size-3.5" />
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={() =>
-                          fileUploadActions.removeFile(fileItem.id)
-                        }
-                        size="icon"
-                        className="size-8"
-                        variant="destructive"
-                        disabled={actionsDisabled}
-                      >
-                        <RiDeleteBinLine className="size-3.5" />
-                      </Button>
-                    )}
+                    <Button
+                      onClick={() => fileUploadActions.removeFile(fileItem.id)}
+                      size="icon"
+                      className="size-8"
+                      variant="destructive"
+                      disabled={actionsDisabled}
+                    >
+                      <RiDeleteBinLine className="size-3.5" />
+                    </Button>
                   </div>
                 </TableCell>
               </TableRow>

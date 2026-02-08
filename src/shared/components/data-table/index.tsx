@@ -164,7 +164,7 @@ const DataTable = ({ className }: { className?: string }) => {
   // }, [measureWidths]);
 
   return (
-    <div className={cn("relative overflow-auto rounded-xl border", className)}>
+    <div className="relative grid">
       {!isMeasured && (
         <div className="bg-background/50 absolute inset-0 z-50 flex items-center justify-center">
           <span className="text-muted-foreground flex items-center gap-1 text-sm">
@@ -173,8 +173,11 @@ const DataTable = ({ className }: { className?: string }) => {
         </div>
       )}
 
-      <Table className={cn(!isMeasured && "opacity-0")}>
-        <TableHeader className="bg-muted">
+      <Table
+        parentClassName={cn("overflow-auto rounded-xl border", className)}
+        className={cn(!isMeasured && "opacity-0")}
+      >
+        <TableHeader className="bg-muted sticky top-0 z-10">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id} ref={headerRef}>
               {headerGroup.headers.map((header) => {
@@ -196,6 +199,7 @@ const DataTable = ({ className }: { className?: string }) => {
             </TableRow>
           ))}
         </TableHeader>
+
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
