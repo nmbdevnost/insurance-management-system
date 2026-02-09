@@ -1,4 +1,4 @@
-import InsuranceStatusBadge from "@/modules/insurance/components/status-badge";
+import InsuranceStatusBadge from "@/shared/components/status-badge";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import type { ExpiredLoan } from "@/shared/lib/types/loans";
 import { formatDate } from "@/shared/lib/utils/format";

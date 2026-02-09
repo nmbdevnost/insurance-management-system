@@ -1,7 +1,7 @@
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import type { Loan } from "@/shared/lib/types/loans";
 import type { ColumnDef } from "@tanstack/react-table";
-import ExpiredInsuranceStatusBadge from "../../../../../../components/status-badge";
+import ExpiredInsuranceStatusBadge from "../../../../../../../../shared/components/status-badge";
 import LoanNotExpiredActions from "./actions";
 
 const loanNotExpiredColumns: ColumnDef<Loan>[] = [

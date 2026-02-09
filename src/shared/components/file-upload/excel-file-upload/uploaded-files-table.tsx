@@ -14,7 +14,7 @@ import { useFileUpload } from "@/shared/providers/file-upload-provider";
 import { RiDeleteBinLine, RiDownloadLine } from "@remixicon/react";
 import { Link } from "react-router-dom";
 import { Button } from "../../ui/button";
-import InsuranceStatusBadge from "@/modules/insurance/components/status-badge";
+import InsuranceStatusBadge from "@/shared/components/status-badge";
 
 const UploadedFilesTable = ({
   actionsDisabled,

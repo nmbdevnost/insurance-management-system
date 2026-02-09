@@ -1,4 +1,4 @@
-import InsuranceStatusBadge from "@/modules/insurance/components/status-badge";
+import InsuranceStatusBadge from "@/shared/components/status-badge";
 import type { ExcelExtractedRow } from "@/shared/lib/types/insurance";
 import type { ColumnDef } from "@tanstack/react-table";
 

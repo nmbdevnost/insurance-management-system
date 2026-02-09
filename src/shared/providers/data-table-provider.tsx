@@ -61,7 +61,7 @@ export type DataTableContextValue<TData> = {
 
 export type DataTableProviderProps<TData> = {
   columns: ColumnDef<TData>[];
-  data: TData[];
+  data?: TData[];
   children: React.ReactNode;
   pageCount?: number;
   totalRows?: number;
@@ -86,7 +86,7 @@ export function useDataTable<TData>(): DataTableContextValue<TData> {
 
 export function DataTableProvider<TData>({
   columns,
-  data,
+  data = [],
   children,
   pageCount,
   totalRows,

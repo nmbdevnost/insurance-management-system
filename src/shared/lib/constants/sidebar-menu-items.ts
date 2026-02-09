@@ -42,6 +42,28 @@ const SIDEBAR_MENU_ITEMS: MenuItem[] = [
     label: "Report",
     icon: "ri-file-chart-line",
   },
+  {
+    path: "/control-panel",
+    label: "Control Panel",
+    icon: "ri-admin-line",
+    children: [
+      {
+        path: "/control-panel",
+        label: "Settings",
+        icon: "ri-settings-2-line",
+      },
+      {
+        path: "/control-panel/scheduled-notifications",
+        label: "Scheduled Notifications",
+        icon: "ri-send-ins-line",
+      },
+      {
+        path: "/control-panel/email-template",
+        label: "Email Template Manager",
+        icon: "ri-mail-settings-line",
+      },
+    ],
+  },
 ];
 
 export default SIDEBAR_MENU_ITEMS;

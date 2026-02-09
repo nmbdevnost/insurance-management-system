@@ -17,7 +17,9 @@ const DataTableToolbar = ({
   const { globalFilter, setGlobalFilter, columnFilters, setColumnFilters } =
     useDataTable();
 
-  const hasAppliedFilters = columnFilters.length > 0 || globalFilter.length > 0;
+  const hasAppliedFilters =
+    (columnFilters && columnFilters.length > 0) ||
+    (globalFilter && globalFilter.length > 0);
 
   const handleReset = () => {
     setGlobalFilter("");
@@ -35,16 +37,17 @@ const DataTableToolbar = ({
       )}
 
       <div className="flex items-center gap-2">
-        {filters?.map((filter) => {
-          return (
-            <DataTableDropdownFilter
-              key={filter.id}
-              filter={filter}
-              columnFilters={columnFilters}
-              onColumnFiltersChange={setColumnFilters}
-            />
-          );
-        })}
+        {columnFilters &&
+          filters?.map((filter) => {
+            return (
+              <DataTableDropdownFilter
+                key={filter.id}
+                filter={filter}
+                columnFilters={columnFilters}
+                onColumnFiltersChange={setColumnFilters}
+              />
+            );
+          })}
 
         {hasAppliedFilters && (
           <Button variant="ghost" onClick={handleReset}>

@@ -8,19 +8,19 @@ export function matchStrings(string: string, strings: string[]) {
 
 export function mapColor(status: string) {
   if (isStringMatch(status, "auto-deduct")) {
-    return "bg-violet-100 border-violet-500 text-violet-500";
+    return "bg-violet-100 border-violet-600 text-violet-600";
   }
 
   if (isStringMatch(status, "reminder")) {
-    return "bg-orange-100 border-orange-500 text-orange-500";
+    return "bg-sky-100 border-sky-600 text-sky-600";
   }
 
   if (matchStrings(status, ["error", "expired"])) {
-    return "bg-red-100 border-red-500 text-red-500";
+    return "bg-red-100 border-red-600 text-red-600";
   }
 
   if (isStringMatch(status, "ok")) {
-    return "bg-green-100 border-green-500 text-green-500";
+    return "bg-green-100 border-green-600 text-green-600";
   }
 
   if (matchStrings(status, ["hold", "pending"])) {

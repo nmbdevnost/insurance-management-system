@@ -1,3 +1,4 @@
+import controlPanelRoutes from "@/modules/control-panel/routes";
 import { DashboardPage } from "@/modules/dashboard/pages";
 import { ReportsPage } from "@/modules/insurance/pages";
 import insuranceRoutes from "@/modules/insurance/routes";
@@ -18,6 +19,7 @@ const routes: RouteObject[] = [
         path: "/report",
         element: <ReportsPage />,
       },
+      ...controlPanelRoutes,
     ],
   },
 ];

@@ -1,9 +1,9 @@
 import { Badge } from "@/shared/components/ui/badge";
 import { cn } from "@/shared/lib/utils";
 import { RiCircleFill } from "@remixicon/react";
-import { mapColor } from "../utils/status-badge";
+import { mapColor } from "../lib/utils/status-badge";
 
-const InsuranceStatusBadge = ({
+const StatusBadge = ({
   status,
   className,
 }: {
@@ -22,4 +22,4 @@ const InsuranceStatusBadge = ({
   );
 };
 
-export default InsuranceStatusBadge;
+export default StatusBadge;

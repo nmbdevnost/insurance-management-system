@@ -148,6 +148,6 @@
 
 @layer components {
   .page-heading {
-    @apply text-xl font-bold tracking-tight;
+    @apply text-xl font-semibold tracking-tight;
   }
 }

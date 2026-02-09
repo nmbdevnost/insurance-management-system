@@ -1,4 +1,4 @@
-import InsuranceStatusBadge from "@/modules/insurance/components/status-badge";
+import InsuranceStatusBadge from "@/shared/components/status-badge";
 import { Button } from "@/shared/components/ui/button";
 import {
   Dialog,

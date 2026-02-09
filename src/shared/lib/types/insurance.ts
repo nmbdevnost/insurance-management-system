@@ -9,17 +9,20 @@ export type Insurance = {
 };
 
 export type ExcelExtractedRow = {
-  "Customer Name": string;
-  "Customer Email": string;
-  "Customer Phone Number": string;
-  "Customer Identification Number": string;
-  "Reference Identifier": string;
-  "Purpose Name": string;
-  "Meeting Status": string;
-  "Video Provider": string;
-  "Scheduled Date": string;
-  "Meeting Link": string;
-  Remarks: string;
-  "Cancellation Reason": string;
-  status: string;
+  id: string;
+  refrence_num: string;
+  account_number: string;
+  client_code: string;
+  client_name: string;
+  branch_code: string;
+  available_balance: number;
+  insurance_company_name: string;
+  insurance_company_account_no: string;
+  policy_number: string;
+  sum_assured: number;
+  total_premium: number;
+  policy_issue_date: string;
+  risk_start: string;
+  maturity_date: string;
+  status: "active" | "pending" | "expired" | "cancelled" | "matured";
 };

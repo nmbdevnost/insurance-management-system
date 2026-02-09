@@ -2,7 +2,7 @@ import type { ExpiredPolicy } from "@/shared/lib/types/policies";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import type { ColumnDef } from "@tanstack/react-table";
 import ExpiredInsuranceActions from "./actions";
-import ExpiredInsuranceStatusBadge from "../../../../../../components/status-badge";
+import ExpiredInsuranceStatusBadge from "../../../../../../../../shared/components/status-badge";
 
 const expiredPolicyColumns: ColumnDef<ExpiredPolicy>[] = [
   {
