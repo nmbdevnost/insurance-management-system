@@ -1,3 +1,8 @@
+import {
+  variableFormDefaultValues,
+  variableSchema,
+} from "@/modules/control-panel/lib/schemas/variable-schema";
+import DialogForm from "@/shared/components/dialogs/dialog-form";
 import { Button } from "@/shared/components/ui/button";
 import {
   Tooltip,
@@ -6,10 +11,11 @@ import {
 } from "@/shared/components/ui/tooltip";
 import { RiAddLine } from "@remixicon/react";
 import { useState } from "react";
+import AddVariableForm from "./add-variable-form";
 
 const AddVariable = () => {
   const [open, setOpen] = useState(false);
-  console.log(open);
+
   return (
     <>
       <Tooltip delay={500}>
@@ -24,16 +30,19 @@ const AddVariable = () => {
         <TooltipContent>Add Variable</TooltipContent>
       </Tooltip>
 
-      {/* <DialogForm
+      <DialogForm
         open={open}
         onOpenChange={setOpen}
-        schema={z.object({ name: z.string().min(2).max(100) })}
-        onSubmit={() => {}}
-        defaultValues={}
+        schema={variableSchema}
+        onSubmit={(data) => {
+          console.log(data);
+        }}
+        defaultValues={variableFormDefaultValues}
         title="Add Variable"
         description="Add a new variable to be used in email templates."
-        className="w-full"
-      ></DialogForm> */}
+      >
+        <AddVariableForm />
+      </DialogForm>
     </>
   );
 };

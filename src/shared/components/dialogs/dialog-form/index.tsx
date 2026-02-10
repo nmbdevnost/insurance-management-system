@@ -30,6 +30,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../../ui/dialog";
+import { FieldSet } from "../../ui/field";
 import { ScrollArea } from "../../ui/scroll-area";
 import Spinner from "../../ui/spinner";
 
@@ -93,7 +94,7 @@ const DialogForm = <T extends FieldValues>({
   cancelText = "Cancel",
   footer,
 
-  scrollableBody,
+  scrollableBody = true,
 }: DialogFormProps<T>) => {
   // state for controlling the open state of the dialog
   const { value, onChange } = useControlledState({
@@ -116,24 +117,34 @@ const DialogForm = <T extends FieldValues>({
   const isFormDirty = formState.isDirty;
   const isSubmitting = formState.isSubmitting;
 
-  const handleToggle = () => {
+  const handleClose = () => {
     if (value) {
       if (isFormDirty) {
         setOpenCloseAlert(true);
       } else {
         onChange(false);
+        form.reset(defaultValues);
       }
     } else {
       onChange(true);
     }
   };
 
+  const handleDiscard = () => {
+    setOpenCloseAlert(false);
+    onChange(false);
+    form.reset(defaultValues);
+  };
+
   return (
     <>
-      <Dialog open={value} onOpenChange={handleToggle}>
-        <FormProvider {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <DialogContent className={cn("gap-0 p-0", className)}>
+      <Dialog open={value} onOpenChange={handleClose}>
+        <DialogContent className={cn("p-0", className)}>
+          <FormProvider {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="grid w-full gap-0"
+            >
               {header ? (
                 header
               ) : (
@@ -147,7 +158,9 @@ const DialogForm = <T extends FieldValues>({
                 children
               ) : (
                 <ScrollArea className="max-h-[70vh]">
-                  <div className={cn("p-2", bodyClassName)}>{children}</div>
+                  <FieldSet className={cn("p-4 pt-2", bodyClassName)}>
+                    {children}
+                  </FieldSet>
                 </ScrollArea>
               )}
 
@@ -155,22 +168,18 @@ const DialogForm = <T extends FieldValues>({
                 footer
               ) : (
                 <DialogFooter className="m-0">
-                  <Button
-                    type="button"
-                    onClick={handleToggle}
-                    variant="outline"
-                  >
+                  <Button type="button" onClick={handleClose} variant="outline">
                     {cancelText}
                   </Button>
 
-                  <Button disabled={isSubmitting}>
+                  <Button type="submit" disabled={isSubmitting}>
                     {isSubmitting && <Spinner />} {submitText}
                   </Button>
                 </DialogFooter>
               )}
-            </DialogContent>
-          </form>
-        </FormProvider>
+            </form>
+          </FormProvider>
+        </DialogContent>
       </Dialog>
 
       <AlertDialog open={openCloseAlert} onOpenChange={setOpenCloseAlert}>
@@ -178,19 +187,14 @@ const DialogForm = <T extends FieldValues>({
           <AlertDialogHeader>
             <AlertDialogTitle>Unsaved Changes</AlertDialogTitle>
             <AlertDialogDescription>
-              You have unsaved changes. Are you sure you want to close this
-              form?
+              Are you sure you want to discard your changes? Your changes will
+              be lost.
             </AlertDialogDescription>
           </AlertDialogHeader>
 
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                setOpenCloseAlert(false);
-                onChange(false);
-              }}
-            >
+            <AlertDialogAction onClick={handleDiscard}>
               Continue
             </AlertDialogAction>
           </AlertDialogFooter>

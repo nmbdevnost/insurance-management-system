@@ -24,7 +24,7 @@ export type VirtualizedCommandProps = {
   loading?: boolean;
   disableSearch?: boolean;
   overscan?: number;
-  mode?: "single" | "multiple";
+  multiple?: boolean;
   selectedOption?: DropdownOption | DropdownOption[];
   onValueChange?: (option: DropdownOption[] | DropdownOption | null) => void;
 };
@@ -36,7 +36,7 @@ const VirtualizedCommand = ({
   height = 250,
   loading,
   disableSearch,
-  mode = "single",
+  multiple = false,
   selectedOption,
   onValueChange,
   overscan = 5,
@@ -58,17 +58,15 @@ const VirtualizedCommand = ({
   // options to be displayed
   const virtualOptions = virtualizer.getVirtualItems();
 
-  const isMultiple = mode === "multiple";
-
   const isAllSelected = useMemo(() => {
-    if (!isMultiple) return false;
+    if (!multiple) return false;
 
     const selectedOptions = (selectedOption as DropdownOption[]) || [];
 
     return filteredOptions.every((option) =>
       selectedOptions.some((item) => item.value === option.value)
     );
-  }, [isMultiple, filteredOptions, selectedOption]);
+  }, [multiple, filteredOptions, selectedOption]);
 
   // custom function to handle search
   const handleSearch = useCallback(
@@ -91,7 +89,7 @@ const VirtualizedCommand = ({
   // util function to get if an option is selected or not
   const getIsOptionSelected = useCallback(
     (value: string) => {
-      if (!isMultiple) {
+      if (!multiple) {
         const selectedValue = (selectedOption as DropdownOption)?.value;
         return selectedValue === value;
       } else {
@@ -99,18 +97,18 @@ const VirtualizedCommand = ({
         return selectedOptions?.some((item) => item.value === value);
       }
     },
-    [selectedOption, isMultiple]
+    [selectedOption, multiple]
   );
 
   // const getIsAllSelected = useCallback(() => {
-  //   if (!isMultiple) return false;
+  //   if (!multiple) return false;
 
   //   const selectedOptions = (selectedOption as DropdownOption[]) || [];
 
   //   return filteredOptions.every((option) =>
   //     selectedOptions.some((item) => item.value === option.value)
   //   );
-  // }, [filteredOptions, selectedOption, isMultiple]);
+  // }, [filteredOptions, selectedOption, multiple]);
 
   // toggles an option selection
   const handleToggle = useCallback(
@@ -119,7 +117,7 @@ const VirtualizedCommand = ({
 
       const isSelected = getIsOptionSelected(option.value);
 
-      if (isMultiple) {
+      if (multiple) {
         const selectedOptions = (selectedOption as DropdownOption[]) || [];
 
         if (isSelected) {
@@ -137,19 +135,19 @@ const VirtualizedCommand = ({
         onValueChange(isSelected ? null : option);
       }
     },
-    [onValueChange, isMultiple, selectedOption, getIsOptionSelected]
+    [onValueChange, multiple, selectedOption, getIsOptionSelected]
   );
 
   // toggles selection for all filtered options
   const handleToggleAll = useCallback(() => {
-    if (!onValueChange || !isMultiple) return;
+    if (!onValueChange || !multiple) return;
 
     if (isAllSelected) {
       onValueChange([]);
     } else {
       onValueChange(filteredOptions);
     }
-  }, [onValueChange, isMultiple, isAllSelected, filteredOptions]);
+  }, [onValueChange, multiple, isAllSelected, filteredOptions]);
 
   return (
     <Command shouldFilter={false}>
@@ -185,7 +183,7 @@ const VirtualizedCommand = ({
             </CommandEmpty>
 
             <CommandGroup>
-              {isMultiple && filteredOptions.length > 0 && (
+              {multiple && filteredOptions.length > 0 && (
                 <CommandItem
                   onSelect={handleToggleAll}
                   className={cn(
@@ -233,7 +231,7 @@ const VirtualizedCommand = ({
                         key={filteredOption.value}
                         value={filteredOption.value}
                         onSelect={() => handleToggle(filteredOption)}
-                        data-checked={!isMultiple && isSelected}
+                        data-checked={!multiple && isSelected}
                         className={cn(
                           "absolute top-0 left-0 w-full cursor-pointer",
                           isSelected && "bg-muted/50"
@@ -244,7 +242,7 @@ const VirtualizedCommand = ({
                           userSelect: "none",
                         }}
                       >
-                        {isMultiple && (
+                        {multiple && (
                           <Checkbox
                             checked={isSelected}
                             className="size-4 shrink-0 text-inherit"

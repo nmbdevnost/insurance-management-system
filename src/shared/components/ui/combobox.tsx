@@ -8,7 +8,7 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "@/shared/components/ui/input-group";
-import { cn } from "@/shared/lib/utils";
+import { cn } from "@/shared/lib/utils/index";
 import { RiArrowDownSLine, RiCheckLine, RiCloseLine } from "@remixicon/react";
 
 const Combobox = ComboboxPrimitive.Root;
