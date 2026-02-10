@@ -62,7 +62,7 @@ const AddEmailTemplate = () => {
         className="max-w-5xl!"
         title="Create Email Template"
         description="Design a new automated email template for your notifications."
-        autoScroll={false}
+        scrollableBody={false}
       >
         <div className="flex max-h-[70vh]">
           <ScrollArea className="max-h-full flex-1 transition-all duration-300">

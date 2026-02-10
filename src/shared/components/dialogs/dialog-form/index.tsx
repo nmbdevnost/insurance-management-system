@@ -54,9 +54,27 @@ type DialogFormProps<T extends FieldValues> = {
   cancelText?: string;
   footer?: React.ReactNode;
 
-  autoScroll?: boolean;
+  scrollableBody?: boolean;
 };
 
+/**
+ * A dialog form component that allows for the creation of a form inside a dialog.
+ * @param open - The open state of the dialog
+ * @param onOpenChange - The function to call when the open state of the dialog changes
+ * @param schema - The schema to use for the form
+ * @param defaultValues - The default values to use for the form
+ * @param onSubmit - The function to call when the form is submitted
+ * @param className - The class name to use for the dialog
+ * @param children - The children to render in the dialog
+ * @param bodyClassName - The class name to use for the body of the dialog
+ * @param title - The title of the dialog
+ * @param description - The description of the dialog
+ * @param header - The header of the dialog
+ * @param submitText - The text to use for the submit button
+ * @param cancelText - The text to use for the cancel button
+ * @param footer - The footer of the dialog
+ * @param scrollableBody - Whether to add a scroll area to the body of the dialog
+ */
 const DialogForm = <T extends FieldValues>({
   open,
   onOpenChange,
@@ -75,7 +93,7 @@ const DialogForm = <T extends FieldValues>({
   cancelText = "Cancel",
   footer,
 
-  autoScroll,
+  scrollableBody,
 }: DialogFormProps<T>) => {
   // state for controlling the open state of the dialog
   const { value, onChange } = useControlledState({
@@ -125,7 +143,7 @@ const DialogForm = <T extends FieldValues>({
                 </DialogHeader>
               )}
 
-              {!autoScroll ? (
+              {!scrollableBody ? (
                 children
               ) : (
                 <ScrollArea className="max-h-[70vh]">
