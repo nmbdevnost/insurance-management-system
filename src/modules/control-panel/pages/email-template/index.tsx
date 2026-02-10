@@ -6,8 +6,8 @@ const EmailTemplatesManager = () => {
   return (
     <div className="-m-4 flex grow flex-col">
       {/* Top Header */}
-      <div className="bg-card flex h-fit items-center justify-between border-b p-4">
-        <div>
+      <div className="bg-card flex h-fit items-end justify-between border-b p-4">
+        <div className="flex-1">
           <h1 className="page-heading">Email Templates</h1>
           <p className="text-muted-foreground mt-0.5 text-sm">
             Manage automated notification templates.

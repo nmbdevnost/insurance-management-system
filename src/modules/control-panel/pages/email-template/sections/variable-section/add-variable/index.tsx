@@ -1,13 +1,5 @@
 import { Button } from "@/shared/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/shared/components/ui/dialog";
-import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -17,7 +9,7 @@ import { useState } from "react";
 
 const AddVariable = () => {
   const [open, setOpen] = useState(false);
-
+  console.log(open);
   return (
     <>
       <Tooltip delay={500}>
@@ -32,18 +24,16 @@ const AddVariable = () => {
         <TooltipContent>Add Variable</TooltipContent>
       </Tooltip>
 
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Add Variable</DialogTitle>
-            <DialogDescription>
-              Add a new variable to be used in email templates.
-            </DialogDescription>
-          </DialogHeader>
-
-          <DialogFooter></DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* <DialogForm
+        open={open}
+        onOpenChange={setOpen}
+        schema={z.object({ name: z.string().min(2).max(100) })}
+        onSubmit={() => {}}
+        defaultValues={}
+        title="Add Variable"
+        description="Add a new variable to be used in email templates."
+        className="w-full"
+      ></DialogForm> */}
     </>
   );
 };

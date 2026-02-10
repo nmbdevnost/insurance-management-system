@@ -1,15 +1,7 @@
 import VariablesList from "@/modules/control-panel/components/variable/variable-list";
 import VariablesNotFound from "@/modules/control-panel/components/variable/variables-not-found";
+import DialogForm from "@/shared/components/dialogs/dialog-form";
 import { Button } from "@/shared/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/shared/components/ui/dialog";
 import { Input } from "@/shared/components/ui/input";
 import { Label } from "@/shared/components/ui/label";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
@@ -30,6 +22,7 @@ import {
 import { cn } from "@/shared/lib/utils";
 import { RiAddLine, RiArrowRightSLine, RiCodeLine } from "@remixicon/react";
 import { useState } from "react";
+import z from "zod";
 import { variables } from "../sections/variable-section";
 
 const CATEGORY_OPTIONS = [
@@ -52,30 +45,27 @@ const AddEmailTemplate = () => {
   const [variablesOpen, setVariablesOpen] = useState(true);
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={() => {
-        setOpen(!open);
-        setVariablesOpen(true);
-      }}
-    >
-      <DialogTrigger render={<Button onClick={() => setOpen(true)} />}>
-        <RiAddLine className="size-4" />
+    <>
+      <Button onClick={() => setOpen(true)}>
+        <RiAddLine />
         New Template
-      </DialogTrigger>
+      </Button>
 
-      <DialogContent className="max-w-5xl! gap-0 p-0">
-        <DialogHeader className="p-4">
-          <DialogTitle>Create Email Template</DialogTitle>
-          <DialogDescription>
-            Design a new automated email template for your notifications
-          </DialogDescription>
-        </DialogHeader>
-
-        <Separator />
-
+      <DialogForm
+        open={open}
+        onOpenChange={() => {
+          setOpen(false);
+          setVariablesOpen(true);
+        }}
+        schema={z.object({})}
+        onSubmit={() => {}}
+        className="max-w-5xl!"
+        title="Create Email Template"
+        description="Design a new automated email template for your notifications."
+        autoScroll={false}
+      >
         <div className="flex max-h-[70vh]">
-          <ScrollArea className="h-full flex-1 transition-all duration-300">
+          <ScrollArea className="max-h-full flex-1 transition-all duration-300">
             <div className="space-y-4 p-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
@@ -190,16 +180,8 @@ const AddEmailTemplate = () => {
             </ScrollArea>
           </div>
         </div>
-
-        <DialogFooter className="m-0">
-          <Button variant="outline" onClick={() => setOpen(false)}>
-            Cancel
-          </Button>
-
-          <Button onClick={() => setOpen(false)}>Create Template</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      </DialogForm>
+    </>
   );
 };
 
