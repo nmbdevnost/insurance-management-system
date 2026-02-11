@@ -100,16 +100,6 @@ const VirtualizedCommand = ({
     [selectedOption, multiple]
   );
 
-  // const getIsAllSelected = useCallback(() => {
-  //   if (!multiple) return false;
-
-  //   const selectedOptions = (selectedOption as DropdownOption[]) || [];
-
-  //   return filteredOptions.every((option) =>
-  //     selectedOptions.some((item) => item.value === option.value)
-  //   );
-  // }, [filteredOptions, selectedOption, multiple]);
-
   // toggles an option selection
   const handleToggle = useCallback(
     (option: DropdownOption) => {

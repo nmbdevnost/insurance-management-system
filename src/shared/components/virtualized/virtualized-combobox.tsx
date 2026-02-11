@@ -18,6 +18,7 @@ type VirtualizedComboboxProps = {
   className?: string;
   modal?: boolean;
   limit?: number;
+  disabled?: boolean;
 } & VirtualizedCommandProps;
 
 const VirtualizedCombobox = ({
@@ -28,6 +29,7 @@ const VirtualizedCombobox = ({
   modal = true,
   className,
   limit = 3,
+  disabled,
   ...commandProps
 }: VirtualizedComboboxProps) => {
   const { value, onChange } = useControlledState({
@@ -64,6 +66,7 @@ const VirtualizedCombobox = ({
     <Popover modal={modal} open={value} onOpenChange={onChange}>
       <PopoverTrigger
         data-selected={isSelected}
+        disabled={disabled}
         render={
           trigger ? (
             trigger
