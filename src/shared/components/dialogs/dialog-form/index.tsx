@@ -117,13 +117,21 @@ const DialogForm = <T extends FieldValues>({
   const isFormDirty = formState.isDirty;
   const isSubmitting = formState.isSubmitting;
 
+  const resetForm = () => {
+    if (defaultValues) {
+      form.reset(defaultValues);
+    } else {
+      form.reset();
+    }
+  };
+
   const handleClose = () => {
     if (value) {
       if (isFormDirty) {
         setOpenCloseAlert(true);
       } else {
         onChange(false);
-        form.reset(defaultValues);
+        resetForm();
       }
     } else {
       onChange(true);
@@ -133,7 +141,7 @@ const DialogForm = <T extends FieldValues>({
   const handleDiscard = () => {
     setOpenCloseAlert(false);
     onChange(false);
-    form.reset(defaultValues);
+    resetForm();
   };
 
   return (
@@ -157,7 +165,7 @@ const DialogForm = <T extends FieldValues>({
               {!scrollableBody ? (
                 children
               ) : (
-                <ScrollArea className="max-h-[70vh]">
+                <ScrollArea className="max-h-[75vh]">
                   <FieldSet className={cn("p-4 pt-2", bodyClassName)}>
                     {children}
                   </FieldSet>

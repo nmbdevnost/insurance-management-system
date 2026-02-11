@@ -31,6 +31,7 @@ const VariableListItem = ({ variable }: { variable: Variable }) => {
           ? "border-emerald-300 ring ring-emerald-100"
           : "bg-card hover:bg-muted"
       )}
+      type="button"
     >
       <div className="mb-2 flex items-center justify-between gap-2">
         <Badge
