@@ -38,6 +38,10 @@ const VirtualizedCombobox = ({
 
   const isMultiple = commandProps.multiple;
 
+  const isSelected = isMultiple
+    ? (commandProps.selectedOption as DropdownOption[]).length > 0
+    : !!commandProps.selectedOption;
+
   const displayedOptions = isMultiple
     ? (commandProps.selectedOption as DropdownOption[]).slice(0, limit)
     : [];
@@ -46,10 +50,20 @@ const VirtualizedCombobox = ({
     ? (commandProps.selectedOption as DropdownOption[]).length - limit
     : 0;
 
+  const handleClearOption = (option: DropdownOption) => {
+    if (!isMultiple) return;
+
+    const selectedOptions = commandProps.selectedOption as DropdownOption[];
+    const newOptions = selectedOptions.filter(
+      (item) => item.value !== option.value
+    );
+    commandProps.onValueChange?.(newOptions);
+  };
+
   return (
     <Popover modal={modal} open={value} onOpenChange={onChange}>
       <PopoverTrigger
-        data-selected={!!commandProps.selectedOption}
+        data-selected={isSelected}
         render={
           trigger ? (
             trigger
@@ -57,18 +71,29 @@ const VirtualizedCombobox = ({
             <Button
               variant="outline"
               className={cn(
-                "text-muted-foreground! h-fit min-h-8 justify-between py-1 font-normal",
+                "text-muted-foreground! h-fit min-h-8 justify-between py-1 font-normal hover:bg-inherit aria-expanded:bg-inherit",
                 "data-[selected=true]:text-foreground!",
                 className
               )}
             >
-              {commandProps.selectedOption ? (
+              {isSelected ? (
                 <>
                   {isMultiple ? (
                     <div className="flex flex-wrap items-center gap-1 overflow-x-auto">
                       {displayedOptions.map((item) => (
                         <Badge>
-                          {item.label} <RiCloseLine />
+                          {item.label}
+
+                          <div
+                            role="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleClearOption(item);
+                            }}
+                            className="hover:bg-muted/30 rounded-full transition-colors duration-150"
+                          >
+                            <RiCloseLine className="size-3" />
+                          </div>
                         </Badge>
                       ))}
 

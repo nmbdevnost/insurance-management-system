@@ -33,14 +33,46 @@ const FormFieldCombobox = <T extends FieldValues>({
 }: FormFieldComboboxProps<T>) => {
   const isMultiple = commandProps.multiple;
 
+  const getSelectedOption = React.useCallback(
+    (value: unknown, options: DropdownOption[]) => {
+      if (isMultiple) {
+        return options?.filter((item) =>
+          (value as string[])?.includes(item.value)
+        );
+      }
+      return options?.find((item) => item.value === value);
+    },
+    [isMultiple]
+  );
+
+  const handleValueChange = React.useCallback(
+    (
+      option: DropdownOption | DropdownOption[] | null,
+      onChange: (value: unknown) => void
+    ) => {
+      if (option === null) return;
+
+      if (isMultiple) {
+        const selectedOptions = option as DropdownOption[];
+        const selectedValues = selectedOptions.map((opt) => opt.value);
+        onChange(selectedValues);
+      } else {
+        const selectedOption = option as DropdownOption;
+        onChange(selectedOption.value);
+      }
+    },
+    [isMultiple]
+  );
+
   return (
     <Controller
       name={name}
       control={control}
       render={({ field, fieldState }) => {
-        const selectedOption = isMultiple
-          ? field.value
-          : commandProps.options?.find((item) => item.value === field.value);
+        const selectedOption = getSelectedOption(
+          field.value,
+          commandProps.options
+        );
 
         return (
           <Field data-invalid={fieldState.invalid}>
@@ -48,13 +80,9 @@ const FormFieldCombobox = <T extends FieldValues>({
 
             <VirtualizedCombobox
               selectedOption={selectedOption}
-              onValueChange={(option) => {
-                if (isMultiple) {
-                  field.onChange(option as DropdownOption[]);
-                } else {
-                  field.onChange(option as DropdownOption);
-                }
-              }}
+              onValueChange={(option) =>
+                handleValueChange(option, field.onChange)
+              }
               {...commandProps}
             />
 
