@@ -1,7 +1,7 @@
 import type { TemplateForm } from "@/modules/control-panel/lib/schemas/template-schema";
 import FormFieldCombobox from "@/shared/components/form/form-fields/form-field-combobox";
 import FormFieldInput from "@/shared/components/form/form-fields/form-field-input";
-import FormFieldTextarea from "@/shared/components/form/form-fields/form-field-textarea";
+import FormFieldTextEditor from "@/shared/components/form/form-fields/form-field-text-editor";
 import {
   FieldDescription,
   FieldGroup,
@@ -81,12 +81,14 @@ const AddEmailTemplateForm = () => {
           className="font-medium"
         />
 
-        <FormFieldTextarea
+        <FormFieldTextEditor
           control={form.control}
           name="body"
           label="Body"
           placeholder="Compose your email template here. Use variables in {{double_braces}} format."
-          className="min-h-48 resize-none font-mono text-sm"
+          className="min-h-48 resize-none"
+          contentClassName="prose-sm! p-2"
+          placeholderClassName="top-2.5 left-2"
         />
       </FieldGroup>
     </>

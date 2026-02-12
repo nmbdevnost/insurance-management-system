@@ -17,6 +17,7 @@ import ToolbarPlugin from "./plugins/toolbar-plugin";
 import { editorTheme } from "./theme";
 
 type TextEditorProps = {
+  id?: string;
   placeholder?: string;
   className?: string;
   invalid?: boolean;
@@ -24,9 +25,12 @@ type TextEditorProps = {
   onChange?: (value: string) => void;
   onBlur?: () => void;
   disabled?: boolean;
+  contentClassName?: string;
+  placeholderClassName?: string;
 };
 
 const TextEditor = ({
+  id,
   placeholder,
   className,
   invalid,
@@ -34,6 +38,8 @@ const TextEditor = ({
   onChange,
   onBlur,
   disabled,
+  contentClassName,
+  placeholderClassName,
 }: TextEditorProps) => {
   const initialConfig = {
     namespace: "rich-text-editor",
@@ -80,13 +86,22 @@ const TextEditor = ({
           <RichTextPlugin
             contentEditable={
               <ContentEditable
-                className="prose max-sm:prose-sm max-w-none p-4 focus:outline-none"
+                id={id}
+                className={cn(
+                  "prose max-sm:prose-sm max-w-none p-4 focus:outline-none",
+                  contentClassName
+                )}
                 onBlur={onBlur}
               />
             }
             placeholder={
               placeholder ? (
-                <div className="editor-placeholder text-muted-foreground pointer-events-none absolute top-4 left-4">
+                <div
+                  className={cn(
+                    "text-muted-foreground pointer-events-none absolute top-4 left-4",
+                    placeholderClassName
+                  )}
+                >
                   {placeholder}
                 </div>
               ) : (

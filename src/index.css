@@ -145,6 +145,9 @@
   button {
     @apply cursor-pointer;
   }
+  pre {
+    @apply bg-muted/50! text-foreground!;
+  }
 }
 
 @layer components {

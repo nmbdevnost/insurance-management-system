@@ -6,6 +6,7 @@ import type { ComponentProps } from "react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
 import VirtualizedCommand, {
   type VirtualizedCommandProps,
 } from "./virtualized-command";
@@ -19,6 +20,7 @@ type VirtualizedComboboxProps = {
   modal?: boolean;
   limit?: number;
   disabled?: boolean;
+  invalid?: boolean;
 } & VirtualizedCommandProps;
 
 const VirtualizedCombobox = ({
@@ -30,6 +32,7 @@ const VirtualizedCombobox = ({
   className,
   limit = 3,
   disabled,
+  invalid,
   ...commandProps
 }: VirtualizedComboboxProps) => {
   const { value, onChange } = useControlledState({
@@ -64,6 +67,12 @@ const VirtualizedCombobox = ({
 
   return (
     <Popover modal={modal} open={value} onOpenChange={onChange}>
+      {modal && (
+        <PopoverPrimitive.Portal>
+          <PopoverPrimitive.Backdrop className="fixed inset-0 z-50 duration-100" />
+        </PopoverPrimitive.Portal>
+      )}
+
       <PopoverTrigger
         data-selected={isSelected}
         disabled={disabled}
@@ -78,6 +87,7 @@ const VirtualizedCombobox = ({
                 "data-[selected=true]:text-foreground!",
                 className
               )}
+              aria-invalid={invalid}
             >
               {isSelected ? (
                 <>

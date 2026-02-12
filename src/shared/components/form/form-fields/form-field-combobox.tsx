@@ -83,6 +83,8 @@ const FormFieldCombobox = <T extends FieldValues>({
               onValueChange={(option) =>
                 handleValueChange(option, field.onChange)
               }
+              invalid={fieldState.invalid}
+              modal
               {...commandProps}
             />
 
