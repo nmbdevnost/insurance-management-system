@@ -19,6 +19,18 @@ const SIDEBAR_MENU_ITEMS: MenuItem[] = [
         path: "/insurance/new",
         label: "New Insurance",
         icon: "ri-add-line",
+        children: [
+          {
+            path: "/insurance/new/bank-induced",
+            label: "Bank Induced",
+            icon: "ri-bank-line",
+          },
+          {
+            path: "/insurance/new/client-induced",
+            label: "Client Induced",
+            icon: "ri-user-line",
+          },
+        ],
       },
       {
         path: "/insurance",

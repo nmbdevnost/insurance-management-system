@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { cn } from "@/shared/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   RiArrowLeftLine,
   RiArrowRightLine,
   RiCheckLine,
 } from "@remixicon/react";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   FormProvider,
   useForm,
@@ -31,122 +32,238 @@ import {
   StepperTrigger,
 } from "../../ui/stepper";
 
+const get = (obj: any, path: string) =>
+  path.split(".").reduce((acc, key) => acc?.[key], obj);
+
 /**
  * A step configuration.
  * @template T - The shape of the whole form data.
  */
-type StepConfig<T extends FieldValues> = {
-  id: string;
+export type StepConfig<T extends FieldValues> = {
   title: string;
-  schema: ZodObject<ZodRawShape>;
+  schema?: ZodObject<ZodRawShape>;
   icon?: React.ReactNode;
   /**
    * Render fields for this step.
    * Accepts the full typed form instance.
    */
   fields: (form: UseFormReturn<T>, step: number) => React.ReactNode;
+  /**
+   * Optional API call when leaving this step (moving forward).
+   * Receives current form data and should return true on success.
+   * If it returns false or throws, navigation will be blocked.
+   * ⚠️ This will run ONLY if at least one field in the step has been changed
+   *    since the last successful submission (or initial load).
+   */
+  onStepSubmit?: (data: T, form: UseFormReturn<T>) => Promise<boolean>;
 };
 
 type MultiStepFormProps<T extends FieldValues> = {
   defaultValues?: DefaultValues<T>;
   steps: StepConfig<T>[];
   onSubmit: SubmitHandler<T>;
+  footerClassName?: string;
+  stickyFooter?: boolean;
 };
 
 const MultiStepForm = <T extends FieldValues>({
   defaultValues,
   steps,
   onSubmit,
+  footerClassName,
+  stickyFooter = true,
 }: MultiStepFormProps<T>) => {
+  const [mode, setMode] = useState<
+    "onSubmit" | "onBlur" | "onChange" | "onTouched" | "all" | undefined
+  >("onSubmit");
+
   const [currentStep, setCurrentStep] = useState(0);
+  const [isStepSubmitting, setIsStepSubmitting] = useState(false);
+
+  const formTopRef = useRef<HTMLDivElement>(null);
 
   // Merge all step schemas into one for full form validation
-  const fullSchema = steps.reduce(
-    (acc, step) => acc.and(step.schema) as any,
-    z.object({})
-  );
+  const fullSchema = useMemo(() => {
+    // Collect all schemas that actually exist
+    const schemas = steps
+      .map((step) => step.schema)
+      .filter(Boolean) as ZodObject<ZodRawShape>[];
 
-  const form = useForm<T>({
-    resolver: zodResolver(fullSchema) as any,
+    if (schemas.length === 0) {
+      return z.object({}); // fallback empty schema
+    }
+
+    // Merge all shapes into one
+    const mergedShape = schemas.reduce<ZodRawShape>(
+      (acc, schema) => ({ ...acc, ...schema.shape }),
+      {}
+    );
+
+    return z.object(mergedShape);
+  }, [steps]);
+
+  const form = useForm({
+    resolver: zodResolver(fullSchema as any),
     defaultValues,
+    mode,
   });
 
   const {
     handleSubmit,
     trigger,
-    formState: { isValid, isSubmitting },
+    getValues,
+    formState: { isValid, isSubmitting, dirtyFields },
+    resetField,
   } = form;
+
+  // Memoise field names for each step (derived from step.schema)
+  const stepFields = steps.map((step) =>
+    step.schema ? Object.keys(step.schema.shape) : []
+  );
 
   // Validate only fields belonging to a specific step
   const validateStep = useCallback(
     async (step: number) => {
       const schema = steps[step]?.schema;
       if (!schema) return true;
+
       const fieldsToValidate = Object.keys(schema.shape);
-      return await trigger(fieldsToValidate as Path<T>[]);
+      const isValid = await trigger(fieldsToValidate as Path<T>[]);
+      if (isValid) {
+        // Do something here
+        setMode("onSubmit"); // Change validation mode to onSubmit(To Default one)
+      } else {
+        setMode("onChange"); // If not valid change the mode to onChange
+      }
+      return isValid;
     },
     [steps, trigger]
+  );
+
+  // Helper: check if a specific field (including nested) is dirty
+  const isFieldDirty = useCallback(
+    (field: string): boolean => {
+      const dirtyValue = get(dirtyFields, field);
+      if (typeof dirtyValue === "boolean") return dirtyValue;
+      // If it's an object, it means at least one nested field is dirty
+      if (dirtyValue && typeof dirtyValue === "object") {
+        return Object.keys(dirtyValue).length > 0;
+      }
+      return false;
+    },
+    [dirtyFields]
+  );
+
+  /**
+   * Execute onStepSubmit only if the step has any dirty field.
+   * After successful submission, reset dirty state for all fields of this step.
+   */
+  const executeStepSubmit = useCallback(
+    async (step: number): Promise<boolean> => {
+      const stepConfig = steps[step];
+      if (!stepConfig?.onStepSubmit) return true;
+
+      const fields = stepFields[step];
+      const isStepDirty = fields.some(isFieldDirty);
+
+      // No changes → skip the API call entirely
+      if (!isStepDirty) return true;
+
+      setIsStepSubmitting(true);
+
+      try {
+        const currentData = getValues();
+        const isSuccess = await stepConfig.onStepSubmit(currentData, form);
+
+        // On success, reset dirty state for all fields of this step
+        if (isSuccess) {
+          fields.forEach((field) => {
+            resetField(field as Path<T>, {
+              defaultValue: getValues(field as Path<T>),
+            });
+          });
+        }
+        return isSuccess;
+      } finally {
+        setIsStepSubmitting(false);
+      }
+    },
+    [steps, stepFields, getValues, form, resetField, isFieldDirty]
   );
 
   /**
    * Navigate to a target step with proper validation.
    * Returns true if navigation was successful, false otherwise.
    */
-  const goToStep = async (targetStep: number): Promise<boolean> => {
-    if (targetStep === currentStep) return true;
+  const goToStep = useCallback(
+    async (targetStep: number): Promise<boolean> => {
+      if (targetStep === currentStep) return true;
 
-    // Going backwards – always allowed
-    if (targetStep < currentStep) {
+      if (targetStep < currentStep) {
+        setCurrentStep(targetStep);
+        return true;
+      }
+
+      for (let step = currentStep; step < targetStep; step++) {
+        // Validate current step before moving forward
+        console.log("validating step :", step);
+        const isValidStep = await validateStep(step);
+
+        if (!isValidStep) {
+          return false;
+        }
+
+        const fields = stepFields[step];
+        form.clearErrors(fields);
+
+        // Execute step submission if defined (skipped if no changes)
+        const stepSubmitted = await executeStepSubmit(step);
+        if (!stepSubmitted) {
+          return false;
+        }
+      }
+
+      // Smooth scroll to top of form after successful step transition
+      if (formTopRef.current) {
+        formTopRef.current.scrollIntoView({
+          block: "center",
+          inline: "start",
+        });
+      }
+
       setCurrentStep(targetStep);
       return true;
-    }
+    },
+    [currentStep, validateStep, executeStepSubmit, form, stepFields]
+  );
 
-    // Going forwards – validate every intermediate step sequentially
-    for (let step = currentStep + 1; step <= targetStep; step++) {
-      const isValidStep = await validateStep(step - 1); // validate the step *before* moving to it
-      if (!isValidStep) {
-        setCurrentStep(step - 1);
-        return false;
-      }
-    }
-
-    // All intermediate steps are valid
-    setCurrentStep(targetStep);
-    return true;
-  };
-
-  const nextStep = async () => {
-    if (currentStep < steps.length - 1) {
-      await goToStep(currentStep + 1);
-    }
-  };
-
-  const prevStep = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
-
-  // Handle stepper value change (triggered by clicking on a step)
   const handleStepChange = async (step: number) => {
     await goToStep(step);
   };
 
-  // Form submission – only allowed on the last step
   const onFormSubmit: SubmitHandler<T> = async (data) => {
     if (currentStep === steps.length - 1) {
-      try {
-        await onSubmit(data);
-      } catch (error) {
-        console.error("Form submission failed:", error);
-        // Optionally show error toast/notification
-      }
+      await onSubmit(data);
     }
   };
 
+  const isProcessing = isStepSubmitting || isSubmitting;
+
   return (
     <FormProvider {...form}>
-      <form onSubmit={handleSubmit(onFormSubmit)}>
+      <form
+        onSubmit={handleSubmit(onFormSubmit)}
+        className={cn("relative", isStepSubmitting && "pointer-events-none")}
+      >
+        <div ref={formTopRef}></div>
+
+        {/* Processing Overlay */}
+        {isStepSubmitting && (
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/50">
+            <Spinner className="text-primary size-10" />
+          </div>
+        )}
+
         <Stepper
           value={currentStep}
           onValueChange={handleStepChange}
@@ -154,17 +271,17 @@ const MultiStepForm = <T extends FieldValues>({
             completed: <RiCheckLine className="size-3.5" />,
             loading: <Spinner className="size-3.5" />,
           }}
-          className="space-y-4"
+          className="relative space-y-4"
         >
           <StepperNav className="gap-3">
             {steps.map((step, index) => (
               <StepperItem
-                key={step.id}
+                key={index + step.title + "-nav"}
                 step={index}
-                className="relative flex-1 items-start"
+                className="relative items-start"
               >
                 <StepperTrigger className="flex grow flex-col items-start justify-center gap-2.5 outline-none">
-                  <StepperIndicator className="data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground data-[state=completed]:bg-success size-8 border-2 data-[state=completed]:text-white data-[state=inactive]:bg-transparent">
+                  <StepperIndicator className="data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground data-[state=completed]:bg-success size-10 border-2 data-[state=completed]:text-white data-[state=inactive]:bg-transparent [&_svg:not([class*='size-'])]:size-5">
                     {step.icon}
                   </StepperIndicator>
 
@@ -201,13 +318,8 @@ const MultiStepForm = <T extends FieldValues>({
                   </div>
                 </StepperTrigger>
 
-                <StepperSeparator className="group-data-[state=completed]/step:bg-success absolute inset-x-0 start-9 top-4 m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none" />
-                {steps.length === index + 1 && (
-                  <StepperTrigger asChild>
-                    <StepperIndicator className="data-[state=inactive]:bg-background data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground data-[state=completed]:bg-success size-8 border-2 data-[state=completed]:text-white">
-                      <RiCheckLine />
-                    </StepperIndicator>
-                  </StepperTrigger>
+                {steps.length > index + 1 && (
+                  <StepperSeparator className="group-data-[state=completed]/step:bg-success absolute inset-x-0 start-12 top-4 m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-3rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none" />
                 )}
               </StepperItem>
             ))}
@@ -216,34 +328,55 @@ const MultiStepForm = <T extends FieldValues>({
           <StepperPanel className="text-sm">
             {steps.map((step, index) => (
               <StepperContent
-                key={step.id}
+                key={index + step.title + "-content"}
                 value={index}
-                className="flex items-center justify-center"
               >
                 {step.fields(form, index)}
               </StepperContent>
             ))}
           </StepperPanel>
 
-          <div className="flex flex-1 justify-between gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={prevStep}
-              disabled={currentStep === 0}
-            >
-              <RiArrowLeftLine />
-              Previous
-            </Button>
+          <div
+            className={cn(
+              "flex flex-1 justify-between gap-2 border-t py-4",
+              stickyFooter && "bg-background sticky bottom-0",
+              footerClassName
+            )}
+          >
+            {currentStep > 0 && (
+              <StepperItem step={currentStep - 1} className="flex-none!">
+                <StepperTrigger
+                  disabled={currentStep === 0 || isProcessing}
+                  type="button"
+                >
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={currentStep === 0 || isProcessing}
+                  >
+                    <RiArrowLeftLine />
+                    Previous
+                  </Button>
+                </StepperTrigger>
+              </StepperItem>
+            )}
             {currentStep === steps.length - 1 ? (
-              <Button type="submit" disabled={!isValid || isSubmitting}>
-                {isSubmitting ? "Submitting..." : "Submit"}
+              <Button
+                type="submit"
+                disabled={!isValid || isProcessing}
+                className="ml-auto"
+              >
+                {isSubmitting && <Spinner />} Submit
               </Button>
             ) : (
-              <Button type="button" onClick={nextStep}>
-                Next
-                <RiArrowRightLine />
-              </Button>
+              <StepperItem step={currentStep + 1} className="ml-auto">
+                <StepperTrigger disabled={isProcessing}>
+                  <Button type="button" disabled={isProcessing}>
+                    Next
+                    <RiArrowRightLine />
+                  </Button>
+                </StepperTrigger>
+              </StepperItem>
             )}
           </div>
         </Stepper>

@@ -3,8 +3,9 @@ import {
   BulkUploadPage,
   ExpiredInsurancesPage,
   InsurancesPage,
-  NewInsurancePage,
 } from "../pages";
+import BankInducedForm from "../pages/new-insurance/bank-induced-form";
+import ClientInducedForm from "../pages/new-insurance/client-induced-form";
 
 const insuranceRoutes: RouteObject[] = [
   {
@@ -16,7 +17,16 @@ const insuranceRoutes: RouteObject[] = [
       },
       {
         path: "new",
-        element: <NewInsurancePage />,
+        children: [
+          {
+            path: "client-induced",
+            element: <ClientInducedForm />,
+          },
+          {
+            path: "bank-induced",
+            element: <BankInducedForm />,
+          },
+        ],
       },
       {
         path: "expired",
