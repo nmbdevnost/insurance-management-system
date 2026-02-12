@@ -206,7 +206,6 @@ const MultiStepForm = <T extends FieldValues>({
 
       for (let step = currentStep; step < targetStep; step++) {
         // Validate current step before moving forward
-        console.log("validating step :", step);
         const isValidStep = await validateStep(step);
 
         if (!isValidStep) {

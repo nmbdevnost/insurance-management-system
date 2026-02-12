@@ -3,7 +3,7 @@ import {
   defaultClientInducedValues,
   type ClientInducedFormData,
 } from "@/modules/insurance/lib/schemas/client-induced-schema";
-import MultiStepForm from "@/shared/components/form/multi-step-form";
+import SimpleMultiStepForm from "@/shared/components/form/multi-step-form/simple-multi-step-form";
 import { RiEye2Line, RiUser2Line } from "@remixicon/react";
 import { type SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
@@ -38,7 +38,7 @@ const ClientInducedForm = () => {
         </p>
       </div>
 
-      <MultiStepForm
+      <SimpleMultiStepForm
         onSubmit={onSubmit}
         steps={[
           {

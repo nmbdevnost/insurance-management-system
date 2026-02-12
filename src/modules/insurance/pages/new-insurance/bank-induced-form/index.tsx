@@ -3,7 +3,7 @@ import {
   PremiumQuerySchema,
   type CombinedFormData,
 } from "@/modules/insurance/lib/schemas/bank-induced-schema";
-import MultiStepForm from "@/shared/components/form/multi-step-form";
+import SimpleMultiStepForm from "@/shared/components/form/multi-step-form/simple-multi-step-form";
 import { RiBankCard2Fill, RiCashLine, RiCommunityLine } from "@remixicon/react";
 import { type SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
@@ -38,7 +38,7 @@ const BankInducedForm = () => {
         Create and manage insurance policies provided by the bank
       </p>
 
-      <MultiStepForm
+      <SimpleMultiStepForm
         onSubmit={onSubmit}
         steps={[
           {
