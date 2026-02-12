@@ -1,15 +1,60 @@
-import TextEditor from "@/shared/components/text-editor";
-import { useState } from "react";
+import MultiStepForm from "@/shared/components/form/multi-step-form";
+import { RiTestTubeLine } from "@remixicon/react";
+import { toast } from "sonner";
+import z from "zod";
 
 const NewInsurancePage = () => {
-  const [value, setValue] = useState<string | undefined>(
-    `<h1><span style="white-space: pre-wrap;">This is Heading 1</span></h1><h2><span style="white-space: pre-wrap;">This is Heading 2</span></h2><h3><span style="white-space: pre-wrap;">This is Heading 3</span></h3><p class="text-foreground"><span style="white-space: pre-wrap;">This is paragraph</span></p><p class="text-foreground"><b><strong class="font-bold" style="white-space: pre-wrap;">This is bold paragraph</strong></b></p><p class="text-foreground"><u><span class="underline" style="white-space: pre-wrap;">This is underlined paragraph</span></u></p><p class="text-foreground"><i><em class="italic" style="white-space: pre-wrap;">This is italic paragraph</em></i></p>`
-  );
-
   return (
     <div>
-      <TextEditor value={value} onChange={setValue} />
-      <pre className="break-all whitespace-pre-wrap">{value}</pre>
+      <MultiStepForm
+        steps={[
+          {
+            id: "policy-details",
+            title: "Policy Details",
+            icon: <RiTestTubeLine />,
+            schema: z.object({}),
+            fields: () => <>Policy Details</>,
+          },
+          {
+            id: "asset-details",
+            title: "Asset Details",
+            icon: <RiTestTubeLine />,
+            schema: z.object({}),
+            fields: () => <>Asset Details</>,
+          },
+          {
+            id: "payment-details",
+            title: "Payment Details",
+            icon: <RiTestTubeLine />,
+            schema: z.object({
+              policyNumber: z.string().min(1, "Policy number is required"),
+              policyType: z.string().min(1, "Policy type is required"),
+              policyStatus: z.string().min(1, "Policy status is required"),
+              policyStartDate: z
+                .string()
+                .min(1, "Policy start date is required"),
+              policyEndDate: z.string().min(1, "Policy end date is required"),
+            }),
+            fields: () => <>Payment Details</>,
+          },
+          {
+            id: "test-details",
+            title: "Test Details",
+            icon: <RiTestTubeLine />,
+            schema: z.object({}),
+            fields: () => <>Payment Details</>,
+          },
+        ]}
+        onSubmit={(data) => {
+          console.log("🚀 ~ NewInsurancePage ~ data:", data);
+          toast.success("Insurance created successfully");
+        }}
+        defaultValues={{
+          "policy-details": {},
+          "asset-details": {},
+          "payment-details": {},
+        }}
+      />
     </div>
   );
 };

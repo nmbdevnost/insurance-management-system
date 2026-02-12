@@ -8,28 +8,28 @@ export function matchStrings(string: string, strings: string[]) {
 
 export function mapColor(status: string) {
   if (isStringMatch(status, "auto-deduct")) {
-    return "bg-violet-100 border-violet-600 text-violet-600";
+    return "bg-violet-100 text-violet-600";
   }
 
   if (isStringMatch(status, "reminder")) {
-    return "bg-sky-100 border-sky-600 text-sky-600";
+    return "bg-sky-100 text-sky-600";
   }
 
   if (matchStrings(status, ["error", "expired"])) {
-    return "bg-red-100 border-red-600 text-red-600";
+    return "bg-red-100 text-red-600";
   }
 
   if (isStringMatch(status, "ok")) {
-    return "bg-green-100 border-green-600 text-green-600";
+    return "bg-green-100 text-green-600";
   }
 
   if (matchStrings(status, ["hold", "pending"])) {
-    return "bg-amber-100 border-amber-600 text-amber-600";
+    return "bg-amber-100 text-amber-600";
   }
 
   if (matchStrings(status, ["draft"])) {
-    return "bg-muted border-muted-foregroud text-muted-foreground border-dashed";
+    return "bg-muted text-muted-foreground";
   }
 
-  return "text-primary border-primary bg-primary/10";
+  return "text-primary bg-primary/10";
 }
