@@ -101,14 +101,14 @@ export const defaultPremiumQueryValues: PremiumQueryFormData = {
   theftProtection: false,
 };
 
-export const CombinedSchema = z.intersection(
+export const bankInducedSchema = z.intersection(
   AssetDetailSchema,
   PremiumQuerySchema
 );
 
-export type CombinedFormData = z.infer<typeof CombinedSchema>;
+export type BankInducedFormData = z.infer<typeof bankInducedSchema>;
 
-export const defaultCombinedValues: CombinedFormData = {
+export const defaultBankInducedValues: BankInducedFormData = {
   branchId: "",
   segment: "",
   province: "",

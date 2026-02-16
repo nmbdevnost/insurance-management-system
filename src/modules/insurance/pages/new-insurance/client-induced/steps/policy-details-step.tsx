@@ -173,6 +173,7 @@ const PolicyDetailsStep = ({ mode }: { mode?: string }) => {
                   key={name}
                   name={name as keyof ClientInducedFormData}
                   label={label}
+                  disabled={mode === "view"}
                 />
               ))}
             </FieldGroup>

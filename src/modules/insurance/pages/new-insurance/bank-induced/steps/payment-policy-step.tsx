@@ -1,6 +1,5 @@
 import { Alert, AlertDescription } from "@/shared/components/ui/alert";
 import { RiInformationFill } from "@remixicon/react";
-import React from "react";
 
 const values = [
   {

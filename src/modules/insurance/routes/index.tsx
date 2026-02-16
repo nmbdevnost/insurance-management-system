@@ -1,11 +1,11 @@
 import type { RouteObject } from "react-router-dom";
 import {
+  BankInducedPage,
   BulkUploadPage,
+  ClientInducedPage,
   ExpiredInsurancesPage,
   InsurancesPage,
 } from "../pages";
-import BankInducedForm from "../pages/new-insurance/bank-induced-form";
-import ClientInducedForm from "../pages/new-insurance/client-induced-form";
 
 const insuranceRoutes: RouteObject[] = [
   {
@@ -20,11 +20,11 @@ const insuranceRoutes: RouteObject[] = [
         children: [
           {
             path: "client-induced",
-            element: <ClientInducedForm />,
+            element: <ClientInducedPage />,
           },
           {
             path: "bank-induced",
-            element: <BankInducedForm />,
+            element: <BankInducedPage />,
           },
         ],
       },

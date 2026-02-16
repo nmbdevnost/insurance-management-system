@@ -93,12 +93,10 @@ const DataTableDropdownFilter = ({
 
   return (
     <VirtualizedCombobox
-      commandProps={{
-        ...filter,
-        selectedOption,
-        placeholder: placeholder || formatString(label || ""),
-        onValueChange: handleValueChange,
-      }}
+      selectedOption={selectedOption}
+      placeholder={placeholder || formatString(label || "")}
+      onValueChange={handleValueChange}
+      {...filter}
       trigger={
         <Button
           type="button"

@@ -134,7 +134,8 @@ const BulkUploadSelectStep = ({
         status: "draft",
       }));
 
-      setExtractedRows((prev) => [...prev, ...newRows]);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setExtractedRows((prev) => [...prev, ...newRows] as any);
 
       // complete processing
       await new Promise((resolve) => setTimeout(resolve, 500));
