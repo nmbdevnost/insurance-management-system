@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 
 export function AppHeader() {
   return (
-    <header className="bg-background border-border sticky top-0 z-50 flex w-full items-center border-b">
+    <header className="bg-background/80 border-border sticky top-0 z-50 flex w-full items-center border-b backdrop-blur-sm">
       <div className="flex h-(--header-height) w-full items-center gap-2 px-4">
         <SidebarTrigger className="-ml-1 md:flex" />
         <Link to="/" className="flex items-center gap-1">
