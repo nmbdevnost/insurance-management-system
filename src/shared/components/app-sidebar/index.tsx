@@ -1,4 +1,4 @@
-import { Logo } from "@/assets";
+import { Logo, MountainBg } from "@/assets";
 import {
   Sidebar,
   SidebarContent,
@@ -65,6 +65,11 @@ export function AppSidebar({
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
+      <img
+        src={MountainBg}
+        className={cn("absolute bottom-0", isMobile && "right-0 max-w-80")}
+      />
       {/* <SidebarRail /> */}
     </Sidebar>
   );

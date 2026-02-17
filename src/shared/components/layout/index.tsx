@@ -1,13 +1,13 @@
 import { AppSidebar } from "@/shared/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/shared/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
-import { AppHeader } from "./app-header";
 import AppSidebarTrigger from "../app-sidebar/app-sidebar-trigger";
+import { AppHeader } from "./app-header";
 
 export function AppLayout() {
   return (
-    <div className="min-h-svh [--header-height:calc(var(--spacing)*14)]">
-      <SidebarProvider className="flex flex-col">
+    <div className="relative h-svh overflow-y-hidden [--header-height:calc(var(--spacing)*14)]">
+      <SidebarProvider className="flex h-full flex-col overflow-y-auto">
         <AppSidebarTrigger className="absolute -left-2.5 md:pointer-events-none md:hidden" />
 
         <AppHeader />

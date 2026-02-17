@@ -60,6 +60,9 @@
   --warning-foreground: var(--color-yellow-600);
   --invert: var(--color-zinc-700);
   --invert-foreground: var(--color-zinc-50);
+
+  --chart-lightness: 0.7; /* 0–1, 0.6 = 60% */
+  --chart-chroma: 0.18; /* typical range 0–0.37 for display colors */
 }
 
 .dark {
@@ -94,6 +97,9 @@
   --sidebar-accent-foreground: oklch(0.3 0.05 230);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
+
+  /* --chart-lightness: 0.7;
+  --chart-chroma: 0.18; */
 }
 
 @theme inline {
