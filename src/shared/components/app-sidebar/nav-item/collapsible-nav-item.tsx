@@ -24,6 +24,29 @@ interface CollapsibleNavItemProps {
   item: MenuItem;
 }
 
+const GROUP_CLASSES: Record<number, { group: string; chevron: string }> = {
+  1: {
+    group: "group/collapsible-1",
+    chevron: "group-data-open/collapsible-1:rotate-180",
+  },
+  2: {
+    group: "group/collapsible-2",
+    chevron: "group-data-open/collapsible-2:rotate-180",
+  },
+  3: {
+    group: "group/collapsible-3",
+    chevron: "group-data-open/collapsible-3:rotate-180",
+  },
+  4: {
+    group: "group/collapsible-4",
+    chevron: "group-data-open/collapsible-4:rotate-180",
+  },
+  5: {
+    group: "group/collapsible-5",
+    chevron: "group-data-open/collapsible-5:rotate-180",
+  },
+};
+
 export function CollapsibleNavItem({ item }: CollapsibleNavItemProps) {
   const children = item.children ?? [];
   const { pathname } = useLocation();
@@ -116,8 +139,9 @@ function NestedCollapsibleItem({
   const { pathname } = useLocation();
   const isChildActive = hasActiveChild(children, pathname);
   const [expanded, setExpanded] = useState(isChildActive);
-  const groupClass = `group/collapsible-${depth}`;
-  const chevronClass = `group-data-open/collapsible-${depth}:rotate-180`;
+
+  const { group: groupClass, chevron: chevronClass } =
+    GROUP_CLASSES[depth] ?? GROUP_CLASSES[1];
 
   return (
     <SidebarMenuSubItem>
