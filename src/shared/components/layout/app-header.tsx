@@ -1,3 +1,4 @@
+import { Logo } from "@/assets";
 import { Button } from "@/shared/components/ui/button";
 import {
   DropdownMenu,
@@ -8,7 +9,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
-import { SidebarTrigger } from "@/shared/components/ui/sidebar";
 import { RiUserLine } from "@remixicon/react";
 import { Link } from "react-router-dom";
 
@@ -16,10 +16,10 @@ export function AppHeader() {
   return (
     <header className="bg-background/80 border-border sticky top-0 z-50 flex w-full items-center border-b backdrop-blur-sm">
       <div className="flex h-(--header-height) w-full items-center gap-2 px-4">
-        <SidebarTrigger className="-ml-1 md:flex" />
-        <Link to="/" className="flex items-center gap-1">
-          <span className="text-primary">NMB</span>
-          <span className="hidden truncate sm:inline-block">
+        <Link to="/" className="flex h-full items-center gap-2 py-2">
+          <img src={Logo} alt="Logo" className="h-full" />
+
+          <span className="hidden truncate font-semibold sm:inline-block">
             Insurance Management System
           </span>
         </Link>

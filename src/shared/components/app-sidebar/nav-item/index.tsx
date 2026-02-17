@@ -11,8 +11,8 @@ export interface NavItemProps {
 }
 
 export function NavItem({ item, tooltip }: NavItemProps) {
-  const { state } = useSidebar();
-  const isCollapsed = state === "collapsed";
+  const { state, isMobile } = useSidebar();
+  const isCollapsed = state === "collapsed" && !isMobile;
 
   // Link item: has path, no children
   if (isLinkItem(item)) {

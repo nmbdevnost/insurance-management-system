@@ -1,3 +1,4 @@
+import { Logo } from "@/assets";
 import {
   Sidebar,
   SidebarContent,
@@ -5,15 +6,13 @@ import {
   SidebarGroupContent,
   SidebarHeader,
   SidebarMenu,
-  SidebarRail,
   useSidebar,
 } from "@/shared/components/ui/sidebar";
 import SIDEBAR_MENU_ITEMS from "@/shared/lib/constants/sidebar-menu-items";
 import type { MenuItem } from "@/shared/lib/types/menu";
 import { cn } from "@/shared/lib/utils";
-import { RiCloseLine } from "@remixicon/react";
 import * as React from "react";
-import { Button } from "../ui/button";
+import AppSidebarTrigger from "./app-sidebar-trigger";
 import { NavItem } from "./nav-item";
 
 export interface AppSidebarProps extends Omit<
@@ -30,7 +29,7 @@ export function AppSidebar({
   className,
   ...props
 }: AppSidebarProps) {
-  const { isMobile, toggleSidebar } = useSidebar();
+  const { isMobile } = useSidebar();
 
   return (
     <Sidebar
@@ -44,19 +43,18 @@ export function AppSidebar({
     >
       {isMobile && (
         <SidebarHeader className="bg-background flex h-(--header-height)! flex-row items-center justify-between">
-          <span className="text-primary text-lg font-semibold">NMB</span>
+          <div className="flex h-full items-center gap-2 overflow-hidden">
+            <img src={Logo} className="h-full" />
 
-          <Button
-            onClick={toggleSidebar}
-            variant="ghost"
-            size="icon"
-            className="text-foreground"
-          >
-            <RiCloseLine />
-          </Button>
+            <span className="text-foreground line-clamp-2 text-base font-semibold">
+              Insurance Management System
+            </span>
+          </div>
         </SidebarHeader>
       )}
       <SidebarContent>
+        <AppSidebarTrigger />
+
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
@@ -67,7 +65,7 @@ export function AppSidebar({
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarRail />
+      {/* <SidebarRail /> */}
     </Sidebar>
   );
 }

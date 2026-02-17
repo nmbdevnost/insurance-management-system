@@ -65,7 +65,7 @@ export function DropdownNavItem({ item, tooltip }: DropdownNavItemProps) {
 
 function DropdownNavLinkItem({ item }: { item: MenuItem }) {
   const path = item.path ?? "/";
-  const match = useMatch({ path, end: path === "/" });
+  const match = useMatch({ path, end: true });
   const isActive = Boolean(match);
 
   return (
