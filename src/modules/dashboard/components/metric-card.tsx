@@ -21,10 +21,10 @@ const MetricCard: React.FC<MetricCardProps> = ({
   className,
 }) => {
   const variantClasses = {
-    default: "bg-white",
+    default: "bg-white border-border/30",
     accent: "bg-accent border-accent text-accent-foreground",
-    danger: "bg-destructive/10 border-destructive",
-    warning: "bg-warning/10 border-warning",
+    danger: "bg-destructive/10 border-destructive/30",
+    warning: "bg-warning/10 border-warning/30",
   };
 
   const textColor = variant === "accent" ? "text-white" : "text-slate-900";
@@ -60,10 +60,18 @@ const MetricCard: React.FC<MetricCardProps> = ({
           >
             {value}
           </p>
-          {subValue && <p className={`text-sm font-medium`}>{subValue}</p>}
+          {subValue && <p className="text-sm font-medium">{subValue}</p>}
         </div>
 
-        <div className="absolute top-0 right-0 -mt-16 -mr-16 aspect-square! h-[80%] max-h-50 rounded-full bg-linear-to-br from-transparent to-black/10 transition-transform group-hover:scale-110" />
+        <div
+          className={cn(
+            "absolute top-0 right-0 aspect-square h-[80%] rounded-full",
+            "bg-linear-to-br from-transparent to-black/10",
+            "translate-x-1/3 -translate-y-1/2",
+            "transition-transform group-hover:scale-110"
+          )}
+          aria-hidden
+        />
       </CardContent>
     </Card>
   );

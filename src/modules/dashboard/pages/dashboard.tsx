@@ -1,3 +1,9 @@
+import {
+  Alert,
+  AlertAction,
+  AlertDescription,
+  AlertTitle,
+} from "@/shared/components/ui/alert";
 import { Button } from "@/shared/components/ui/button";
 import {
   Card,
@@ -21,6 +27,7 @@ import {
 import { useState } from "react";
 import MetricCard from "../components/metric-card";
 import QuickAction from "../components/quick-action";
+import { ButtonGroup } from "@/shared/components/ui/button-group";
 
 export function DashboardPage() {
   const [activeView, setActiveView] = useState<"overview" | "client" | "bank">(
@@ -42,30 +49,32 @@ export function DashboardPage() {
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Button
-                variant={activeView === "overview" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setActiveView("overview")}
-                className="text-xs"
-              >
-                Overview
-              </Button>
-              <Button
-                variant={activeView === "client" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setActiveView("client")}
-                className="text-xs"
-              >
-                Client Policies
-              </Button>
-              <Button
-                variant={activeView === "bank" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setActiveView("bank")}
-                className="text-xs"
-              >
-                Bank Policies
-              </Button>
+              <ButtonGroup>
+                <Button
+                  variant={activeView === "overview" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setActiveView("overview")}
+                  className="text-xs"
+                >
+                  Overview
+                </Button>
+                <Button
+                  variant={activeView === "client" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setActiveView("client")}
+                  className="text-xs"
+                >
+                  Client Policies
+                </Button>
+                <Button
+                  variant={activeView === "bank" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setActiveView("bank")}
+                  className="text-xs"
+                >
+                  Bank Policies
+                </Button>
+              </ButtonGroup>
             </div>
           </div>
         </div>
@@ -155,29 +164,29 @@ export function DashboardPage() {
         {/* Chart Placeholder - Takes 8 columns */}
         <div className="col-span-12 lg:col-span-8">
           <Card className="h-full border-slate-200 bg-white">
-            <CardHeader className="pb-4">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-lg font-bold text-slate-900">
-                  Insurance Distribution
-                </CardTitle>
-                <div className="flex items-center gap-2 text-xs text-slate-500">
-                  <div className="flex items-center gap-1">
-                    <div className="h-2 w-2 rounded-full bg-slate-900" />
-                    <span>Building</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <div className="h-2 w-2 rounded-full bg-slate-600" />
-                    <span>Vehicle</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <div className="h-2 w-2 rounded-full bg-slate-400" />
-                    <span>Other</span>
-                  </div>
+            <CardHeader className="flex items-center justify-between">
+              <CardTitle className="text-lg font-bold text-slate-900">
+                Insurance Distribution
+              </CardTitle>
+
+              <div className="flex items-center gap-2 text-xs text-slate-500">
+                <div className="flex items-center gap-1">
+                  <div className="h-2 w-2 rounded-full bg-slate-900" />
+                  <span>Building</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="h-2 w-2 rounded-full bg-slate-600" />
+                  <span>Vehicle</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="h-2 w-2 rounded-full bg-slate-400" />
+                  <span>Other</span>
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="relative flex h-100 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-linear-to-br from-slate-50 to-white">
+
+            <CardContent className="flex h-full">
+              <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-linear-to-br from-slate-50 to-white">
                 {/* Decorative Background Pattern */}
                 <div className="absolute inset-0 opacity-5">
                   <div className="absolute top-0 left-0 h-64 w-64 -translate-x-32 -translate-y-32 rounded-full bg-slate-900" />
@@ -218,6 +227,7 @@ export function DashboardPage() {
             <h3 className="mb-3 text-sm font-bold tracking-wide text-slate-900 uppercase">
               Client Operations
             </h3>
+
             <div className="space-y-2">
               <QuickAction
                 icon={<RiShieldLine className="h-4 w-4" />}
@@ -238,6 +248,7 @@ export function DashboardPage() {
             <h3 className="mb-3 text-sm font-bold tracking-wide text-slate-900 uppercase">
               Bank Operations
             </h3>
+
             <div className="space-y-2">
               <QuickAction
                 icon={<RiShieldLine className="h-4 w-4" />}
@@ -255,28 +266,22 @@ export function DashboardPage() {
           </div>
 
           {/* Alert Card */}
-          <Card className="border-rose-200 bg-rose-50">
-            <CardContent className="pt-6">
-              <div className="flex items-start gap-3">
-                <RiAlertLine className="mt-0.5 h-5 w-5 shrink-0 text-rose-600" />
-                <div>
-                  <p className="mb-1 text-sm font-semibold text-rose-900">
-                    Payment Failures
-                  </p>
-                  <p className="mb-3 text-xs text-rose-700">
-                    4 policies require immediate attention
-                  </p>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="w-full border-rose-300 text-rose-900 hover:bg-rose-100"
-                  >
-                    Review Issues
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <Alert
+            variant="destructive"
+            className="border-destructive/30 bg-destructive/10"
+          >
+            <RiAlertLine />
+
+            <AlertTitle>Payment Failures</AlertTitle>
+
+            <AlertDescription>
+              4 policies require immediate attention
+            </AlertDescription>
+
+            <AlertAction>
+              <Button variant="destructive">Review Issues</Button>
+            </AlertAction>
+          </Alert>
         </div>
       </div>
     </>

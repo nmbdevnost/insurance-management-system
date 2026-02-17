@@ -1,3 +1,11 @@
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from "@/shared/components/ui/item";
 import { RiArrowRightUpLine } from "@remixicon/react";
 
 export type QuickActionProps = {
@@ -14,21 +22,28 @@ const QuickAction: React.FC<QuickActionProps> = ({
   onClick,
 }) => {
   return (
-    <button
+    <Item
+      variant="outline"
+      render={<button />}
+      className="group hover:border-primary hover:bg-primary/5 w-full rounded-lg border border-slate-200 bg-white text-left transition-all"
       onClick={onClick}
-      className="group w-full rounded-lg border border-slate-200 bg-white p-4 text-left transition-all hover:border-slate-900 hover:bg-slate-50"
     >
-      <div className="flex items-start gap-3">
-        <div className="rounded-md bg-slate-100 p-2 transition-colors group-hover:bg-slate-900 group-hover:text-white">
-          {icon}
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="mb-0.5 text-sm font-semibold text-slate-900">{title}</p>
-          <p className="text-xs text-slate-500">{subtitle}</p>
-        </div>
-        <RiArrowRightUpLine className="h-4 w-4 text-slate-400 transition-colors group-hover:text-slate-900" />
-      </div>
-    </button>
+      <ItemMedia
+        className="bg-primary/5 group-hover:bg-primary group-hover:text-primary-foreground text-primary self-center! rounded-md p-3 transition-colors [&_svg:not([class*='size-'])]:size-4.5"
+        variant="icon"
+      >
+        {icon}
+      </ItemMedia>
+
+      <ItemContent>
+        <ItemTitle>{title}</ItemTitle>
+        <ItemDescription>{subtitle}</ItemDescription>
+      </ItemContent>
+
+      <ItemActions>
+        <RiArrowRightUpLine className="text-muted-foreground group-hover:text-primary h-4 w-4 transition-all group-hover:-translate-y-1" />
+      </ItemActions>
+    </Item>
   );
 };
 
