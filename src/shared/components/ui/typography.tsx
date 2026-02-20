@@ -86,7 +86,7 @@ interface TypographyProps
 export const Typography = ({
   variant = "body",
   muted,
-  as = "p",
+  as,
   className,
   ref,
   ...rest
