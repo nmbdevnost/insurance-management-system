@@ -64,7 +64,7 @@ export function CollapsibleNavItem({ item }: CollapsibleNavItemProps) {
           data-open={expanded}
           isActive={isChildActive}
           render={
-            <CollapsibleTrigger className="data-open:bg-sidebar-accent/80! flex w-full cursor-pointer items-center gap-2 transition-colors duration-150">
+            <CollapsibleTrigger className="data-open:bg-sidebar-accent/50 flex w-full cursor-pointer items-center gap-2 transition-colors duration-150">
               <MenuIcon icon={item.icon} />
               <span className="flex-1 truncate">{item.label}</span>
               <i
@@ -152,9 +152,12 @@ function NestedCollapsibleItem({
         className={groupClass}
       >
         <SidebarMenuButton
-          isActive={expanded || isChildActive}
+          isActive={isChildActive}
           render={
-            <CollapsibleTrigger className="flex w-full cursor-pointer items-center gap-2 transition-colors duration-150">
+            <CollapsibleTrigger
+              data-open={expanded}
+              className="data-open:bg-sidebar-accent/50 flex w-full cursor-pointer items-center gap-2 transition-colors duration-150"
+            >
               <MenuIcon icon={item.icon} />
               <span className="flex-1 truncate">{item.label}</span>
               {depth < 5 && (
