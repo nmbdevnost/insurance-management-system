@@ -59,10 +59,7 @@ export default function NotFoundPage() {
         </div>
 
         <div className="bg-primary relative -m-14 ml-0 max-w-xl flex-1">
-          <img
-            src={MountainBg}
-            className="absolute right-0 bottom-0 max-w-[80%]"
-          />
+          <img src={MountainBg} className="absolute right-0 bottom-0 w-full" />
         </div>
       </div>
     </div>

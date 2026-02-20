@@ -165,9 +165,7 @@ const InsuranceTypeCard = () => {
           <CardTitle className="text-base font-bold tracking-tight">
             Insurance Portfolio
           </CardTitle>
-          <CardDescription className="text-xs">
-            Distribution by type
-          </CardDescription>
+          <CardDescription>Distribution by type</CardDescription>
         </div>
 
         <Badge variant="info-light">{total.toLocaleString()} Total</Badge>
@@ -223,9 +221,7 @@ const PolicyOverviewCard = () => (
       <CardTitle className="text-base font-bold tracking-tight">
         Policy Breakdown
       </CardTitle>
-      <CardDescription className="text-xs">
-        Status across all policies
-      </CardDescription>
+      <CardDescription>Status across all policies</CardDescription>
     </CardHeader>
 
     <CardContent className="flex flex-col gap-4">
@@ -299,7 +295,7 @@ export const DashboardPage = () => (
               <CardTitle className="text-base font-bold tracking-tight">
                 Client-Induced Insurance
               </CardTitle>
-              <CardDescription className="text-xs">
+              <CardDescription>
                 Process policies submitted by clients.
               </CardDescription>
             </div>
@@ -358,7 +354,7 @@ export const DashboardPage = () => (
               <CardTitle className="text-base font-bold tracking-tight">
                 Bank-Induced Insurance
               </CardTitle>
-              <CardDescription className="text-xs">
+              <CardDescription>
                 Manage policies provided by the bank.
               </CardDescription>
             </div>

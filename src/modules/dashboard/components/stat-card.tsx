@@ -1,4 +1,5 @@
 import { Card, CardContent } from "@/shared/components/ui/card";
+import { Typography } from "@/shared/components/ui/typography";
 import { cn } from "@/shared/lib/utils";
 import {
   RiArrowRightDownLine,
@@ -42,12 +43,13 @@ const StatCard: React.FC<StatItem> = ({
     <CardContent className="space-y-4">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-muted-foreground mb-2 text-[10px] font-semibold tracking-widest uppercase">
+          <Typography variant="overline" className="text-xs">
             {label}
-          </p>
-          <p className="text-foreground text-3xl leading-none font-extrabold tracking-tight">
+          </Typography>
+
+          <Typography variant="h2" as="p">
             {value}
-          </p>
+          </Typography>
         </div>
         <div
           className={cn(
@@ -71,9 +73,9 @@ const StatCard: React.FC<StatItem> = ({
           {trend}
         </span>
 
-        <span className="text-muted-foreground ml-0.5 text-sm">
+        <Typography muted variant="body-sm" className="ml-0.5">
           vs last month
-        </span>
+        </Typography>
       </div>
     </CardContent>
   </Card>
