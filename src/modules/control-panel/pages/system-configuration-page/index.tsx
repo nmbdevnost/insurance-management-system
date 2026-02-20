@@ -13,6 +13,7 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/shared/components/ui/item";
+import { Typography } from "@/shared/components/ui/typography";
 import { RiSettings2Line } from "@remixicon/react";
 
 const SystemConfigurationPage = () => {
@@ -20,9 +21,13 @@ const SystemConfigurationPage = () => {
     <>
       <form>
         <FieldSet>
-          <FieldLegend>Sytstem Configuration</FieldLegend>
+          <FieldLegend>
+            <Typography variant="h5">Sytstem Configuration</Typography>
+          </FieldLegend>
           <FieldDescription>
-            General notification and email settings.
+            <Typography variant="body-sm">
+              General notification and email settings.
+            </Typography>
           </FieldDescription>
 
           <FieldGroup>

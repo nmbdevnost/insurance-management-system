@@ -7,16 +7,22 @@ import {
   FieldSet,
 } from "@/shared/components/ui/field";
 import { Input } from "@/shared/components/ui/input";
+import { Typography } from "@/shared/components/ui/typography";
 
 const NotificationTimingPage = () => {
   return (
     <>
       <form>
         <FieldSet>
-          <FieldLegend>Notification Timing</FieldLegend>
+          <FieldLegend>
+            <Typography variant="h5">Notification Timing</Typography>
+          </FieldLegend>
           <FieldDescription>
-            Configure when and how often reminders are sent.
+            <Typography variant="body-sm">
+              Configure when and how often reminders are sent.
+            </Typography>
           </FieldDescription>
+
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="initial-reminder">

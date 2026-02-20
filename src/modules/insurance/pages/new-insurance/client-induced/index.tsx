@@ -9,6 +9,7 @@ import { RiEye2Line, RiUser2Line } from "@remixicon/react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import PolicyDetailsStep from "./steps/policy-details-step";
+import { Typography } from "@/shared/components/ui/typography";
 
 const steps = [
   {
@@ -47,12 +48,14 @@ const ClientInducedPage = () => {
   };
 
   return (
-    <div className="-mb-4">
+    <div className="-mb-4 space-y-4">
       <div>
-        <h1 className="page-heading">Client-Induced Insurance</h1>
-        <p className="text-muted-foreground mb-4">
+        <Typography variant="h3" as="h1">
+          Client-Induced Insurance
+        </Typography>
+        <Typography muted>
           Record insurance policy details submitted by the client.
-        </p>
+        </Typography>
       </div>
 
       <MultiStepForm

@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import AssetsDetailsStep from "./steps/assets-details-step";
 import PaymentPolicyStep from "./steps/payment-policy-step";
 import PremiumQueryStep from "./steps/premium-query-step";
+import { Typography } from "@/shared/components/ui/typography";
 
 const steps = [
   {
@@ -60,11 +61,15 @@ const BankInducedPage = () => {
   };
 
   return (
-    <div className="-mb-4 w-full">
-      <h1 className="page-heading">Bank-Induced Insurance</h1>
-      <p className="text-muted-foreground mb-4">
-        Create and manage insurance policies provided by the bank
-      </p>
+    <div className="-mb-4 w-full space-y-4">
+      <div>
+        <Typography variant="h3" as="h1">
+          Bank-Induced Insurance
+        </Typography>
+        <Typography muted>
+          Create and manage insurance policies provided by the bank
+        </Typography>
+      </div>
 
       <MultiStepForm
         steps={steps}

@@ -16,6 +16,7 @@ import {
 import { useState } from "react";
 import NotificationTimingPage from "./notification-timing";
 import SystemConfigurationPage from "./system-configuration-page";
+import { Typography } from "@/shared/components/ui/typography";
 
 const ControlPanelPage = () => {
   const [tab, setTab] = useState("system-configuration");
@@ -24,10 +25,12 @@ const ControlPanelPage = () => {
     <div className="-m-4 flex grow flex-col">
       <div className="space-y-4 border-b p-4">
         <div>
-          <h1 className="page-heading">Control Panel</h1>
-          <p className="text-muted-foreground">
+          <Typography variant="h3" as="h1">
+            Control Panel
+          </Typography>
+          <Typography muted>
             Manage insurance renewal notifications and email scheduling.
-          </p>
+          </Typography>
         </div>
 
         <div className="grid grid-cols-2 gap-4">

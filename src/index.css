@@ -185,9 +185,3 @@
     @apply bg-muted/50! text-foreground!;
   }
 }
-
-@layer components {
-  .page-heading {
-    @apply text-xl font-semibold tracking-tight;
-  }
-}

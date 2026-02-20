@@ -9,6 +9,7 @@ import { useState } from "react";
 import ExpiredLoanTab from "./tabs/expired-loan";
 import ExpiredPolicyTab from "./tabs/expired-policy";
 import LoanNotExpiredTab from "./tabs/loan-not-expired";
+import { Typography } from "@/shared/components/ui/typography";
 
 const ExpiredIsurancePage = () => {
   const [tab, setTab] = useState("expired-policy");
@@ -17,11 +18,14 @@ const ExpiredIsurancePage = () => {
     <>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="page-heading">Insurance Expiry & Renewal</h1>
-          <p className="text-muted-foreground text-sm">
+          <Typography variant="h3" as="h1">
+            Insurance Expiry & Renewal
+          </Typography>
+
+          <Typography muted>
             Kathmandu Branch &bull; Last Updated:{" "}
             {format(new Date(), "PPP hh:mm a")}
-          </p>
+          </Typography>
         </div>
       </div>
 

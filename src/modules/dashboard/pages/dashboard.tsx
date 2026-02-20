@@ -29,6 +29,7 @@ import {
   RiTimeLine,
 } from "@remixicon/react";
 import StatCard, { type StatItem } from "../components/stat-card";
+import { Typography } from "@/shared/components/ui/typography";
 
 interface PolicyBar {
   label: string;
@@ -265,10 +266,12 @@ const PolicyOverviewCard = () => (
 export const DashboardPage = () => (
   <>
     <div>
-      <h1 className="page-heading">Dashboard</h1>
-      <p className="text-muted-foreground text-sm">
-        Overview of your insurance policy portfolio
-      </p>
+      <Typography variant="h3" as="h1">
+        Dashboard
+      </Typography>
+      <Typography muted>
+        Overview of your insurance policy portfolio.
+      </Typography>
     </div>
 
     {/* KPI grid */}

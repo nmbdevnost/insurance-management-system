@@ -2,6 +2,7 @@ import type { ScheduledNotification } from "@/shared/lib/types/notifications";
 import { DataTableProvider } from "@/shared/providers/data-table-provider";
 import ScheduledNotificationsTable from "./schedule-notifications-table";
 import scheduleNotificationColumns from "./schedule-notifications-table/columns";
+import { Typography } from "@/shared/components/ui/typography";
 
 export const scheduledNotifications: ScheduledNotification[] = [
   {
@@ -55,12 +56,14 @@ const ScheduleNotificationPage = () => {
   return (
     <>
       <div>
-        <h1 className="page-heading">Scheduled Notifications</h1>
+        <Typography variant="h3" as="h1">
+          Scheduled Notifications
+        </Typography>
 
-        <p className="text-muted-foreground">
+        <Typography muted>
           Manage and monitor scheduled notifications for policy renewals and
           reminders.
-        </p>
+        </Typography>
       </div>
 
       <DataTableProvider
