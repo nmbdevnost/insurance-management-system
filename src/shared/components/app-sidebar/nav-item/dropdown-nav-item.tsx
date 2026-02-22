@@ -49,7 +49,7 @@ export function DropdownNavItem({ item, tooltip }: DropdownNavItemProps) {
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          className="w-[--radix-popper-anchor-width] min-w-48 rounded-lg"
+          className="bg-sidebar w-[--radix-popper-anchor-width] min-w-48 rounded-lg"
           side="right"
           align="start"
           sideOffset={10}
@@ -71,9 +71,9 @@ function DropdownNavLinkItem({ item }: { item: MenuItem }) {
   return (
     <DropdownMenuItem
       className={cn(
-        "flex cursor-pointer items-center gap-2 [&_svg]:size-4 [&_svg]:shrink-0",
+        "text-sidebar-foreground hover:bg-sidebar-accent/50! flex h-8 cursor-pointer items-center gap-2 [&_svg]:size-4 [&_svg]:shrink-0",
         "transition-colors duration-150",
-        "data-[active=true]:bg-accent data-[active=true]:text-accent-foreground"
+        "data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground"
       )}
       data-active={isActive}
       render={<NavLink to={path} end={path === "/"} />}
@@ -85,6 +85,10 @@ function DropdownNavLinkItem({ item }: { item: MenuItem }) {
 }
 
 function DropdownNavChild({ item }: { item: MenuItem }) {
+  const children = item.children ?? [];
+  const { pathname } = useLocation();
+  const isChildActive = hasActiveChild(children, pathname);
+
   // Link item: has path, no children
   if (item.path && !hasChildren(item)) {
     return <DropdownNavLinkItem item={item} />;
@@ -94,11 +98,23 @@ function DropdownNavChild({ item }: { item: MenuItem }) {
   if (hasChildren(item)) {
     return (
       <DropdownMenuSub>
-        <DropdownMenuSubTrigger className="gap-2 transition-colors duration-150 [&_i]:size-4 [&_i]:shrink-0 [&_svg]:size-4 [&_svg]:shrink-0">
+        <DropdownMenuSubTrigger
+          className={cn(
+            "text-sidebar-foreground hover:bg-sidebar-accent/50! cursor-pointer gap-2 transition-colors duration-150 [&_i]:size-4 [&_i]:shrink-0 [&_svg]:size-4 [&_svg]:shrink-0",
+            "data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground",
+            "h-8"
+          )}
+          data-active={isChildActive}
+        >
           <MenuIcon icon={item.icon} />
           {item.label}
         </DropdownMenuSubTrigger>
-        <DropdownMenuSubContent className="rounded-lg">
+        <DropdownMenuSubContent
+          className="bg-sidebar rounded-lg"
+          side="right"
+          align="start"
+          sideOffset={8}
+        >
           {item.children!.map((child) => (
             <DropdownNavChild key={getItemKey(child)} item={child} />
           ))}
