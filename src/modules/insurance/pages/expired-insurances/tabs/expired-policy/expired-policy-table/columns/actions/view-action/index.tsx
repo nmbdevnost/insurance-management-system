@@ -14,11 +14,7 @@ import { TooltipContent, TooltipTrigger } from "@/shared/components/ui/tooltip";
 import type { ExpiredPolicy } from "@/shared/lib/types/policies";
 import { formatCurrency } from "@/shared/lib/utils/format";
 import { Tooltip } from "@base-ui/react";
-import {
-  RiDownload2Line,
-  RiEyeLine,
-  RiShieldCheckLine,
-} from "@remixicon/react";
+import { RiEyeLine, RiShieldCheckLine } from "@remixicon/react";
 import { format } from "date-fns";
 import { useState } from "react";
 
@@ -77,11 +73,11 @@ const ExpiredInsuranceViewAction = ({
               {/* Days Left */}
               <div className="p-4">
                 <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                  Days Left
+                  Term Days
                 </div>
 
                 <div className="mt-1 text-lg font-semibold">
-                  {policy.daysLeft}
+                  {policy.termDays}
                 </div>
               </div>
 
@@ -90,7 +86,7 @@ const ExpiredInsuranceViewAction = ({
                   Premium
                 </div>
                 <div className="mt-1 text-lg font-semibold">
-                  {formatCurrency(policy.premium)}
+                  {formatCurrency(policy.totalPremium)}
                 </div>
               </div>
 
@@ -115,6 +111,14 @@ const ExpiredInsuranceViewAction = ({
                   <div className="space-y-4">
                     <div>
                       <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                        Customer Name
+                      </label>
+                      <div className="mt-1 font-mono text-sm">
+                        {policy.customerName}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                         Policy Number
                       </label>
                       <div className="mt-1 font-mono text-sm">
@@ -130,13 +134,6 @@ const ExpiredInsuranceViewAction = ({
                         {policy.referenceNo}
                       </div>
                     </div>
-
-                    <div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Policy Type
-                      </label>
-                      <div className="mt-1 text-sm">{policy.type}</div>
-                    </div>
                   </div>
 
                   <div className="space-y-4">
@@ -151,16 +148,16 @@ const ExpiredInsuranceViewAction = ({
 
                     <div>
                       <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Segment
+                        Asset Type
                       </label>
-                      <div className="mt-1 text-sm">{policy.segment}</div>
+                      <div className="mt-1 text-sm">{policy.assetType}</div>
                     </div>
 
                     <div>
                       <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                         Branch
                       </label>
-                      <div className="mt-1 text-sm">{policy.branch}</div>
+                      <div className="mt-1 text-sm">{policy.branchName}</div>
                     </div>
                   </div>
                 </div>
@@ -220,7 +217,7 @@ const ExpiredInsuranceViewAction = ({
                       </label>
                     </div>
                     <div className="ml-4 text-sm font-medium">
-                      {formatCurrency(policy.premium)}
+                      {formatCurrency(policy.totalPremium)}
                     </div>
                   </div>
                 </div>
@@ -269,9 +266,6 @@ const ExpiredInsuranceViewAction = ({
               <div className="flex gap-3">
                 <Button variant="outline" onClick={() => setOpen(false)}>
                   Close
-                </Button>
-                <Button onClick={() => setOpen(false)}>
-                  <RiDownload2Line /> Download Policy
                 </Button>
               </div>
             </div>

@@ -12,11 +12,7 @@ import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { TooltipContent, TooltipTrigger } from "@/shared/components/ui/tooltip";
 import type { ExpiredLoan } from "@/shared/lib/types/loans";
 import { Tooltip } from "@base-ui/react";
-import {
-  RiDownload2Line,
-  RiEyeLine,
-  RiShieldCheckLine,
-} from "@remixicon/react";
+import { RiEyeLine, RiShieldCheckLine } from "@remixicon/react";
 import { format } from "date-fns";
 import { useState } from "react";
 
@@ -113,10 +109,10 @@ const ExpiredLoanViewAction = ({ rowData }: ExpiredLoanViewActionProps) => {
                   <div className="space-y-4">
                     <div>
                       <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Reference Number
+                        Customer Name
                       </label>
                       <div className="mt-1 font-mono text-sm">
-                        {rowData.referenceNo}
+                        {rowData.customerName}
                       </div>
                     </div>
                     <div>
@@ -127,34 +123,46 @@ const ExpiredLoanViewAction = ({ rowData }: ExpiredLoanViewActionProps) => {
                         {rowData.policyNumber}
                       </div>
                     </div>
-                    <div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Loan Type
-                      </label>
+                    {/* <div>
+                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase"></label>
                       <div className="mt-1 text-sm">{rowData.type}</div>
                     </div>
-                  </div>
+                    <div>
+                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase"></label>
+                      <div className="mt-1 text-sm">{rowData.type}</div>
+                    </div>
+                  </div> */}
 
-                  <div className="space-y-4">
+                    {/* <div className="space-y-4">
                     <div>
                       <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                         Segment
                       </label>
                       <div className="mt-1 text-sm">{rowData.segment}</div>
-                    </div>
+                    </div> */}
 
-                    <div>
+                    {/* <div>
                       <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                         Branch
                       </label>
                       <div className="mt-1 text-sm">{rowData.branch}</div>
-                    </div>
+                    </div> */}
 
-                    <div>
+                    {/* <div>
                       <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                         Province
                       </label>
                       <div className="mt-1 text-sm">{rowData.province}</div>
+                    </div> */}
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                        Reference Number
+                      </label>
+                      <div className="mt-1 font-mono text-sm">
+                        {rowData.referenceNo}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -169,21 +177,21 @@ const ExpiredLoanViewAction = ({ rowData }: ExpiredLoanViewActionProps) => {
                   <div className="grid gap-6 sm:grid-cols-2">
                     <div>
                       <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Risk Start Date
+                        Account Closed Date
                       </label>
                       <div className="mt-1 text-sm">
-                        {format(rowData.riskStartDate, "PP")}
+                        {format(rowData.accountClosedDate, "PP")}
                       </div>
                     </div>
 
-                    <div>
+                    {/* <div>
                       <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                         Risk Maturity Date
                       </label>
                       <div className="mt-1 text-sm">
                         {format(rowData.riskMaturityDate, "PP")}
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
@@ -194,21 +202,21 @@ const ExpiredLoanViewAction = ({ rowData }: ExpiredLoanViewActionProps) => {
                   Important Dates
                 </h3>
                 <div className="grid gap-6 sm:grid-cols-2">
-                  {rowData.closedDate && (
+                  {rowData.accountClosedDate && (
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
                         <div className="h-2 w-2 rounded-full bg-purple-500"></div>
                         <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                          Closed Date
+                          Account Closed Date
                         </label>
                       </div>
                       <div className="ml-4 text-sm font-medium">
-                        {format(rowData.closedDate, "PPP")}
+                        {format(rowData.accountClosedDate, "PPP")}
                       </div>
                     </div>
                   )}
 
-                  <div className="space-y-2">
+                  {/* <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-2 rounded-full bg-orange-500"></div>
                       <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
@@ -218,9 +226,9 @@ const ExpiredLoanViewAction = ({ rowData }: ExpiredLoanViewActionProps) => {
                     <div className="ml-4 text-sm font-medium">
                       {format(rowData.riskStartDate, "PPP")}
                     </div>
-                  </div>
+                  </div> */}
 
-                  <div className="space-y-2">
+                  {/* <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-2 rounded-full bg-red-500"></div>
                       <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
@@ -230,7 +238,7 @@ const ExpiredLoanViewAction = ({ rowData }: ExpiredLoanViewActionProps) => {
                     <div className="ml-4 text-sm font-medium">
                       {format(rowData.riskMaturityDate, "PPP")}
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -245,9 +253,6 @@ const ExpiredLoanViewAction = ({ rowData }: ExpiredLoanViewActionProps) => {
               <div className="flex gap-3">
                 <Button variant="outline" onClick={() => setOpen(false)}>
                   Close
-                </Button>
-                <Button onClick={() => setOpen(false)}>
-                  <RiDownload2Line /> Download Loan
                 </Button>
               </div>
             </div>

@@ -1,10 +1,16 @@
 export type Insurance = {
   id: string;
-  loan_number: string;
-  customer: string;
-  insurance_expiry_date: string;
-  days_left: number;
-  policy: string;
+  policy_number: string;
+  cif_id: string;
+  type: string;
+  segment: string;
+  branch: string;
+  province: string;
+  insurance_company: string;
+  sum_insured: number;
+  total_premium: number;
+  risk_start_date: string;
+  maturity_end_date: string;
   status: string;
 };
 
