@@ -39,8 +39,6 @@
   --sidebar-accent-foreground: oklch(0.98 0.02 201);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
-  --header-height: 3.5rem;
-
   --destructive-foreground: var(--color-red-800);
   --success: var(--color-emerald-500);
   --success-foreground: var(--color-emerald-900);
@@ -153,10 +151,10 @@
   --color-invert: var(--invert);
   --color-invert-foreground: var(--invert-foreground);
 
-  --animate-scan: scan 2s ease-in-out infinite;
-
   --breakpoint-xs: 30rem;
+  --header-height: calc(var(--spacing) * 14);
 
+  --animate-scan: scan 2s ease-in-out infinite;
   @keyframes scan {
     0%,
     100% {

@@ -41,6 +41,8 @@ export function AppSidebar({
       )}
       {...props}
     >
+      <img src={MountainBg} className="absolute right-0 bottom-0 left-0" />
+
       {isMobile && (
         <SidebarHeader className="bg-background flex h-(--header-height)! flex-row items-center justify-between">
           <div className="flex h-full items-center gap-2 overflow-hidden">
@@ -52,6 +54,7 @@ export function AppSidebar({
           </div>
         </SidebarHeader>
       )}
+
       <SidebarContent>
         <AppSidebarTrigger />
 
@@ -65,12 +68,6 @@ export function AppSidebar({
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-
-      <img
-        src={MountainBg}
-        className={cn("absolute bottom-0", isMobile && "right-0 max-w-80")}
-      />
-      {/* <SidebarRail /> */}
     </Sidebar>
   );
 }

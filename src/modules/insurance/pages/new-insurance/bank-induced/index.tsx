@@ -85,6 +85,7 @@ const BankInducedPage = () => {
 
           return true;
         }}
+        footerClassName="-mx-4 px-4"
       />
     </div>
   );

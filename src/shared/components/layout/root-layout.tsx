@@ -6,24 +6,23 @@ import { AppHeader } from "./app-header";
 
 const RootLayout = () => {
   return (
-    <div className="relative h-svh overflow-y-hidden [--header-height:calc(var(--spacing)*14)]">
-      <SidebarProvider className="flex h-full flex-col overflow-y-auto">
-        <AppSidebarTrigger className="absolute -left-2.5 md:pointer-events-none md:hidden" />
+    <SidebarProvider className="flex h-full flex-col">
+      <AppSidebarTrigger className="absolute -left-2.5 md:pointer-events-none md:hidden" />
 
-        <AppHeader />
+      <AppHeader />
 
-        <div className="flex flex-1">
-          <AppSidebar />
+      <div className="flex flex-1">
+        <AppSidebar />
 
-          <SidebarInset>
-            <div className="flex flex-1 flex-col gap-4 p-4">
-              <Outlet />
-              <ScrollRestoration />
-            </div>
-          </SidebarInset>
-        </div>
-      </SidebarProvider>
-    </div>
+        <SidebarInset>
+          <div className="flex flex-1 flex-col gap-4 p-4">
+            <Outlet />
+          </div>
+        </SidebarInset>
+      </div>
+
+      <ScrollRestoration />
+    </SidebarProvider>
   );
 };
 

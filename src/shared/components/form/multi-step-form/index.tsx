@@ -244,7 +244,8 @@ const MultiStepForm = <T extends FieldValues>({
           <div
             className={cn(
               "flex flex-1 justify-between gap-2 border-t py-4",
-              stickyFooter && "bg-background sticky bottom-0",
+              stickyFooter &&
+                "bg-background/80 sticky bottom-0 backdrop-blur-xs",
               footerClassName
             )}
           >
