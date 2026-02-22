@@ -1,8 +1,8 @@
+import { Typography } from "@/shared/components/ui/typography";
 import type { ScheduledNotification } from "@/shared/lib/types/notifications";
 import { DataTableProvider } from "@/shared/providers/data-table-provider";
 import ScheduledNotificationsTable from "./schedule-notifications-table";
 import scheduleNotificationColumns from "./schedule-notifications-table/columns";
-import { Typography } from "@/shared/components/ui/typography";
 
 export const scheduledNotifications: ScheduledNotification[] = [
   {
