@@ -1,15 +1,18 @@
 import { format } from "date-fns";
 import InsuranceTable from "./insurance-table";
+import { Typography } from "@/shared/components/ui/typography";
 
 const InsurancesPage = () => {
   return (
     <>
       <div>
-        <h1 className="page-heading">Insurance Page</h1>
-        <p className="text-muted-foreground text-sm">
+        <Typography variant="h3" as="h1">
+          Insurance Page
+        </Typography>
+        <Typography muted>
           Kathmandu Branch &bull; Last Updated:{" "}
           {format(new Date(), "PPP hh:mm a")}
-        </p>
+        </Typography>
       </div>
       <div>
         <InsuranceTable />

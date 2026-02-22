@@ -1,3 +1,5 @@
+import { useSidebar } from "@/shared/components/ui/sidebar";
+import { cn } from "@/shared/lib/utils";
 import {
   RiAlertLine,
   RiBankLine,
@@ -6,8 +8,8 @@ import {
   RiShieldCheckLine,
   RiTimeLine,
 } from "@remixicon/react";
-import type { StatItem } from "./stat-card";
-import StatCard from "./stat-card";
+import type { StatItem } from "../../components/stat-card";
+import StatCard from "../../components/stat-card";
 
 const STATS: StatItem[] = [
   {
@@ -84,9 +86,16 @@ const STATS: StatItem[] = [
   },
 ];
 
-const KpiGrid = () => {
+const KpiGrid: React.FC = () => {
+  const { state } = useSidebar();
+
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div
+      className={cn(
+        "xs:grid-cols-2 grid gap-4",
+        state === "collapsed" ? "md:grid-cols-3" : "lg:grid-cols-3"
+      )}
+    >
       {STATS.map((s) => (
         <StatCard key={s.label} {...s} />
       ))}

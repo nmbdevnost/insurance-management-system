@@ -155,6 +155,8 @@
 
   --animate-scan: scan 2s ease-in-out infinite;
 
+  --breakpoint-xs: 30rem;
+
   @keyframes scan {
     0%,
     100% {

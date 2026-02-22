@@ -1,4 +1,3 @@
-import AnimatedBar from "@/shared/components/chart/animated-bar";
 import {
   Card,
   CardContent,
@@ -6,12 +5,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/components/ui/card";
+import { Skeleton } from "@/shared/components/ui/skeleton";
+import { lazy, Suspense } from "react";
 
 export interface PolicyBar {
   label: string;
   value: number;
   total: number;
 }
+
+const AnimatedBar = lazy(
+  () => import("@/shared/components/chart/animated-bar")
+);
 
 const POLICY_BARS: PolicyBar[] = [
   {
@@ -25,7 +30,7 @@ const POLICY_BARS: PolicyBar[] = [
   { label: "Expired", value: 50, total: 1000 },
 ];
 
-const PolicyBreakdown = () => {
+const PolicyBreakdown: React.FC = () => {
   return (
     <>
       <Card>
@@ -37,28 +42,30 @@ const PolicyBreakdown = () => {
         </CardHeader>
 
         <CardContent className="flex flex-col gap-4">
-          {POLICY_BARS.map((item, index) => (
-            <div key={item.label}>
-              <div className="flex items-baseline justify-between">
-                <span className="text-muted-foreground text-xs font-medium">
-                  {item.label}
-                </span>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-foreground text-[13px] font-bold">
-                    {item.value.toLocaleString()}
+          <Suspense fallback={<Skeleton className="h-45 w-full" />}>
+            {POLICY_BARS.map((item, index) => (
+              <div key={item.label}>
+                <div className="flex items-baseline justify-between">
+                  <span className="text-muted-foreground text-xs font-medium">
+                    {item.label}
                   </span>
-                  <span className="text-muted-foreground/50 text-[11px]">
-                    / {item.total.toLocaleString()}
-                  </span>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-foreground text-[13px] font-bold">
+                      {item.value.toLocaleString()}
+                    </span>
+                    <span className="text-muted-foreground/50 text-[11px]">
+                      / {item.total.toLocaleString()}
+                    </span>
+                  </div>
                 </div>
-              </div>
 
-              <AnimatedBar
-                value={(item.value / item.total) * 100}
-                index={index}
-              />
-            </div>
-          ))}
+                <AnimatedBar
+                  value={(item.value / item.total) * 100}
+                  index={index}
+                />
+              </div>
+            ))}
+          </Suspense>
         </CardContent>
       </Card>
     </>

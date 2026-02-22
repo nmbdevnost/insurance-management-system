@@ -19,6 +19,7 @@ import {
   RiArrowRightSLine,
   type RemixiconComponentType,
 } from "@remixicon/react";
+import { Link } from "react-router-dom";
 
 type ActionPanelProps = {
   title?: string;
@@ -31,6 +32,8 @@ type ActionPanelProps = {
     buttonText: string;
     isPrimary?: boolean;
     icon?: RemixiconComponentType | null;
+    onClick?: () => void;
+    to?: string;
   }>;
 };
 
@@ -80,6 +83,8 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
                 <Button
                   size="sm"
                   variant={action.isPrimary ? "default" : "secondary"}
+                  render={action.to ? <Link to={action.to} /> : undefined}
+                  onClick={action.onClick}
                 >
                   {action.buttonText}
                   {action.icon ? (

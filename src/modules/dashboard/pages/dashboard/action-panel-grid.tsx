@@ -1,34 +1,9 @@
-import { Typography } from "@/shared/components/ui/typography";
 import { RiBankLine, RiGroupLine } from "@remixicon/react";
-import {
-  ActionPanel,
-  InsuranceDistribution,
-  KpiGrid,
-  PolicyBreakdown,
-} from "../components";
+import { ActionPanel } from "../../components";
 
-export const DashboardPage = () => (
-  <>
-    <div>
-      <Typography variant="h3" as="h1">
-        Dashboard
-      </Typography>
-      <Typography muted>
-        Overview of your insurance policy portfolio.
-      </Typography>
-    </div>
-
-    <KpiGrid />
-
-    {/* Charts */}
-    <div className="grid grid-cols-2 gap-4">
-      <InsuranceDistribution />
-
-      <PolicyBreakdown />
-    </div>
-
-    {/* Action panels */}
-    <div className="grid grid-cols-2 gap-4">
+const ActionPanelGrid = () => {
+  return (
+    <div className="grid gap-4 lg:grid-cols-2">
       <ActionPanel
         title="Client-Induced Insurance"
         description="Process policies submitted by clients."
@@ -40,12 +15,13 @@ export const DashboardPage = () => (
             description: "Enter policy information from client submissions.",
             buttonText: "Start",
             isPrimary: true,
+            to: "/insurance/new/bank-induced",
           },
           {
             title: "View Submitted Policies",
             description: "Review and manage client-provided insurance.",
             buttonText: "View Policies",
-            isPrimary: false,
+            to: "/insurance?type=client-induced",
           },
         ]}
       />
@@ -61,15 +37,18 @@ export const DashboardPage = () => (
             description: "Enter asset details and process premium payment.",
             buttonText: "Initiate New",
             isPrimary: true,
+            to: "/insurance/new/bank-induced",
           },
           {
             title: "Manage Bank Policies",
             description: "View and track bank-provided insurance.",
             buttonText: "View Policies",
-            isPrimary: false,
+            to: "/insurance?type=bank-induced",
           },
         ]}
       />
     </div>
-  </>
-);
+  );
+};
+
+export default ActionPanelGrid;

@@ -1,5 +1,3 @@
-import AnimatedBar from "@/shared/components/chart/animated-bar";
-import PieChart from "@/shared/components/chart/pie-chart";
 import { Badge } from "@/shared/components/ui/badge";
 import {
   Card,
@@ -8,6 +6,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/components/ui/card";
+import { Skeleton } from "@/shared/components/ui/skeleton";
+import { lazy, Suspense, type FC } from "react";
+
+const PieChart = lazy(() => import("@/shared/components/chart/pie-chart"));
+const AnimatedBar = lazy(
+  () => import("@/shared/components/chart/animated-bar")
+);
 
 const INSURANCE_DATA = [
   {
@@ -37,7 +42,7 @@ const INSURANCE_DATA = [
   },
 ];
 
-const InsuranceDistribution = () => {
+const InsuranceDistribution: FC = () => {
   const total = INSURANCE_DATA.reduce((s, d) => s + d.value, 0);
   const max = Math.max(...INSURANCE_DATA.map((d) => d.value));
 
@@ -55,33 +60,37 @@ const InsuranceDistribution = () => {
       </CardHeader>
 
       <CardContent className="flex flex-wrap gap-4">
-        <PieChart
-          data={INSURANCE_DATA}
-          label="Policies"
-          className="w-45"
-          innerRadius={60}
-          outerRadius={80}
-        />
+        <Suspense fallback={<Skeleton className="h-45 w-45" />}>
+          <PieChart
+            data={INSURANCE_DATA}
+            label="Policies"
+            className="w-45"
+            innerRadius={60}
+            outerRadius={80}
+          />
+        </Suspense>
 
-        <div className="min-w-40 flex-1 space-y-4">
-          {INSURANCE_DATA.map((item, index) => {
-            return (
-              <div key={item.label}>
-                <div className="flex items-baseline justify-between">
-                  <span className="text-muted-foreground text-xs font-medium">
-                    {item.label}
-                  </span>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-foreground text-[13px] font-bold">
-                      {item.value.toLocaleString()}
+        <div className="min-w-32 flex-1 space-y-4">
+          <Suspense fallback={<Skeleton className="h-full w-full" />}>
+            {INSURANCE_DATA.map((item, index) => {
+              return (
+                <div key={item.key}>
+                  <div className="flex items-baseline justify-between">
+                    <span className="text-muted-foreground text-xs font-medium">
+                      {item.label}
                     </span>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-foreground text-[13px] font-bold">
+                        {item.value.toLocaleString()}
+                      </span>
+                    </div>
                   </div>
-                </div>
 
-                <AnimatedBar value={(item.value / max) * 100} index={index} />
-              </div>
-            );
-          })}
+                  <AnimatedBar value={(item.value / max) * 100} index={index} />
+                </div>
+              );
+            })}
+          </Suspense>
         </div>
       </CardContent>
     </Card>

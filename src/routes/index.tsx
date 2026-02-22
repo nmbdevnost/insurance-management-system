@@ -3,14 +3,14 @@ import controlPanelRoutes from "@/modules/control-panel/routes";
 import { DashboardPage } from "@/modules/dashboard/pages";
 import { ReportsPage } from "@/modules/insurance/pages";
 import insuranceRoutes from "@/modules/insurance/routes";
-import { AppLayout } from "@/shared/components/layout";
+import RootLayout from "@/shared/components/layout/root-layout";
 import NotFoundPage from "@/shared/components/not-found-page";
 import type { RouteObject } from "react-router-dom";
 
 const routes: RouteObject[] = [
   {
     path: "/",
-    element: <AppLayout />,
+    element: <RootLayout />,
     children: [
       {
         index: true,
