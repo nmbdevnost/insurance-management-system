@@ -38,57 +38,33 @@ const expiredLoanColumns: ColumnDef<ExpiredLoan>[] = [
     header: "Policy Number",
   },
   {
-    accessorKey: "type",
-    header: "Type",
+    accessorKey: "cifId",
+    header: "CIFID",
   },
   {
-    accessorKey: "segment",
-    header: "Segment",
-  },
-  {
-    accessorKey: "branch",
-    header: "Branch",
-  },
-  {
-    accessorKey: "province",
-    header: "Province",
+    accessorKey: "customerName",
+    header: "Customer Name",
   },
   {
     accessorKey: "accountNo",
     header: "Account No",
   },
   {
-    accessorKey: "cifId",
-    header: "CIF ID",
-  },
-  {
     accessorKey: "accountStatus",
     header: "Account Status",
   },
   {
-    accessorKey: "closedDate",
-    header: "Closed Date",
+    accessorKey: "accountClosedDate",
+    header: "Account Closed Date",
     cell: ({ row }) => {
-      const formattedDate = formatDate(row.getValue("closedDate"), "PPP");
+      const formattedDate = formatDate(
+        row.getValue("accountClosedDate"),
+        "PPP"
+      );
       return <>{formattedDate}</>;
     },
   },
-  {
-    accessorKey: "riskStartDate",
-    header: "Risk Start Date",
-    cell: ({ row }) => {
-      const formattedDate = formatDate(row.getValue("riskStartDate"), "PPP");
-      return <>{formattedDate}</>;
-    },
-  },
-  {
-    accessorKey: "riskMaturityDate",
-    header: "Risk Maturity Date",
-    cell: ({ row }) => {
-      const formattedDate = formatDate(row.getValue("riskMaturityDate"), "PPP");
-      return <>{formattedDate}</>;
-    },
-  },
+
   {
     accessorKey: "status",
     header: "Status",
@@ -108,3 +84,12 @@ const expiredLoanColumns: ColumnDef<ExpiredLoan>[] = [
 ];
 
 export default expiredLoanColumns;
+
+// {
+//   accessorKey: "riskMaturityDate",
+//   header: "Risk Maturity Date",
+//   cell: ({ row }) => {
+//     const formattedDate = formatDate(row.getValue("riskMaturityDate"), "PPP");
+//     return <>{formattedDate}</>;
+//   },
+// },

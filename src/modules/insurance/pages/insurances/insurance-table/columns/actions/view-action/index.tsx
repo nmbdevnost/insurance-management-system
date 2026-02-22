@@ -1,6 +1,5 @@
 import InsuranceStatusBadge from "@/shared/components/status-badge";
 import { Button } from "@/shared/components/ui/button";
-import { Card } from "@/shared/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -11,22 +10,14 @@ import {
 } from "@/shared/components/ui/dialog";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { TooltipContent, TooltipTrigger } from "@/shared/components/ui/tooltip";
-import type { Loan } from "@/shared/lib/types/loans";
-import { formatCurrency } from "@/shared/lib/utils/format";
+import type { Insurance } from "@/shared/lib/types/insurance";
 import { Tooltip } from "@base-ui/react";
 import { RiEyeLine, RiShieldCheckLine } from "@remixicon/react";
 import { format } from "date-fns";
 import { useState } from "react";
 
-type LoanNotExpiredViewActionProps = {
-  rowData: Loan;
-};
-
-const LoanNotExpiredViewAction = ({
-  rowData,
-}: LoanNotExpiredViewActionProps) => {
+const InsuranceViewAction = ({ rowData }: { rowData: Insurance }) => {
   const [open, setOpen] = useState(false);
-
   return (
     <>
       <Tooltip.Root>
@@ -37,7 +28,6 @@ const LoanNotExpiredViewAction = ({
         >
           <RiEyeLine />
         </TooltipTrigger>
-
         <TooltipContent>View Details</TooltipContent>
       </Tooltip.Root>
 
@@ -49,11 +39,11 @@ const LoanNotExpiredViewAction = ({
             </div>
 
             <div>
-              <DialogTitle className="flex items-center gap-3 text-lg font-semibold text-slate-900">
-                Loan Details
+              <DialogTitle className="flex items-center gap-3 text-lg font-semibold">
+                Insurance Details
               </DialogTitle>
               <DialogDescription className="text-muted-foreground text-sm font-normal">
-                {rowData.policyNumber}
+                {rowData.policy_number}
               </DialogDescription>
             </div>
           </DialogHeader>
@@ -61,105 +51,95 @@ const LoanNotExpiredViewAction = ({
           <ScrollArea className="max-h-[75vh]">
             {/* Key Information Bar */}
             <div className="divide-border bg-muted/50 grid gap-px border-b max-md:divide-y md:grid-cols-4 md:divide-x">
-              {/* Status  */}
+              {/* Status */}
               <div className="p-4">
                 <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                   Status
                 </div>
-
                 <InsuranceStatusBadge
                   status={rowData.status}
                   className="mt-2"
                 />
               </div>
 
-              {/* Days Left */}
+              {/* Account Status */}
               <div className="p-4">
                 <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                  Term Days
+                  Policy Number
                 </div>
-
                 <div className="mt-1 text-lg font-semibold">
-                  {rowData.termDays}
+                  {rowData.policy_number}
                 </div>
               </div>
 
+              {/* CIF ID */}
               <div className="p-4">
                 <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                  Premium
+                  CIF ID
                 </div>
                 <div className="mt-1 text-lg font-semibold">
-                  {formatCurrency(rowData.totalPremium)}
+                  {rowData.cif_id}
                 </div>
               </div>
 
+              {/* Account No */}
               <div className="p-4">
                 <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                  Sum Insured
+                  Insurance Type
                 </div>
-                <div className="mt-1 text-lg font-semibold">
-                  {formatCurrency(rowData.sumInsured)}
-                </div>
+                <div className="mt-1 text-lg font-semibold">{rowData.type}</div>
               </div>
             </div>
 
             <div className="space-y-8 p-6">
-              {/* Policy Information */}
+              {/* Loan Information */}
               <div>
                 <h3 className="mb-4 text-sm font-semibold tracking-wide uppercase">
-                  Policy Information
+                  Loan Information
                 </h3>
-
                 <div className="grid gap-6 sm:grid-cols-2">
                   <div className="space-y-4">
+                    <div>
+                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                        Branch
+                      </label>
+                      <div className="mt-1 font-mono text-sm">
+                        {rowData.branch}
+                      </div>
+                    </div>
                     <div>
                       <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                         Policy Number
                       </label>
                       <div className="mt-1 font-mono text-sm">
-                        {rowData.policyNumber}
+                        {rowData.policy_number}
                       </div>
-                    </div>
-
-                    <div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Reference Number
-                      </label>
-                      <div className="mt-1 font-mono text-sm">
-                        {rowData.referenceNo}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Asset Type
-                      </label>
-                      <div className="mt-1 text-sm">{rowData.assetType}</div>
                     </div>
                   </div>
-
                   <div className="space-y-4">
                     <div>
                       <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Insurance Company
+                        Province
                       </label>
-                      <div className="mt-1 text-sm">
-                        {rowData.insuranceCompany}
+                      <div className="mt-1 font-mono text-sm">
+                        {rowData.province}
                       </div>
                     </div>
-
                     <div>
                       <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                         Segment
                       </label>
-                      <div className="mt-1 text-sm">{rowData.segment}</div>
+                      <div className="mt-1 font-mono text-sm">
+                        {rowData.segment}
+                      </div>
                     </div>
-
                     <div>
                       <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Branch
+                        Premium
                       </label>
-                      <div className="mt-1 text-sm">{rowData.branchName}</div>
+                      <div className="mt-1 font-mono text-sm">
+                        Rs.{rowData.total_premium}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -170,56 +150,20 @@ const LoanNotExpiredViewAction = ({
                 <h3 className="mb-4 text-sm font-semibold tracking-wide uppercase">
                   Coverage Details
                 </h3>
-
-                <Card className="bg-muted/50 p-4">
+                <div className="bg-muted/50 rounded-lg border p-4">
                   <div className="grid gap-6 sm:grid-cols-2">
                     <div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Province
-                      </label>
-                      <div className="mt-1 text-sm">{rowData.province}</div>
+                      <label>Province</label>
+                      <div>{rowData.province}</div>
                     </div>
-
                     <div>
                       <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                         Coverage Period
                       </label>
                       <div className="mt-1 text-sm">
-                        {format(rowData.riskStartDate, "PP")} -{" "}
-                        {format(rowData.riskMaturityDate, "PP")}
+                        {format(rowData.risk_start_date, "PP")}-
+                        {format(rowData.maturity_end_date, "PP")}
                       </div>
-                    </div>
-                  </div>
-                </Card>
-              </div>
-
-              {/* Financial Summary */}
-              <div>
-                <h3 className="mb-4 text-sm font-semibold tracking-wide uppercase">
-                  Financial Summary
-                </h3>
-
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Sum Insured
-                      </label>
-                    </div>
-                    <div className="ml-4 text-sm font-medium">
-                      {formatCurrency(rowData.sumInsured)}
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className="h-2 w-2 rounded-full bg-blue-500"></div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Premium
-                      </label>
-                    </div>
-                    <div className="ml-4 text-sm font-medium">
-                      {formatCurrency(rowData.totalPremium)}
                     </div>
                   </div>
                 </div>
@@ -230,30 +174,34 @@ const LoanNotExpiredViewAction = ({
                 <h3 className="mb-4 text-sm font-semibold tracking-wide uppercase">
                   Important Dates
                 </h3>
-
                 <div className="grid gap-6 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className="h-2 w-2 rounded-full bg-orange-500"></div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Risk Start Date
-                      </label>
+                  {rowData.risk_start_date && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <div className="h-2 w-2 rounded-full bg-purple-500"></div>
+                        <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                          Risk Start Date
+                        </label>
+                      </div>
+                      <div className="ml-4 text-sm font-medium">
+                        {format(rowData.risk_start_date, "PPP")}
+                      </div>
                     </div>
-                    <div className="ml-4 text-sm font-medium">
-                      {format(rowData.riskStartDate, "PPP")}
+                  )}
+
+                  {rowData.maturity_end_date && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <div className="h-2 w-2 rounded-full bg-purple-500"></div>
+                        <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                          Maturity End Date
+                        </label>
+                      </div>
+                      <div className="ml-4 text-sm font-medium">
+                        {format(rowData.maturity_end_date, "PPP")}
+                      </div>
                     </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className="h-2 w-2 rounded-full bg-red-500"></div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Risk Maturity Date
-                      </label>
-                    </div>
-                    <div className="ml-4 text-sm font-medium">
-                      {format(rowData.riskMaturityDate, "PPP")}
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -278,4 +226,4 @@ const LoanNotExpiredViewAction = ({
   );
 };
 
-export default LoanNotExpiredViewAction;
+export default InsuranceViewAction;

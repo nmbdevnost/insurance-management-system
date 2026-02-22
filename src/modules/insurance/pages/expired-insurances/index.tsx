@@ -31,19 +31,19 @@ const ExpiredIsurancePage = () => {
             className="data-active:bg-primary data-active:text-primary-foreground!"
             value="expired-policy"
           >
-            Expired Policy
+            Expired List
           </TabsTrigger>
           <TabsTrigger
             className="data-active:bg-primary data-active:text-primary-foreground!"
             value="expired-loan"
           >
-            Expired Loan
+            Loan Closed
           </TabsTrigger>
           <TabsTrigger
             className="data-active:bg-primary data-active:text-primary-foreground!"
             value="loan-not-expired"
           >
-            Loan Not Expired
+            Loan Not Closed
           </TabsTrigger>
         </TabsList>
 

@@ -3,6 +3,7 @@ import type { Loan } from "@/shared/lib/types/loans";
 import type { ColumnDef } from "@tanstack/react-table";
 import ExpiredInsuranceStatusBadge from "../../../../../../../../shared/components/status-badge";
 import LoanNotExpiredActions from "./actions";
+import { formatDate } from "@/shared/lib/utils/format";
 
 const loanNotExpiredColumns: ColumnDef<Loan>[] = [
   {
@@ -37,16 +38,24 @@ const loanNotExpiredColumns: ColumnDef<Loan>[] = [
     header: "Policy Number",
   },
   {
-    accessorKey: "type",
-    header: "Type",
+    accessorKey: "cifId",
+    header: "CIFID",
   },
   {
-    accessorKey: "segment",
-    header: "Segment",
+    accessorKey: "customerName",
+    header: "Customer Name",
   },
   {
-    accessorKey: "branch",
-    header: "Branch",
+    accessorKey: "accountNo",
+    header: "Account No",
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+  },
+  {
+    accessorKey: "branchName",
+    header: "Branch Name",
   },
   {
     accessorKey: "province",
@@ -57,24 +66,48 @@ const loanNotExpiredColumns: ColumnDef<Loan>[] = [
     header: "Insurance Company",
   },
   {
-    accessorKey: "sumInsured",
-    header: "Sum Insured",
+    accessorKey: "initiationType",
+    header: "Initiation Type",
   },
   {
-    accessorKey: "premium",
-    header: "Premium",
-  },
-  {
-    accessorKey: "daysLeft",
-    header: "Days Left",
+    accessorKey: "policyIssuedDate",
+    header: "Policy Issued Date",
   },
   {
     accessorKey: "riskStartDate",
     header: "Risk Start Date",
+    cell: ({ row }) => {
+      const formattedDate = formatDate(row.getValue("riskStartDate"), "PPP");
+      return <>{formattedDate}</>;
+    },
   },
   {
     accessorKey: "riskMaturityDate",
     header: "Risk Maturity Date",
+    cell: ({ row }) => {
+      const formattedDate = formatDate(row.getValue("riskMaturityDate"), "PPP");
+      return <>{formattedDate}</>;
+    },
+  },
+  {
+    accessorKey: "termDays",
+    header: "Term Days",
+  },
+  {
+    accessorKey: "assetType",
+    header: "Asset Type",
+  },
+  {
+    accessorKey: "sumInsured",
+    header: "Sum Insured",
+  },
+  {
+    accessorKey: "totalPremium",
+    header: "Total Premium",
+  },
+  {
+    accessorKey: "totalPremium",
+    header: "Total Premium",
   },
   {
     accessorKey: "status",
@@ -87,6 +120,26 @@ const loanNotExpiredColumns: ColumnDef<Loan>[] = [
     },
   },
   {
+    accessorKey: "createdBy",
+    header: "Created By",
+  },
+  {
+    accessorKey: "createdDate",
+    header: "Created Date",
+    cell: ({ row }) => {
+      const formattedDate = formatDate(row.getValue("createdDate"), "PPP");
+      return <>{formattedDate}</>;
+    },
+  },
+  {
+    accessorKey: "apiResponse",
+    header: "API Response",
+  },
+  {
+    accessorKey: "debitAccountNo",
+    header: "Debit Account No",
+  },
+  {
     id: "actions",
     header: "Actions",
     cell: ({ row }) => <LoanNotExpiredActions rowData={row.original} />,
@@ -97,3 +150,102 @@ const loanNotExpiredColumns: ColumnDef<Loan>[] = [
 ];
 
 export default loanNotExpiredColumns;
+// import { Checkbox } from "@/shared/components/ui/checkbox";
+// import type { Loan } from "@/shared/lib/types/loans";
+// import type { ColumnDef } from "@tanstack/react-table";
+// import ExpiredInsuranceStatusBadge from "../../../../../../../../shared/components/status-badge";
+// import LoanNotExpiredActions from "./actions";
+
+// const loanNotExpiredColumns: ColumnDef<Loan>[] = [
+//   {
+//     id: "select",
+//     header: ({ table }) => (
+//       <div>
+//         <Checkbox
+//           checked={table.getIsAllPageRowsSelected()}
+//           indeterminate={table.getIsSomePageRowsSelected()}
+//           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+//           aria-label="Select all"
+//         />
+//       </div>
+//     ),
+//     cell: ({ row }) => (
+//       <div>
+//         <Checkbox
+//           checked={row.getIsSelected()}
+//           onCheckedChange={(value) => row.toggleSelected(!!value)}
+//           aria-label="Select row"
+//         />
+//       </div>
+//     ),
+//     size: 30,
+//   },
+//   {
+//     accessorKey: "referenceNo",
+//     header: "Reference No",
+//   },
+//   {
+//     accessorKey: "policyNumber",
+//     header: "Policy Number",
+//   },
+//   {
+//     accessorKey: "type",
+//     header: "Type",
+//   },
+//   {
+//     accessorKey: "segment",
+//     header: "Segment",
+//   },
+//   {
+//     accessorKey: "branch",
+//     header: "Branch",
+//   },
+//   {
+//     accessorKey: "province",
+//     header: "Province",
+//   },
+//   {
+//     accessorKey: "insuranceCompany",
+//     header: "Insurance Company",
+//   },
+//   {
+//     accessorKey: "sumInsured",
+//     header: "Sum Insured",
+//   },
+//   {
+//     accessorKey: "premium",
+//     header: "Premium",
+//   },
+//   {
+//     accessorKey: "daysLeft",
+//     header: "Days Left",
+//   },
+//   {
+//     accessorKey: "riskStartDate",
+//     header: "Risk Start Date",
+//   },
+//   {
+//     accessorKey: "riskMaturityDate",
+//     header: "Risk Maturity Date",
+//   },
+//   {
+//     accessorKey: "status",
+//     header: "Status",
+//     cell: ({ row }) => (
+//       <ExpiredInsuranceStatusBadge status={row.original.status} />
+//     ),
+//     meta: {
+//       pin: "right",
+//     },
+//   },
+//   {
+//     id: "actions",
+//     header: "Actions",
+//     cell: ({ row }) => <LoanNotExpiredActions rowData={row.original} />,
+//     meta: {
+//       pin: "right",
+//     },
+//   },
+// ];
+
+// export default loanNotExpiredColumns;

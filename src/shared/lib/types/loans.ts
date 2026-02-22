@@ -1,33 +1,35 @@
 export type Loan = {
-  id: string;
   referenceNo: string;
   policyNumber: string;
-  type: string;
-  segment: string;
-  branch: string;
+  cifId: string;
+  customerName: string;
+  accountNo: string;
+  email: string;
+  branchName: string;
   province: string;
   insuranceCompany: string;
+  initiationType: "Manual" | "Online";
+  policyIssuedDate: string; // ISO date
+  riskStartDate: string; // ISO date
+  riskMaturityDate: string; // ISO date
+  termDays: number;
+  assetType: string;
   sumInsured: number;
-  premium: number;
-  daysLeft: number;
-  riskStartDate: string;
-  riskMaturityDate: string;
+  totalPremium: number;
   status: string;
+  createdBy: string;
+  createdDate: string; // ISO date
+  apiResponse: string;
+  debitAccountNo: string;
 };
 
 export type ExpiredLoan = {
-  id: string;
   referenceNo: string;
   policyNumber: string;
-  type: string;
-  segment: string;
-  branch: string;
-  province: string;
-  accountNo: string;
   cifId: string;
+  customerName: string;
+  accountNo: string;
   accountStatus: string;
-  closedDate: string | null;
-  riskStartDate: string;
-  riskMaturityDate: string;
+  accountClosedDate: string; // ISO date string
   status: string;
 };
