@@ -1,3 +1,4 @@
+import authRoutes from "@/modules/auth/routes";
 import controlPanelRoutes from "@/modules/control-panel/routes";
 import { DashboardPage } from "@/modules/dashboard/pages";
 import { ReportsPage } from "@/modules/insurance/pages";
@@ -23,6 +24,7 @@ const routes: RouteObject[] = [
       ...controlPanelRoutes,
     ],
   },
+  ...authRoutes,
   {
     path: "*",
     element: <NotFoundPage />,
