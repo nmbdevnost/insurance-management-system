@@ -131,7 +131,7 @@ const InsuranceTable = () => {
 
           <DataTable className="rounded-none border-x-0" />
 
-          <CardFooter className="bg-background border-t-0 p-2">
+          <CardFooter className="bg-card border-t-0 p-2">
             <DataTablePagination className="w-full" />
           </CardFooter>
         </Card>

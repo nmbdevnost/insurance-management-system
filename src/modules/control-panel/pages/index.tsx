@@ -22,8 +22,8 @@ const ControlPanelPage = () => {
   const [tab, setTab] = useState("system-configuration");
 
   return (
-    <div className="-m-4 flex grow flex-col">
-      <div className="space-y-4 border-b p-4">
+    <div className="mx-auto w-full max-w-4xl space-y-4">
+      <div className="space-y-4">
         <div>
           <Typography variant="h3" as="h1">
             Control Panel
@@ -57,12 +57,9 @@ const ControlPanelPage = () => {
         value={tab}
         onValueChange={setTab}
         orientation="vertical"
-        className="grow"
+        className="gap-8"
       >
-        <TabsList
-          variant="line"
-          className="h-full! max-h-full! items-start justify-start border-r pt-4"
-        >
+        <TabsList variant="line">
           <TabsTrigger
             value="system-configuration"
             className="data-active:text-primary! after:bg-primary h-fit flex-none"
@@ -77,16 +74,12 @@ const ControlPanelPage = () => {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="system-configuration" className="px-4 py-6">
-          <div className="mx-auto w-full max-w-xl">
-            <SystemConfigurationPage />
-          </div>
+        <TabsContent value="system-configuration">
+          <SystemConfigurationPage />
         </TabsContent>
 
-        <TabsContent value="notifications" className="px-4 py-6">
-          <div className="mx-auto w-full max-w-xl">
-            <NotificationTimingPage />
-          </div>
+        <TabsContent value="notifications">
+          <NotificationTimingPage />
         </TabsContent>
       </Tabs>
     </div>
