@@ -151,7 +151,6 @@ const VirtualizedCommand = ({
 
       <CommandList
         ref={parentRef}
-        className="overflow-y-auto"
         style={{
           maxHeight: height,
           scrollBehavior: "smooth",
@@ -205,6 +204,7 @@ const VirtualizedCommand = ({
                   height: `${virtualizer.getTotalSize()}px`,
                   position: "relative",
                 }}
+                className="grid min-w-max overflow-hidden"
               >
                 <TooltipProvider delay={500}>
                   {virtualOptions.map((virtualRow) => {
@@ -240,15 +240,13 @@ const VirtualizedCommand = ({
                         )}
 
                         <Tooltip.Root>
-                          <TooltipTrigger>
-                            <div className="min-w-0">
-                              <span className="block truncate">
-                                {filteredOption.label}
-                              </span>
-                            </div>
+                          <TooltipTrigger className="min-w-0">
+                            <span className="block truncate">
+                              {filteredOption.label}
+                            </span>
                           </TooltipTrigger>
 
-                          <TooltipContent>
+                          <TooltipContent side="right" sideOffset={10}>
                             {filteredOption.label}
                           </TooltipContent>
                         </Tooltip.Root>

@@ -10,7 +10,7 @@ import { Button } from "../../ui/button";
 import { Separator } from "../../ui/separator";
 import VirtualizedCombobox from "../../virtualized/virtualized-combobox";
 
-const DEFAULT_DISPLAY_OPTIONS = 3;
+const DEFAULT_DISPLAY_OPTIONS = 1;
 
 type DataTableDropdownFilterProps = {
   filter: FilterConfig;
@@ -28,11 +28,9 @@ const DataTableDropdownFilter = ({
     label,
     options,
     placeholder,
-    mode = "single",
+    multiple: isMultiple = false,
     disabled,
   } = filter || {};
-
-  const isMultiple = mode === "multiple";
 
   // get current filter using id
   const currentFilter = useMemo(() => {
@@ -96,7 +94,7 @@ const DataTableDropdownFilter = ({
       selectedOption={selectedOption}
       placeholder={placeholder || formatString(label || "")}
       onValueChange={handleValueChange}
-      {...filter}
+      modal={false}
       trigger={
         <Button
           type="button"
@@ -152,6 +150,7 @@ const DataTableDropdownFilter = ({
           )}
         </Button>
       }
+      {...filter}
     />
   );
 };

@@ -12,8 +12,8 @@ import type { FilterConfig } from "@/shared/lib/types/table";
 
 // Branch Options
 const branchOptions: DropdownOption[] = [
-  { label: "Kathmandu Branch", value: "kathmandu" },
-  { label: "Pokhara Branch", value: "pokhara" },
+  { label: "Kathmandu Branchdsd asdsadsds", value: "kathmandu" },
+  { label: "Pokhara Branchdasd sdsd sdasdas", value: "pokhara" },
   { label: "Biratnagar Branch", value: "biratnagar" },
   { label: "Butwal Branch", value: "butwal" },
   { label: "Dhangadhi Branch", value: "dhangadhi" },
@@ -40,8 +40,7 @@ const ExpiredPolicyTable = () => {
       label: "Branch",
       options: branchOptions,
       type: "select",
-      mode: "multiple",
-      loading: false,
+      multiple: true,
     },
   ];
 

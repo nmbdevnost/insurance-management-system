@@ -45,11 +45,13 @@ export function AppHeader() {
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Settings</DropdownMenuItem>
+                <DropdownMenuItem render={<Link to="/control-panel" />}>
+                  Settings
+                </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem className="text-destructive">
+                <DropdownMenuItem variant="destructive">
                   Log out
                 </DropdownMenuItem>
               </DropdownMenuGroup>

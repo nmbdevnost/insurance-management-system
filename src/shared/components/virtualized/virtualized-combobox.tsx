@@ -2,7 +2,7 @@ import useControlledState from "@/shared/hooks/use-controlled-state";
 import type { DropdownOption } from "@/shared/lib/types/dropdown";
 import { cn } from "@/shared/lib/utils";
 import { RiArrowDownSLine, RiCloseLine } from "@remixicon/react";
-import type { ComponentProps } from "react";
+import { useMemo, type ComponentProps } from "react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -33,6 +33,7 @@ const VirtualizedCombobox = ({
   limit = 3,
   disabled,
   invalid,
+  options = [],
   ...commandProps
 }: VirtualizedComboboxProps) => {
   const { value, onChange } = useControlledState({
@@ -64,6 +65,14 @@ const VirtualizedCombobox = ({
     );
     commandProps.onValueChange?.(newOptions);
   };
+
+  const contentWidth = useMemo(() => {
+    const longest = options.reduce(
+      (max, o) => (o.label.length > max ? o.label.length : max),
+      0
+    );
+    return longest * 8;
+  }, [options]);
 
   return (
     <Popover modal={modal} open={value} onOpenChange={onChange}>
@@ -136,13 +145,14 @@ const VirtualizedCombobox = ({
 
       <PopoverContent
         align="start"
+        style={{ minWidth: contentWidth + 48 }}
         className={cn(
-          "min-w-44 p-0",
-          autoWidth && "w-(--anchor-width)",
+          "w-fit max-w-72 min-w-44 p-0",
+          autoWidth && "min-w-(--anchor-width)",
           className
         )}
       >
-        <VirtualizedCommand {...commandProps} />
+        <VirtualizedCommand options={options} {...commandProps} />
       </PopoverContent>
     </Popover>
   );
