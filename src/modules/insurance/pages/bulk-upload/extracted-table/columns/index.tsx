@@ -1,73 +1,35 @@
-import InsuranceStatusBadge from "@/shared/components/status-badge";
-import type { ExcelExtractedRow } from "@/shared/lib/types/insurance";
+import type { InsuranceBulkUploadRow } from "@/shared/lib/types/insurance";
 import type { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
 
-const extractedColumns: ColumnDef<ExcelExtractedRow>[] = [
+const extractedColumns: ColumnDef<InsuranceBulkUploadRow>[] = [
   {
-    accessorKey: "Customer Name",
-    header: "Customer Name",
+    accessorKey: "reference_number",
+    header: "Reference Number",
   },
   {
-    accessorKey: "Customer Email",
-    header: "Customer Email",
+    accessorKey: "cif_id",
+    header: "CIF ID",
   },
   {
-    accessorKey: "Customer Phone",
-    header: "Phone",
+    accessorKey: "policy_number",
+    header: "Policy Number",
   },
   {
-    accessorKey: "Customer ID Number",
-    header: "ID Number",
+    accessorKey: "debit_account_number",
+    header: "Debit Account Number",
   },
   {
-    accessorKey: "Reference Identifier",
-    header: "Reference ID",
+    accessorKey: "uploaded_by",
+    header: "Uploaded By",
   },
   {
-    accessorKey: "Proposed Date Time",
-    header: "Proposed Date Time",
-  },
-  {
-    accessorKey: "Scheduled Date Time",
-    header: "Scheduled Date Time",
-  },
-  {
-    accessorKey: "Purpose",
-    header: "Purpose",
-  },
-  {
-    accessorKey: "Location",
-    header: "Location",
-  },
-  {
-    accessorKey: "Assigned Staff",
-    header: "Assigned Staff",
-  },
-  {
-    accessorKey: "Customer TimeZone",
-    header: "Customer TimeZone",
-  },
-  {
-    accessorKey: "Agent TimeZone",
-    header: "Agent TimeZone",
-  },
-  {
-    accessorKey: "Remarks",
-    header: "Remarks",
-  },
-  {
-    accessorKey: "Cancellation Reason",
-    header: "Cancellation Reason",
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    meta: {
-      pin: "right",
+    accessorKey: "uploaded_date",
+    header: "Uploaded Date",
+    cell: ({ row }) => {
+      const date = new Date(row.original.uploaded_date);
+      return format(date, "PPP");
     },
-    cell: ({ row }) => (
-      <InsuranceStatusBadge status={row.original.status || ""} />
-    ),
   },
 ];
 

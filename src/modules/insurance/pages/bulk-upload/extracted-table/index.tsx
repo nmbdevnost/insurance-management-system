@@ -1,13 +1,13 @@
 import DataTable from "@/shared/components/data-table";
 import DataTablePagination from "@/shared/components/data-table/data-table-pagination";
-import type { ExcelExtractedRow } from "@/shared/lib/types/insurance";
+import type { InsuranceBulkUploadRow } from "@/shared/lib/types/insurance";
 import { DataTableProvider } from "@/shared/providers/data-table-provider";
 import extractedColumns from "./columns";
 
 const ExtractedTable = ({
   extractedRows,
 }: {
-  extractedRows: ExcelExtractedRow[];
+  extractedRows: InsuranceBulkUploadRow[];
 }) => {
   return (
     <DataTableProvider columns={extractedColumns} data={extractedRows}>

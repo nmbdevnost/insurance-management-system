@@ -1,24 +1,26 @@
 import { Button } from "@/shared/components/ui/button";
 import { CardContent, CardFooter } from "@/shared/components/ui/card";
-import type { ExcelExtractedRow } from "@/shared/lib/types/insurance";
+import type { InsuranceBulkUploadRow } from "@/shared/lib/types/insurance";
 import { RiArrowLeftLine, RiCheckLine, RiInboxLine } from "@remixicon/react";
 import ExtractedTable from "../extracted-table";
+import { Typography } from "@/shared/components/ui/typography";
+import useLeaveConfirmation from "@/shared/hooks/use-leave-confirmation";
 
 const UploadPreviewStep = ({
   extractedRows,
   setTab,
 }: {
-  extractedRows: ExcelExtractedRow[];
+  extractedRows: InsuranceBulkUploadRow[];
   setTab: (tab: "uploader" | "preview") => void;
 }) => {
   const handleSubmit = () => {};
 
+  useLeaveConfirmation();
+
   return (
     <>
-      <CardContent className="mb-4 w-full">
-        <p className="mb-2 text-lg leading-tight font-medium">
-          Preview & Validation Results
-        </p>
+      <CardContent className="mb-4 w-full space-y-2">
+        <Typography variant="h4">Preview & Validation Results</Typography>
 
         {/* Preview */}
         <ExtractedTable extractedRows={extractedRows} />

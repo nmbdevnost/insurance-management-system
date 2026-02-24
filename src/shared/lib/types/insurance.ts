@@ -14,6 +14,15 @@ export type Insurance = {
   status: string;
 };
 
+export type InsuranceBulkUploadRow = {
+  reference_number: string;
+  cif_id: string;
+  policy_number: string;
+  debit_account_number: string;
+  uploaded_by: string;
+  uploaded_date: string;
+};
+
 export type ExcelExtractedRow = {
   id: string;
   refrence_num: string;

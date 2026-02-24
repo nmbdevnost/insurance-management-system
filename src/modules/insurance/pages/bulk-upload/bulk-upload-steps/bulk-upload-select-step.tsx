@@ -8,7 +8,10 @@ import {
 } from "@/shared/components/ui/alert";
 import { Button } from "@/shared/components/ui/button";
 import { CardContent, CardFooter } from "@/shared/components/ui/card";
-import type { ExcelExtractedRow } from "@/shared/lib/types/insurance";
+import type {
+  ExcelExtractedRow,
+  InsuranceBulkUploadRow,
+} from "@/shared/lib/types/insurance";
 import { parseExcelFile } from "@/shared/lib/utils/excel";
 import type { FileUploadItem } from "@/shared/providers/file-upload-provider";
 import FileUploadProvider from "@/shared/providers/file-upload-provider";
@@ -22,21 +25,12 @@ import {
 } from "react";
 
 const EXPECTED_COLUMNS = [
-  "Customer Name",
-  "Customer Email",
-  "Customer Phone",
-  "Customer ID Number",
-  "Reference Identifier",
-  "Proposed Date Time",
-  "Scheduled Date Time",
-  "Purpose",
-  "Status",
-  "Location",
-  "Assigned Staff",
-  "Customer TimeZone",
-  "Agent TimeZone",
-  "Remarks",
-  "Cancellation Reason",
+  "reference_number",
+  "cif_id",
+  "policy_number",
+  "debit_account_number",
+  "uploaded_by",
+  "uploaded_date",
 ] as const;
 
 interface FileError {
@@ -49,7 +43,7 @@ const BulkUploadSelectStep = ({
   setExtractedRows,
   setTab,
 }: {
-  setExtractedRows: Dispatch<SetStateAction<ExcelExtractedRow[]>>;
+  setExtractedRows: Dispatch<SetStateAction<InsuranceBulkUploadRow[]>>;
   setTab: Dispatch<SetStateAction<"uploader" | "preview">>;
 }) => {
   const [uploadFiles, setUploadFiles] = useState<FileUploadItem[]>([]);
@@ -133,6 +127,7 @@ const BulkUploadSelectStep = ({
         fileName: file.file.name,
         status: "draft",
       }));
+      console.log("🚀 ~ processFile ~ newRows:", newRows);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       setExtractedRows((prev) => [...prev, ...newRows] as any);
@@ -181,7 +176,7 @@ const BulkUploadSelectStep = ({
       setExtractedRows((prev) =>
         prev.filter(
           (row) =>
-            (row as ExcelExtractedRow & { fileName: string }).fileName !==
+            (row as InsuranceBulkUploadRow & { fileName: string }).fileName !==
             file.file.name
         )
       );

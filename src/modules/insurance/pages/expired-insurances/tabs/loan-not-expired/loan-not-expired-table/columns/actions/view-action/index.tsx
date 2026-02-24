@@ -148,12 +148,12 @@ const LoanNotExpiredViewAction = ({
                       </div>
                     </div>
 
-                    <div>
+                    {/* <div>
                       <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                         Segment
                       </label>
                       <div className="mt-1 text-sm">{rowData.segment}</div>
-                    </div>
+                    </div> */}
 
                     <div>
                       <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
