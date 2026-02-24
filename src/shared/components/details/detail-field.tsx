@@ -2,6 +2,7 @@
 import { cn } from "@/shared/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import StatusBadge from "../status-badge";
+import { Typography } from "../ui/typography";
 
 const detailFieldVariants = cva("mt-1 text-sm", {
   variants: {
@@ -9,7 +10,7 @@ const detailFieldVariants = cva("mt-1 text-sm", {
       default: "",
       mono: "font-mono",
       medium: "font-medium",
-      badge: "", // slightly more spacing for badges
+      badge: "",
     },
   },
   defaultVariants: {
@@ -33,14 +34,20 @@ const DetailField = ({
     if (variant === "badge" && typeof value === "string") {
       return <StatusBadge status={value} />;
     }
-    return value;
+
+    return <Typography variant="body-sm">{value}</Typography>;
   };
 
   return (
     <div>
-      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+      <Typography
+        variant="label"
+        className="text-xs font-medium uppercase"
+        muted
+      >
         {label}
-      </label>
+      </Typography>
+
       <div className={cn(detailFieldVariants({ variant }), className)}>
         {renderValue()}
       </div>
