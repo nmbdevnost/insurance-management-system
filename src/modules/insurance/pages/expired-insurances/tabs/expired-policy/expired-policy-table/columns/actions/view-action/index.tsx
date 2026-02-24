@@ -11,6 +11,7 @@ import {
 } from "@/shared/components/ui/dialog";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { TooltipContent, TooltipTrigger } from "@/shared/components/ui/tooltip";
+import { Typography } from "@/shared/components/ui/typography";
 import type { ExpiredPolicy } from "@/shared/lib/types/policies";
 import { formatCurrency } from "@/shared/lib/utils/format";
 import { Tooltip } from "@base-ui/react";
@@ -63,129 +64,205 @@ const ExpiredInsuranceViewAction = ({
             <div className="divide-border bg-muted/50 grid gap-px border-b max-md:divide-y md:grid-cols-4 md:divide-x">
               {/* Status  */}
               <div className="p-4">
-                <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                <Typography
+                  as="p"
+                  variant="label"
+                  className="text-xs tracking-wide uppercase"
+                  muted
+                >
                   Status
-                </div>
+                </Typography>
 
                 <InsuranceStatusBadge status={policy.status} className="mt-2" />
               </div>
 
               {/* Days Left */}
               <div className="p-4">
-                <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                <Typography
+                  as="label"
+                  variant="label"
+                  className="racking-wide text-xs uppercase"
+                  muted
+                >
                   Term Days
-                </div>
+                </Typography>
 
-                <div className="mt-1 text-lg font-semibold">
+                <p className="mt-1 font-mono text-lg font-semibold">
                   {policy.termDays}
-                </div>
+                </p>
               </div>
 
               <div className="p-4">
-                <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                <Typography
+                  as="label"
+                  variant="label"
+                  className="text-xs tracking-wide uppercase"
+                  muted
+                >
                   Premium
-                </div>
-                <div className="mt-1 text-lg font-semibold">
+                </Typography>
+                <p className="mt-1 font-mono text-lg font-semibold">
                   {formatCurrency(policy.totalPremium)}
-                </div>
+                </p>
               </div>
 
               <div className="p-4">
-                <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                <Typography
+                  as="label"
+                  variant="label"
+                  className="text-xs tracking-wide uppercase"
+                  muted
+                >
                   Sum Insured
-                </div>
-                <div className="mt-1 text-lg font-semibold">
+                </Typography>
+                <p className="mt-1 font-mono text-lg font-semibold">
                   {formatCurrency(policy.sumInsured)}
-                </div>
+                </p>
               </div>
             </div>
 
             <div className="space-y-8 p-6">
               {/* Policy Information */}
               <div>
-                <h3 className="mb-4 text-sm font-semibold tracking-wide uppercase">
+                <Typography
+                  as="h3"
+                  variant="overline"
+                  className="mb-4 text-sm"
+                  muted
+                >
                   Policy Information
-                </h3>
+                </Typography>
 
                 <div className="grid gap-6 sm:grid-cols-2">
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Customer Name
-                      </label>
-                      <div className="mt-1 font-mono text-sm">
-                        {policy.customerName}
-                      </div>
-                    </div>
-                    <div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Policy Number
-                      </label>
-                      <div className="mt-1 font-mono text-sm">
-                        {policy.policyNumber}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Reference Number
-                      </label>
-                      <div className="mt-1 font-mono text-sm">
-                        {policy.referenceNo}
-                      </div>
-                    </div>
+                  <div>
+                    <Typography
+                      as="label"
+                      variant="label"
+                      className="text-xs tracking-wide uppercase"
+                      muted
+                    >
+                      Customer Name
+                    </Typography>
+                    <Typography variant="body-sm" className="mt-1 text-sm">
+                      {policy.customerName}
+                    </Typography>
+                  </div>
+                  <div>
+                    <Typography
+                      as="label"
+                      variant="label"
+                      className="text-xs tracking-wide uppercase"
+                      muted
+                    >
+                      Branch
+                    </Typography>
+                    <Typography variant="body-sm" className="mt-1 text-sm">
+                      {policy.branchName}
+                    </Typography>
+                  </div>
+                  <div>
+                    <Typography
+                      as="label"
+                      variant="label"
+                      className="text-xs tracking-wide uppercase"
+                      muted
+                    >
+                      Policy Number
+                    </Typography>
+                    <Typography
+                      variant="body-sm"
+                      className="mt-1 font-mono text-sm"
+                    >
+                      {policy.policyNumber}
+                    </Typography>
                   </div>
 
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Insurance Company
-                      </label>
-                      <div className="mt-1 text-sm">
-                        {policy.insuranceCompany}
-                      </div>
-                    </div>
+                  <div>
+                    <Typography
+                      as="label"
+                      variant="label"
+                      className="text-xs tracking-wide uppercase"
+                      muted
+                    >
+                      Reference Number
+                    </Typography>
+                    <Typography
+                      variant="body-sm"
+                      className="mt-1 font-mono text-sm"
+                    >
+                      {policy.referenceNo}
+                    </Typography>
+                  </div>
+                  <div>
+                    <Typography
+                      as="label"
+                      variant="label"
+                      className="text-xs tracking-wide uppercase"
+                      muted
+                    >
+                      Insurance Company
+                    </Typography>
+                    <Typography variant="body-sm" className="mt-1 text-sm">
+                      {policy.insuranceCompany}
+                    </Typography>
+                  </div>
 
-                    <div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Asset Type
-                      </label>
-                      <div className="mt-1 text-sm">{policy.assetType}</div>
-                    </div>
-
-                    <div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Branch
-                      </label>
-                      <div className="mt-1 text-sm">{policy.branchName}</div>
-                    </div>
+                  <div>
+                    <Typography
+                      as="label"
+                      variant="label"
+                      className="text-xs tracking-wide uppercase"
+                      muted
+                    >
+                      Asset Type
+                    </Typography>
+                    <Typography variant="body-sm" className="mt-1 text-sm">
+                      {policy.assetType}
+                    </Typography>
                   </div>
                 </div>
               </div>
 
               {/* Coverage Details */}
               <div>
-                <h3 className="mb-4 text-sm font-semibold tracking-wide uppercase">
+                <Typography
+                  as="h3"
+                  variant="overline"
+                  className="mb-4 text-sm"
+                  muted
+                >
                   Coverage Details
-                </h3>
+                </Typography>
 
                 <Card className="bg-muted/50 p-4">
                   <div className="grid gap-6 sm:grid-cols-2">
                     <div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                      <Typography
+                        as="label"
+                        variant="label"
+                        className="text-xs tracking-wide uppercase"
+                        muted
+                      >
                         Province
-                      </label>
-                      <div className="mt-1 text-sm">{policy.province}</div>
+                      </Typography>
+                      <Typography variant="body-sm" className="mt-1 text-sm">
+                        {policy.province}
+                      </Typography>
                     </div>
 
                     <div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                      <Typography
+                        as="label"
+                        variant="label"
+                        className="text-xs tracking-wide uppercase"
+                        muted
+                      >
                         Coverage Period
-                      </label>
-                      <div className="mt-1 text-sm">
+                      </Typography>
+                      <Typography variant="body-sm" className="mt-1 text-sm">
                         {format(policy.riskStartDate, "PP")} -{" "}
                         {format(policy.riskMaturityDate, "PP")}
-                      </div>
+                      </Typography>
                     </div>
                   </div>
                 </Card>
@@ -193,64 +270,106 @@ const ExpiredInsuranceViewAction = ({
 
               {/* Financial Summary */}
               <div>
-                <h3 className="mb-4 text-sm font-semibold tracking-wide uppercase">
+                <Typography
+                  as="h3"
+                  variant="overline"
+                  className="mb-4 text-sm"
+                  muted
+                >
                   Financial Summary
-                </h3>
+                </Typography>
 
                 <div className="grid gap-6 sm:grid-cols-2">
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                      <Typography
+                        as="label"
+                        variant="label"
+                        className="text-xs tracking-wide uppercase"
+                        muted
+                      >
                         Sum Insured
-                      </label>
+                      </Typography>
                     </div>
-                    <div className="ml-4 text-sm font-medium">
+                    <Typography
+                      variant="body-sm"
+                      className="ml-4 font-mono font-medium"
+                    >
                       {formatCurrency(policy.sumInsured)}
-                    </div>
+                    </Typography>
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-2 rounded-full bg-blue-500"></div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                      <Typography
+                        as="label"
+                        variant="label"
+                        className="text-xs tracking-wide uppercase"
+                        muted
+                      >
                         Premium
-                      </label>
+                      </Typography>
                     </div>
-                    <div className="ml-4 text-sm font-medium">
+                    <Typography
+                      variant="body-sm"
+                      className="ml-4 font-mono text-sm font-medium"
+                    >
                       {formatCurrency(policy.totalPremium)}
-                    </div>
+                    </Typography>
                   </div>
                 </div>
               </div>
 
               {/* Important Dates */}
               <div>
-                <h3 className="mb-4 text-sm font-semibold tracking-wide uppercase">
+                <Typography
+                  as="h3"
+                  variant="overline"
+                  className="mb-4 text-sm"
+                  muted
+                >
                   Important Dates
-                </h3>
+                </Typography>
 
                 <div className="grid gap-6 sm:grid-cols-2">
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-2 rounded-full bg-orange-500"></div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                      <Typography
+                        as="label"
+                        variant="label"
+                        className="text-xs tracking-wide uppercase"
+                        muted
+                      >
                         Risk Start Date
-                      </label>
+                      </Typography>
                     </div>
-                    <div className="ml-4 text-sm font-medium">
+                    <Typography
+                      variant="body-sm"
+                      className="ml-4 text-sm font-medium"
+                    >
                       {format(policy.riskStartDate, "PPP")}
-                    </div>
+                    </Typography>
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-2 rounded-full bg-red-500"></div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                      <Typography
+                        as="label"
+                        variant="label"
+                        className="text-xs tracking-wide uppercase"
+                        muted
+                      >
                         Risk Maturity Date
-                      </label>
+                      </Typography>
                     </div>
-                    <div className="ml-4 text-sm font-medium">
+                    <Typography
+                      variant="body-sm"
+                      className="ml-4 text-sm font-medium"
+                    >
                       {format(policy.riskMaturityDate, "PPP")}
-                    </div>
+                    </Typography>
                   </div>
                 </div>
               </div>
@@ -259,9 +378,9 @@ const ExpiredInsuranceViewAction = ({
 
           <DialogFooter className="m-0">
             <div className="flex w-full items-center justify-between">
-              <div className="text-muted-foreground text-xs">
+              <Typography variant="body-sm" className="text-xs" muted>
                 Last updated: {new Date().toLocaleDateString()}
-              </div>
+              </Typography>
 
               <div className="flex gap-3">
                 <Button variant="outline" onClick={() => setOpen(false)}>
