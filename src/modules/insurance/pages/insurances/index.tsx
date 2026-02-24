@@ -7,7 +7,7 @@ const InsurancesPage = () => {
     <>
       <div>
         <Typography variant="h3" as="h1">
-          Insurance
+          Insurances
         </Typography>
         <Typography muted>
           Kathmandu Branch &bull; Last Updated:{" "}

@@ -4,7 +4,7 @@ import { getPageRange } from "@/shared/lib/utils/data-table";
 import { useDataTable } from "@/shared/providers/data-table-provider";
 import { RiArrowLeftLine, RiArrowRightLine } from "@remixicon/react";
 import { useMemo } from "react";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import {
   Select,
   SelectContent,
@@ -55,16 +55,15 @@ const DataTablePagination = ({ className }: { className?: string }) => {
         {/* Pages */}
         {pageRange.map((page, index) =>
           page === "..." ? (
-            <Button
+            <span
               key={`ellipsis-${index}`}
-              size="icon"
-              variant="ghost"
-              type="button"
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "icon" }),
+                "pointer-events-none"
+              )}
             >
-              <span className="text-muted-foreground flex size-8 items-center justify-center text-sm">
-                &#8230;
-              </span>
-            </Button>
+              &#8230;
+            </span>
           ) : (
             <Button
               key={page}

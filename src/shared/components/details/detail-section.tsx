@@ -1,6 +1,7 @@
 // DetailsSection.tsx
 
 import { cn } from "@/shared/lib/utils";
+import { Typography } from "../ui/typography";
 
 interface DetailsSectionProps {
   title: string;
@@ -14,12 +15,12 @@ const DetailsSection = ({
   className,
 }: DetailsSectionProps) => {
   return (
-    <div className={className}>
-      <h3 className="mb-4 text-sm font-semibold tracking-wide uppercase">
+    <div>
+      <Typography variant="overline" muted>
         {title}
-      </h3>
+      </Typography>
 
-      <div className={cn("grid gap-6 sm:grid-cols-2", className)}>
+      <div className={cn("mt-2 grid gap-6 sm:grid-cols-2", className)}>
         {children}
       </div>
     </div>

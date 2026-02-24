@@ -1,78 +1,117 @@
+import { Button } from "@/shared/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/shared/components/ui/card";
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
   FieldLegend,
+  FieldSeparator,
   FieldSet,
 } from "@/shared/components/ui/field";
 import { Input } from "@/shared/components/ui/input";
 import {
   Item,
   ItemContent,
+  ItemDescription,
   ItemMedia,
-  ItemTitle,
 } from "@/shared/components/ui/item";
 import { Typography } from "@/shared/components/ui/typography";
-import { RiSettings2Line } from "@remixicon/react";
+import { RiSaveLine, RiSettings2Line } from "@remixicon/react";
 
 const SystemConfigurationPage = () => {
   return (
     <>
-      <form>
-        <FieldSet>
-          <FieldLegend>
-            <Typography variant="h5">Sytstem Configuration</Typography>
-          </FieldLegend>
-          <FieldDescription>
-            <Typography variant="body-sm">
-              General notification and email settings.
-            </Typography>
-          </FieldDescription>
+      <Card>
+        <form>
+          <FieldSet>
+            <CardHeader>
+              <CardTitle>
+                <FieldLegend>
+                  <Typography variant="h5">Sytstem Configuration</Typography>
+                </FieldLegend>
+              </CardTitle>
 
-          <FieldGroup>
-            <Field>
-              <FieldLabel htmlFor="auto-renewal-trigger">
-                Auto-Renewal Trigger (days before expiry)
-              </FieldLabel>
-              <Input id="auto-renewal-trigger" type="text" placeholder="30" />
-              <FieldDescription>
-                Trigger auto-renewal process this many days before expiry.
-              </FieldDescription>
-            </Field>
+              <CardDescription>
+                <FieldDescription>
+                  <Typography variant="body-sm">
+                    General notification and email settings.
+                  </Typography>
+                </FieldDescription>
+              </CardDescription>
+            </CardHeader>
 
-            <Field>
-              <FieldLabel htmlFor="email-send-time">Email Send Time</FieldLabel>
-              <Input id="email-send-time" type="time" />
-              <FieldDescription>
-                Time of day to send scheduled emails.
-              </FieldDescription>
-            </Field>
+            <FieldSeparator />
 
-            <Field>
-              <FieldLabel htmlFor="maximum-retry-attempts">
-                Maximum Retry Attempts
-              </FieldLabel>
-              <Input id="maximum-retry-attempts" type="text" placeholder="3" />
-              <FieldDescription>
-                Maximum attempts to retry failed email attempts.
-              </FieldDescription>
-            </Field>
-          </FieldGroup>
+            <CardContent>
+              <FieldGroup>
+                <Field>
+                  <FieldLabel htmlFor="auto-renewal-trigger">
+                    Auto-Renewal Trigger (days before expiry)
+                  </FieldLabel>
+                  <Input
+                    id="auto-renewal-trigger"
+                    type="text"
+                    placeholder="30"
+                  />
+                  <FieldDescription>
+                    Trigger auto-renewal process this many days before expiry.
+                  </FieldDescription>
+                </Field>
 
-          <Item variant="outline" size="sm">
-            <ItemMedia variant="icon">
-              <RiSettings2Line className="text-muted-foreground size-5" />
-            </ItemMedia>
-            <ItemContent>
-              <ItemTitle className="text-muted-foreground">
-                Changes will take effect after saving and regenerating scheduled
-                notifications.
-              </ItemTitle>
-            </ItemContent>
-          </Item>
-        </FieldSet>
-      </form>
+                <Field>
+                  <FieldLabel htmlFor="email-send-time">
+                    Email Send Time
+                  </FieldLabel>
+                  <Input id="email-send-time" type="time" />
+                  <FieldDescription>
+                    Time of day to send scheduled emails.
+                  </FieldDescription>
+                </Field>
+
+                <Field>
+                  <FieldLabel htmlFor="maximum-retry-attempts">
+                    Maximum Retry Attempts
+                  </FieldLabel>
+                  <Input
+                    id="maximum-retry-attempts"
+                    type="text"
+                    placeholder="3"
+                  />
+                  <FieldDescription>
+                    Maximum attempts to retry failed email attempts.
+                  </FieldDescription>
+                </Field>
+              </FieldGroup>
+
+              <Item variant="outline" size="sm" className="mt-4">
+                <ItemMedia variant="icon">
+                  <RiSettings2Line className="text-primary size-5" />
+                </ItemMedia>
+                <ItemContent>
+                  <ItemDescription>
+                    Changes will take effect after saving and regenerating
+                    scheduled notifications.
+                  </ItemDescription>
+                </ItemContent>
+              </Item>
+            </CardContent>
+
+            <CardFooter>
+              <Button className="ml-auto">
+                <RiSaveLine /> Save Changes
+              </Button>
+            </CardFooter>
+          </FieldSet>
+        </form>
+      </Card>
     </>
   );
 };
