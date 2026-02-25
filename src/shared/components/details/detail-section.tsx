@@ -4,7 +4,7 @@ import { cn } from "@/shared/lib/utils";
 import { Typography } from "../ui/typography";
 
 interface DetailsSectionProps {
-  title: string;
+  title: string | React.ReactNode;
   children: React.ReactNode;
   className?: string;
 }

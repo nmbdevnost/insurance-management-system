@@ -1,3 +1,6 @@
+import { DetailField } from "@/shared/components/details/detail-field";
+import { DetailsSection } from "@/shared/components/details/detail-section";
+import DetailSectionGroup from "@/shared/components/details/detail-section-group";
 import InsuranceStatusBadge from "@/shared/components/status-badge";
 import { Button } from "@/shared/components/ui/button";
 import {
@@ -12,6 +15,7 @@ import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { TooltipContent, TooltipTrigger } from "@/shared/components/ui/tooltip";
 import { Typography } from "@/shared/components/ui/typography";
 import type { Insurance } from "@/shared/lib/types/insurance";
+import { formatCurrency } from "@/shared/lib/utils/format";
 import { Tooltip } from "@base-ui/react";
 import { RiEyeLine, RiShieldCheckLine } from "@remixicon/react";
 import { format } from "date-fns";
@@ -33,7 +37,7 @@ const InsuranceViewAction = ({ rowData }: { rowData: Insurance }) => {
       </Tooltip.Root>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-4xl! gap-0 overflow-hidden p-0">
+        <DialogContent className="max-w-3xl! gap-0 overflow-hidden p-0">
           <DialogHeader className="flex flex-row items-center space-y-1 border-b px-6 py-4">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg border">
               <RiShieldCheckLine className="size-5" />
@@ -43,7 +47,7 @@ const InsuranceViewAction = ({ rowData }: { rowData: Insurance }) => {
               <DialogTitle className="flex items-center gap-3 text-lg font-semibold">
                 Insurance Details
               </DialogTitle>
-              <DialogDescription className="text-muted-foreground text-sm font-normal">
+              <DialogDescription className="text-muted-foreground font-mono text-sm font-normal">
                 {rowData.policy_number}
               </DialogDescription>
             </div>
@@ -53,6 +57,7 @@ const InsuranceViewAction = ({ rowData }: { rowData: Insurance }) => {
             {/* Key Information Bar */}
             <div className="divide-border bg-muted/50 grid gap-px border-b max-md:divide-y md:grid-cols-4 md:divide-x">
               {/* Status */}
+
               <div className="p-4">
                 <Typography
                   as="p"
@@ -78,7 +83,7 @@ const InsuranceViewAction = ({ rowData }: { rowData: Insurance }) => {
                 >
                   Policy Number
                 </Typography>
-                <p className="mt-1 text-lg font-semibold">
+                <p className="mt-1 font-mono text-lg font-semibold">
                   {rowData.policy_number}
                 </p>
               </div>
@@ -93,7 +98,9 @@ const InsuranceViewAction = ({ rowData }: { rowData: Insurance }) => {
                 >
                   CIF ID
                 </Typography>
-                <p className="mt-1 text-lg font-semibold">{rowData.cif_id}</p>
+                <p className="mt-1 font-mono text-lg font-semibold">
+                  {rowData.cif_id}
+                </p>
               </div>
 
               {/* Account No */}
@@ -109,191 +116,64 @@ const InsuranceViewAction = ({ rowData }: { rowData: Insurance }) => {
                 <p className="mt-1 text-lg font-semibold">{rowData.type}</p>
               </div>
             </div>
-
-            <div className="space-y-8 p-6">
-              {/* Loan Information */}
-              <div className="space-y-2">
-                <Typography
-                  as="h3"
-                  variant="overline"
-                  className="mb-4 text-sm"
-                  muted
-                >
-                  Loan Information
-                </Typography>
-                <div className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
-                  <div>
-                    <Typography
-                      as="label"
-                      variant="label"
-                      className="text-xs tracking-wide uppercase"
-                      muted
-                    >
-                      Branch
-                    </Typography>
-                    <Typography variant="body-sm" className="mt-1 text-sm">
-                      {rowData.branch}
-                    </Typography>
-                  </div>
-                  <div>
-                    <Typography
-                      as="label"
-                      variant="label"
-                      className="text-xs tracking-wide uppercase"
-                      muted
-                    >
-                      Province
-                    </Typography>
-                    <Typography variant="body-sm" className="mt-1 text-sm">
-                      {rowData.province}
-                    </Typography>
-                  </div>
-                  <div>
-                    <Typography
-                      variant="label"
-                      as="label"
-                      className="text-xs tracking-wide uppercase"
-                      muted
-                    >
-                      Policy Number
-                    </Typography>
-                    <Typography
-                      variant="body-sm"
-                      className="mt-1 font-mono text-sm"
-                    >
-                      {rowData.policy_number}
-                    </Typography>
-                  </div>
-                  <div>
-                    <Typography
-                      variant="label"
-                      as="label"
-                      className="text-xs tracking-wide uppercase"
-                      muted
-                    >
-                      Segment
-                    </Typography>
-                    <div className="mt-1 text-sm">{rowData.segment}</div>
-                  </div>
-                  <div>
-                    <Typography
-                      as="label"
-                      variant="label"
-                      className="text-xs tracking-wide uppercase"
-                      muted
-                    >
-                      Premium
-                    </Typography>
-                    <Typography
-                      variant="body-sm"
-                      className="mt-1 font-mono text-sm"
-                    >
-                      Rs.{rowData.total_premium}
-                    </Typography>
-                  </div>
-                </div>
-              </div>
+            <DetailSectionGroup>
+              <DetailsSection title="Loan Information">
+                <DetailField label="Branch" value={rowData.branch} />
+                <DetailField label="Province" value={rowData.province} />
+                <DetailField
+                  label="Policy Number"
+                  value={rowData.policy_number}
+                  variant="mono"
+                />
+                <DetailField label="Segment" value={rowData.segment} />
+                <DetailField
+                  label="Premium"
+                  value={`${formatCurrency(rowData.total_premium)}`}
+                />
+              </DetailsSection>
 
               {/* Coverage Details */}
-              <div>
-                <Typography
-                  as="h3"
-                  variant="overline"
-                  className="mb-4 text-sm"
-                  muted
-                >
-                  Coverage Details
-                </Typography>
-                <div className="bg-muted/50 rounded-lg border p-4">
-                  <div className="grid gap-6 sm:grid-cols-2">
-                    <div>
-                      <Typography
-                        as="label"
-                        variant="label"
-                        className="text-xs tracking-wide uppercase"
-                        muted
-                      >
-                        Province
-                      </Typography>
-                      <Typography variant="body-sm" className="mt-1 text-sm">
-                        {rowData.province}
-                      </Typography>
-                    </div>
-                    <div>
-                      <Typography
-                        as="label"
-                        variant="label"
-                        className="text-xs tracking-wide uppercase"
-                        muted
-                      >
-                        Coverage Period
-                      </Typography>
-                      <Typography variant="body-sm" className="mt-1 text-sm">
-                        {format(rowData.risk_start_date, "PP")}-
-                        {format(rowData.maturity_end_date, "PP")}
-                      </Typography>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <DetailsSection
+                title="Coverage Details"
+                className="bg-muted/50 rounded-lg border p-4"
+              >
+                <DetailField label="Province" value={rowData.province} />
+                <DetailField
+                  label="Coverage Period"
+                  value={` ${format(rowData.risk_start_date, "PP")}-
+                        ${format(rowData.maturity_end_date, "PP")}`}
+                />
+              </DetailsSection>
 
               {/* Important Dates */}
-              <div>
-                <Typography
-                  as="h3"
-                  variant="overline"
-                  className="mb-4 text-sm"
-                  muted
-                >
-                  Important Dates
-                </Typography>
-                <div className="grid gap-6 sm:grid-cols-2">
-                  {rowData.risk_start_date && (
-                    <div className="space-y-2">
+              <DetailsSection title="Important Dates">
+                {rowData.risk_start_date && (
+                  <DetailField
+                    label={
                       <div className="flex items-center gap-2">
-                        <div className="h-2 w-2 rounded-full bg-purple-500"></div>
-                        <Typography
-                          as="label"
-                          variant="label"
-                          className="text-xs tracking-wide uppercase"
-                          muted
-                        >
-                          Risk Start Date
-                        </Typography>
+                        <div className="h-2 w-2 rounded-full bg-purple-500"></div>{" "}
+                        Risk Start Date
                       </div>
-                      <Typography
-                        variant="body-sm"
-                        className="ml-4 font-medium"
-                      >
-                        {format(rowData.risk_start_date, "PPP")}
-                      </Typography>
-                    </div>
-                  )}
+                    }
+                    className="ml-4 font-medium"
+                    value={`${format(rowData.risk_start_date, "PPP")}`}
+                  />
+                )}
 
-                  {rowData.maturity_end_date && (
-                    <div className="space-y-2">
+                {rowData.maturity_end_date && (
+                  <DetailField
+                    label={
                       <div className="flex items-center gap-2">
-                        <div className="h-2 w-2 rounded-full bg-purple-500"></div>
-                        <Typography
-                          as="label"
-                          className="text-xs tracking-wide uppercase"
-                          variant="label"
-                          muted
-                        >
-                          Maturity End Date
-                        </Typography>
+                        <div className="bg-destructive h-2 w-2 rounded-full"></div>{" "}
+                        Risk Maturity Date
                       </div>
-                      <Typography
-                        variant="body-sm"
-                        className="ml-4 font-medium"
-                      >
-                        {format(rowData.maturity_end_date, "PPP")}
-                      </Typography>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+                    }
+                    className="ml-4 font-medium"
+                    value={`${format(rowData.maturity_end_date, "PPP")}`}
+                  />
+                )}
+              </DetailsSection>
+            </DetailSectionGroup>
           </ScrollArea>
 
           <DialogFooter className="m-0">

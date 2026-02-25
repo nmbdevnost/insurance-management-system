@@ -1,6 +1,8 @@
+import { DetailField } from "@/shared/components/details/detail-field";
+import { DetailsSection } from "@/shared/components/details/detail-section";
+import DetailSectionGroup from "@/shared/components/details/detail-section-group";
 import InsuranceStatusBadge from "@/shared/components/status-badge";
 import { Button } from "@/shared/components/ui/button";
-import { Card } from "@/shared/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -43,7 +45,7 @@ const LoanNotExpiredViewAction = ({
       </Tooltip.Root>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-4xl! gap-0 overflow-hidden p-0">
+        <DialogContent className="max-w-3xl! gap-0 overflow-hidden p-0">
           <DialogHeader className="flex flex-row items-center space-y-1 border-b px-6 py-4">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg border">
               <RiShieldCheckLine className="size-5" />
@@ -53,7 +55,7 @@ const LoanNotExpiredViewAction = ({
               <DialogTitle className="flex items-center gap-3 text-lg font-semibold text-slate-900">
                 Loan Details
               </DialogTitle>
-              <DialogDescription className="text-muted-foreground text-sm font-normal">
+              <DialogDescription className="text-muted-foreground font-mono text-sm font-normal">
                 {rowData.policyNumber}
               </DialogDescription>
             </div>
@@ -89,9 +91,7 @@ const LoanNotExpiredViewAction = ({
                   Term Days
                 </Typography>
 
-                <p className="mt-1 font-mono text-lg font-semibold">
-                  {rowData.termDays}
-                </p>
+                <p className="mt-1 text-lg font-semibold">{rowData.termDays}</p>
               </div>
 
               <div className="p-4">
@@ -103,7 +103,7 @@ const LoanNotExpiredViewAction = ({
                 >
                   Premium
                 </Typography>
-                <p className="mt-1 font-mono text-lg font-semibold">
+                <p className="mt-1 text-lg font-semibold">
                   {formatCurrency(rowData.totalPremium)}
                 </p>
               </div>
@@ -116,253 +116,100 @@ const LoanNotExpiredViewAction = ({
                 >
                   Sum Insured
                 </Typography>
-                <div className="mt-1 font-mono text-lg font-semibold">
+                <p className="mt-1 text-lg font-semibold">
                   {formatCurrency(rowData.sumInsured)}
-                </div>
+                </p>
               </div>
             </div>
 
-            <div className="space-y-8 p-6">
+            <DetailSectionGroup>
               {/* Policy Information */}
-              <div>
-                <Typography
-                  as="h3"
-                  variant="overline"
-                  className="mb-4 text-sm"
-                  muted
-                >
-                  Policy Information
-                </Typography>
-
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <Typography
-                      as="label"
-                      variant="label"
-                      className="text-xs tracking-wide uppercase"
-                      muted
-                    >
-                      Policy Number
-                    </Typography>
-                    <Typography
-                      variant="body-sm"
-                      className="mt-1 font-mono text-sm"
-                    >
-                      {rowData.policyNumber}
-                    </Typography>
-                  </div>
-                  <div>
-                    <Typography
-                      as="label"
-                      variant="body-sm"
-                      className="text-xs tracking-wide uppercase"
-                      muted
-                    >
-                      Branch
-                    </Typography>
-                    <Typography variant="body-sm" className="mt-1 text-sm">
-                      {rowData.branchName}
-                    </Typography>
-                  </div>
-
-                  <div>
-                    <Typography
-                      as="label"
-                      variant="label"
-                      className="text-xs tracking-wide uppercase"
-                      muted
-                    >
-                      Reference Number
-                    </Typography>
-                    <Typography
-                      variant="body-sm"
-                      className="mt-1 font-mono text-sm"
-                    >
-                      {rowData.referenceNo}
-                    </Typography>
-                  </div>
-
-                  <div>
-                    <Typography
-                      as="label"
-                      variant="label"
-                      className="text-xs tracking-wide uppercase"
-                      muted
-                    >
-                      Asset Type
-                    </Typography>
-                    <Typography variant="body-sm" className="mt-1 text-sm">
-                      {rowData.assetType}
-                    </Typography>
-                  </div>
-
-                  <div>
-                    <Typography
-                      as="label"
-                      variant="label"
-                      className="text-xs tracking-wide uppercase"
-                      muted
-                    >
-                      Insurance Company
-                    </Typography>
-                    <Typography variant="body-sm" className="mt-1 text-sm">
-                      {rowData.insuranceCompany}
-                    </Typography>
-                  </div>
-                </div>
-              </div>
+              <DetailsSection title="Policy Information">
+                <DetailField
+                  label="Policy Number"
+                  value={rowData.policyNumber}
+                  variant="mono"
+                />
+                <DetailField label="Branch" value={rowData.branchName} />
+                <DetailField
+                  label="Reference Number"
+                  value={rowData.referenceNo}
+                  variant="mono"
+                />
+                <DetailField label="Asset Type" value={rowData.assetType} />
+                <DetailField
+                  label="Insurance Company"
+                  value={rowData.assetType}
+                />
+              </DetailsSection>
 
               {/* Coverage Details */}
-              <div>
-                <Typography
-                  as="h3"
-                  variant="overline"
-                  className="mb-4 text-sm"
-                  muted
-                >
-                  Coverage Details
-                </Typography>
 
-                <Card className="bg-muted/50 p-4">
-                  <div className="grid gap-6 sm:grid-cols-2">
-                    <div>
-                      <Typography
-                        as="label"
-                        variant="label"
-                        className="text-xs tracking-wide uppercase"
-                        muted
-                      >
-                        Province
-                      </Typography>
-                      <Typography variant="body-sm" className="mt-1 text-sm">
-                        {rowData.province}
-                      </Typography>
-                    </div>
-
-                    <div>
-                      <Typography
-                        as="label"
-                        variant="label"
-                        className="text-xs tracking-wide uppercase"
-                        muted
-                      >
-                        Coverage Period
-                      </Typography>
-                      <Typography variant="body-sm" className="mt-1 text-sm">
-                        {format(rowData.riskStartDate, "PP")} -{" "}
-                        {format(rowData.riskMaturityDate, "PP")}
-                      </Typography>
-                    </div>
-                  </div>
-                </Card>
-              </div>
+              <DetailsSection
+                title="Coverage Details"
+                className="bg-muted/50 rounded-lg border p-4"
+              >
+                <DetailField label="Province" value={rowData.province} />
+                <DetailField
+                  label="Coverage Period"
+                  value={`${format(rowData.riskStartDate, "PP")} -
+                        ${format(rowData.riskMaturityDate, "PP")}`}
+                />
+              </DetailsSection>
 
               {/* Financial Summary */}
-              <div>
-                <Typography
-                  as="h3"
-                  variant="overline"
-                  className="mb-4 text-sm"
-                  muted
-                >
-                  Financial Summary
-                </Typography>
-
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div className="space-y-2">
+              <DetailsSection title="Financial Summary">
+                <DetailField
+                  label={
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                      <Typography
-                        as="label"
-                        variant="label"
-                        className="text-xs tracking-wide uppercase"
-                        muted
-                      >
-                        Sum Insured
-                      </Typography>
+                      Sum Insured
                     </div>
-                    <Typography
-                      variant="body-sm"
-                      className="ml-4 font-mono text-sm font-medium"
-                    >
-                      {formatCurrency(rowData.sumInsured)}
-                    </Typography>
-                  </div>
-                  <div className="space-y-2">
+                  }
+                  className="ml-4"
+                  value={`${formatCurrency(rowData.sumInsured)}`}
+                />
+                <DetailField
+                  label={
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-2 rounded-full bg-blue-500"></div>
-                      <Typography
-                        as="label"
-                        variant="label"
-                        className="text-xs tracking-wide uppercase"
-                        muted
-                      >
-                        Premium
-                      </Typography>
+                      Premium
                     </div>
-                    <Typography
-                      variant="body-sm"
-                      className="ml-4 font-mono text-sm font-medium"
-                    >
-                      {formatCurrency(rowData.totalPremium)}
-                    </Typography>
-                  </div>
-                </div>
-              </div>
+                  }
+                  className="ml-4"
+                  value={`${formatCurrency(rowData.totalPremium)}`}
+                />
+              </DetailsSection>
 
               {/* Important Dates */}
-              <div>
-                <Typography
-                  as="h3"
-                  variant="overline"
-                  className="mb-4 text-sm"
-                  muted
-                >
-                  Important Dates
-                </Typography>
-
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className="h-2 w-2 rounded-full bg-orange-500"></div>
-                      <Typography
-                        as="label"
-                        variant="label"
-                        className="text-xs tracking-wide uppercase"
-                        muted
-                      >
+              <DetailsSection title="Important Dates">
+                {rowData.riskStartDate && (
+                  <DetailField
+                    label={
+                      <div className="flex items-center gap-2">
+                        <div className="h-2 w-2 rounded-full bg-purple-500"></div>{" "}
                         Risk Start Date
-                      </Typography>
-                    </div>
-                    <Typography
-                      variant="body-sm"
-                      className="ml-4 text-sm font-medium"
-                    >
-                      {format(rowData.riskStartDate, "PPP")}
-                    </Typography>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className="h-2 w-2 rounded-full bg-red-500"></div>
-                      <Typography
-                        as="label"
-                        variant="label"
-                        className="text-xs tracking-wide uppercase"
-                        muted
-                      >
+                      </div>
+                    }
+                    className="ml-4 font-medium"
+                    value={`${format(rowData.riskStartDate, "PPP")}`}
+                  />
+                )}
+
+                {rowData.riskMaturityDate && (
+                  <DetailField
+                    label={
+                      <div className="flex items-center gap-2">
+                        <div className="bg-destructive h-2 w-2 rounded-full"></div>{" "}
                         Risk Maturity Date
-                      </Typography>
-                    </div>
-                    <Typography
-                      variant="body-sm"
-                      className="ml-4 text-sm font-medium"
-                    >
-                      {format(rowData.riskMaturityDate, "PPP")}
-                    </Typography>
-                  </div>
-                </div>
-              </div>
-            </div>
+                      </div>
+                    }
+                    className="ml-4 font-medium"
+                    value={`${format(rowData.riskMaturityDate, "PPP")}`}
+                  />
+                )}
+              </DetailsSection>
+            </DetailSectionGroup>
           </ScrollArea>
 
           <DialogFooter className="m-0">

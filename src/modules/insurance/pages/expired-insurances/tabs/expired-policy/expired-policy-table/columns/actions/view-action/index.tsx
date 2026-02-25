@@ -1,6 +1,8 @@
+import { DetailField } from "@/shared/components/details/detail-field";
+import { DetailsSection } from "@/shared/components/details/detail-section";
+import DetailSectionGroup from "@/shared/components/details/detail-section-group";
 import InsuranceStatusBadge from "@/shared/components/status-badge";
 import { Button } from "@/shared/components/ui/button";
-import { Card } from "@/shared/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -43,7 +45,7 @@ const ExpiredInsuranceViewAction = ({
       </Tooltip.Root>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-4xl! gap-0 overflow-hidden p-0">
+        <DialogContent className="max-w-3xl! gap-0 overflow-hidden p-0">
           <DialogHeader className="flex flex-row items-center space-y-1 border-b px-6 py-4">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg border">
               <RiShieldCheckLine className="size-5" />
@@ -53,7 +55,7 @@ const ExpiredInsuranceViewAction = ({
               <DialogTitle className="flex items-center gap-3 text-lg font-semibold text-slate-900">
                 Policy Details
               </DialogTitle>
-              <DialogDescription className="text-muted-foreground text-sm font-normal">
+              <DialogDescription className="text-muted-foreground font-mono text-sm font-normal">
                 {policy.policyNumber}
               </DialogDescription>
             </div>
@@ -87,9 +89,7 @@ const ExpiredInsuranceViewAction = ({
                   Term Days
                 </Typography>
 
-                <p className="mt-1 font-mono text-lg font-semibold">
-                  {policy.termDays}
-                </p>
+                <p className="mt-1 text-lg font-semibold">{policy.termDays}</p>
               </div>
 
               <div className="p-4">
@@ -101,7 +101,7 @@ const ExpiredInsuranceViewAction = ({
                 >
                   Premium
                 </Typography>
-                <p className="mt-1 font-mono text-lg font-semibold">
+                <p className="mt-1 text-lg font-semibold">
                   {formatCurrency(policy.totalPremium)}
                 </p>
               </div>
@@ -115,265 +115,102 @@ const ExpiredInsuranceViewAction = ({
                 >
                   Sum Insured
                 </Typography>
-                <p className="mt-1 font-mono text-lg font-semibold">
+                <p className="mt-1 text-lg font-semibold">
                   {formatCurrency(policy.sumInsured)}
                 </p>
               </div>
             </div>
-
-            <div className="space-y-8 p-6">
+            <DetailSectionGroup>
+              <DetailsSection title="Policy Information">
+                <DetailField
+                  label="Customer Name"
+                  value={policy.customerName}
+                />
+                <DetailField label="Branch" value={policy.branchName} />
+                <DetailField
+                  label="Policy Number"
+                  value={policy.policyNumber}
+                  variant="mono"
+                />
+                <DetailField
+                  label="Reference No"
+                  value={policy.referenceNo}
+                  variant="mono"
+                />
+                <DetailField
+                  label="Insurance Company"
+                  value={policy.insuranceCompany}
+                />
+                <DetailField label="Asset Type" value={policy.assetType} />
+              </DetailsSection>
               {/* Policy Information */}
-              <div>
-                <Typography
-                  as="h3"
-                  variant="overline"
-                  className="mb-4 text-sm"
-                  muted
-                >
-                  Policy Information
-                </Typography>
-
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div>
-                    <Typography
-                      as="label"
-                      variant="label"
-                      className="text-xs tracking-wide uppercase"
-                      muted
-                    >
-                      Customer Name
-                    </Typography>
-                    <Typography variant="body-sm" className="mt-1 text-sm">
-                      {policy.customerName}
-                    </Typography>
-                  </div>
-                  <div>
-                    <Typography
-                      as="label"
-                      variant="label"
-                      className="text-xs tracking-wide uppercase"
-                      muted
-                    >
-                      Branch
-                    </Typography>
-                    <Typography variant="body-sm" className="mt-1 text-sm">
-                      {policy.branchName}
-                    </Typography>
-                  </div>
-                  <div>
-                    <Typography
-                      as="label"
-                      variant="label"
-                      className="text-xs tracking-wide uppercase"
-                      muted
-                    >
-                      Policy Number
-                    </Typography>
-                    <Typography
-                      variant="body-sm"
-                      className="mt-1 font-mono text-sm"
-                    >
-                      {policy.policyNumber}
-                    </Typography>
-                  </div>
-
-                  <div>
-                    <Typography
-                      as="label"
-                      variant="label"
-                      className="text-xs tracking-wide uppercase"
-                      muted
-                    >
-                      Reference Number
-                    </Typography>
-                    <Typography
-                      variant="body-sm"
-                      className="mt-1 font-mono text-sm"
-                    >
-                      {policy.referenceNo}
-                    </Typography>
-                  </div>
-                  <div>
-                    <Typography
-                      as="label"
-                      variant="label"
-                      className="text-xs tracking-wide uppercase"
-                      muted
-                    >
-                      Insurance Company
-                    </Typography>
-                    <Typography variant="body-sm" className="mt-1 text-sm">
-                      {policy.insuranceCompany}
-                    </Typography>
-                  </div>
-
-                  <div>
-                    <Typography
-                      as="label"
-                      variant="label"
-                      className="text-xs tracking-wide uppercase"
-                      muted
-                    >
-                      Asset Type
-                    </Typography>
-                    <Typography variant="body-sm" className="mt-1 text-sm">
-                      {policy.assetType}
-                    </Typography>
-                  </div>
-                </div>
-              </div>
 
               {/* Coverage Details */}
-              <div>
-                <Typography
-                  as="h3"
-                  variant="overline"
-                  className="mb-4 text-sm"
-                  muted
-                >
-                  Coverage Details
-                </Typography>
-
-                <Card className="bg-muted/50 p-4">
-                  <div className="grid gap-6 sm:grid-cols-2">
-                    <div>
-                      <Typography
-                        as="label"
-                        variant="label"
-                        className="text-xs tracking-wide uppercase"
-                        muted
-                      >
-                        Province
-                      </Typography>
-                      <Typography variant="body-sm" className="mt-1 text-sm">
-                        {policy.province}
-                      </Typography>
-                    </div>
-
-                    <div>
-                      <Typography
-                        as="label"
-                        variant="label"
-                        className="text-xs tracking-wide uppercase"
-                        muted
-                      >
-                        Coverage Period
-                      </Typography>
-                      <Typography variant="body-sm" className="mt-1 text-sm">
-                        {format(policy.riskStartDate, "PP")} -{" "}
-                        {format(policy.riskMaturityDate, "PP")}
-                      </Typography>
-                    </div>
-                  </div>
-                </Card>
-              </div>
+              <DetailsSection
+                title="Coverage Details"
+                className="bg-muted/50 rounded-lg border p-4"
+              >
+                <DetailField label="Province" value={policy.province} />
+                <DetailField
+                  label="Coverage Period"
+                  value={`${format(policy.riskStartDate, "PP")} -
+                        ${format(policy.riskMaturityDate, "PP")}`}
+                />
+              </DetailsSection>
 
               {/* Financial Summary */}
-              <div>
-                <Typography
-                  as="h3"
-                  variant="overline"
-                  className="mb-4 text-sm"
-                  muted
-                >
-                  Financial Summary
-                </Typography>
-
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div className="space-y-2">
+              <DetailsSection title="Financial Summary">
+                <DetailField
+                  label={
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                      <Typography
-                        as="label"
-                        variant="label"
-                        className="text-xs tracking-wide uppercase"
-                        muted
-                      >
-                        Sum Insured
-                      </Typography>
+                      Sum Insured
                     </div>
-                    <Typography
-                      variant="body-sm"
-                      className="ml-4 font-mono font-medium"
-                    >
-                      {formatCurrency(policy.sumInsured)}
-                    </Typography>
-                  </div>
-                  <div className="space-y-2">
+                  }
+                  className="ml-4"
+                  value={`${formatCurrency(policy.sumInsured)}`}
+                />
+                <DetailField
+                  label={
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-2 rounded-full bg-blue-500"></div>
-                      <Typography
-                        as="label"
-                        variant="label"
-                        className="text-xs tracking-wide uppercase"
-                        muted
-                      >
-                        Premium
-                      </Typography>
+                      Premium
                     </div>
-                    <Typography
-                      variant="body-sm"
-                      className="ml-4 font-mono text-sm font-medium"
-                    >
-                      {formatCurrency(policy.totalPremium)}
-                    </Typography>
-                  </div>
-                </div>
-              </div>
+                  }
+                  className="ml-4"
+                  value={`${formatCurrency(policy.totalPremium)}`}
+                />
+              </DetailsSection>
 
               {/* Important Dates */}
-              <div>
-                <Typography
-                  as="h3"
-                  variant="overline"
-                  className="mb-4 text-sm"
-                  muted
-                >
-                  Important Dates
-                </Typography>
-
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className="h-2 w-2 rounded-full bg-orange-500"></div>
-                      <Typography
-                        as="label"
-                        variant="label"
-                        className="text-xs tracking-wide uppercase"
-                        muted
-                      >
+              <DetailsSection title="Important Dates">
+                {policy.riskStartDate && (
+                  <DetailField
+                    label={
+                      <div className="flex items-center gap-2">
+                        <div className="h-2 w-2 rounded-full bg-purple-500"></div>{" "}
                         Risk Start Date
-                      </Typography>
-                    </div>
-                    <Typography
-                      variant="body-sm"
-                      className="ml-4 text-sm font-medium"
-                    >
-                      {format(policy.riskStartDate, "PPP")}
-                    </Typography>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className="h-2 w-2 rounded-full bg-red-500"></div>
-                      <Typography
-                        as="label"
-                        variant="label"
-                        className="text-xs tracking-wide uppercase"
-                        muted
-                      >
+                      </div>
+                    }
+                    className="ml-4 font-medium"
+                    value={`${format(policy.riskStartDate, "PPP")}`}
+                  />
+                )}
+
+                {policy.riskMaturityDate && (
+                  <DetailField
+                    label={
+                      <div className="flex items-center gap-2">
+                        <div className="bg-destructive h-2 w-2 rounded-full"></div>{" "}
                         Risk Maturity Date
-                      </Typography>
-                    </div>
-                    <Typography
-                      variant="body-sm"
-                      className="ml-4 text-sm font-medium"
-                    >
-                      {format(policy.riskMaturityDate, "PPP")}
-                    </Typography>
-                  </div>
-                </div>
-              </div>
-            </div>
+                      </div>
+                    }
+                    className="ml-4 font-medium"
+                    value={`${format(policy.riskMaturityDate, "PPP")}`}
+                  />
+                )}
+              </DetailsSection>
+            </DetailSectionGroup>
           </ScrollArea>
 
           <DialogFooter className="m-0">

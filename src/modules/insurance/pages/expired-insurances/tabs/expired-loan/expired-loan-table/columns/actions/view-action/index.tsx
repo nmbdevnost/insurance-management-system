@@ -1,3 +1,6 @@
+import { DetailField } from "@/shared/components/details/detail-field";
+import { DetailsSection } from "@/shared/components/details/detail-section";
+import DetailSectionGroup from "@/shared/components/details/detail-section-group";
 import InsuranceStatusBadge from "@/shared/components/status-badge";
 import { Button } from "@/shared/components/ui/button";
 import {
@@ -39,7 +42,7 @@ const ExpiredLoanViewAction = ({ rowData }: ExpiredLoanViewActionProps) => {
       </Tooltip.Root>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-4xl! gap-0 overflow-hidden p-0">
+        <DialogContent className="max-w-3xl! gap-0 overflow-hidden p-0">
           <DialogHeader className="flex flex-row items-center space-y-1 border-b px-6 py-4">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg border">
               <RiShieldCheckLine className="size-5" />
@@ -49,7 +52,7 @@ const ExpiredLoanViewAction = ({ rowData }: ExpiredLoanViewActionProps) => {
               <DialogTitle className="flex items-center gap-3 text-lg font-semibold">
                 Loan Details
               </DialogTitle>
-              <DialogDescription className="text-muted-foreground text-sm font-normal">
+              <DialogDescription className="text-muted-foreground font-mono text-sm font-normal">
                 {rowData.referenceNo}
               </DialogDescription>
             </div>
@@ -99,7 +102,9 @@ const ExpiredLoanViewAction = ({ rowData }: ExpiredLoanViewActionProps) => {
                 >
                   CIF ID
                 </Typography>
-                <p className="mt-1 text-lg font-semibold">{rowData.cifId}</p>
+                <p className="mt-1 font-mono text-lg font-semibold">
+                  {rowData.cifId}
+                </p>
               </div>
 
               {/* Account No */}
@@ -118,133 +123,52 @@ const ExpiredLoanViewAction = ({ rowData }: ExpiredLoanViewActionProps) => {
               </div>
             </div>
 
-            <div className="space-y-8 p-6">
+            <DetailSectionGroup>
+              <DetailsSection title="Loan Information">
+                <DetailField
+                  label="Customer Name"
+                  value={rowData.customerName}
+                />
+                <DetailField
+                  label="Policy Number"
+                  value={rowData.policyNumber}
+                  variant="mono"
+                />
+                <DetailField
+                  label="Reference Number"
+                  value={rowData.referenceNo}
+                  variant="mono"
+                />
+              </DetailsSection>
               {/* Loan Information */}
-              <div>
-                <Typography
-                  as="h3"
-                  variant="overline"
-                  className="mb-4 text-sm"
-                  muted
-                >
-                  Loan Information
-                </Typography>
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div>
-                    <Typography
-                      as="label"
-                      variant="label"
-                      className="text-xs tracking-wide uppercase"
-                      muted
-                    >
-                      Customer Name
-                    </Typography>
-                    <Typography
-                      variant="body-sm"
-                      className="mt-1 font-mono text-sm"
-                    >
-                      {rowData.customerName}
-                    </Typography>
-                  </div>
-                  <div>
-                    <Typography
-                      as="label"
-                      variant="label"
-                      className="text-xs tracking-wide uppercase"
-                      muted
-                    >
-                      Policy Number
-                    </Typography>
-                    <Typography
-                      variant="body-sm"
-                      className="mt-1 font-mono text-sm"
-                    >
-                      {rowData.policyNumber}
-                    </Typography>
-                  </div>
-                  <div>
-                    <Typography
-                      as="label"
-                      variant="label"
-                      className="text-xs tracking-wide uppercase"
-                      muted
-                    >
-                      Reference Number
-                    </Typography>
-                    <Typography
-                      variant="body-sm"
-                      className="mt-1 font-mono text-sm"
-                    >
-                      {rowData.referenceNo}
-                    </Typography>
-                  </div>
-                </div>
-              </div>
 
               {/* Coverage Details */}
-              <div>
-                <Typography
-                  as="h3"
-                  variant="overline"
-                  className="mb-4 text-sm"
-                  muted
-                >
-                  Coverage Details
-                </Typography>
-                <div className="bg-muted/50 rounded-lg border p-4">
-                  <div className="grid gap-6 sm:grid-cols-2">
-                    <div>
-                      <Typography
-                        as="label"
-                        variant="label"
-                        className="text-xs tracking-wide uppercase"
-                        muted
-                      >
-                        Account Closed Date
-                      </Typography>
-                      <Typography variant="body-sm" className="mt-1 text-sm">
-                        {format(rowData.accountClosedDate, "PP")}
-                      </Typography>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <DetailsSection
+                title="Coverage Details"
+                className="bg-muted/50 rounded-lg border p-4"
+              >
+                <DetailField
+                  label="Account Closed Date"
+                  value={`${format(rowData.accountClosedDate, "PP")}`}
+                />
+              </DetailsSection>
 
               {/* Important Dates */}
-              <div>
-                <Typography
-                  as="h3"
-                  variant="body-sm"
-                  className="mb-4 font-semibold tracking-wide"
-                  muted
-                >
-                  Important Dates
-                </Typography>
-                <div className="grid gap-6 sm:grid-cols-2">
-                  {rowData.accountClosedDate && (
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <div className="h-2 w-2 rounded-full bg-purple-500"></div>
-                        <Typography
-                          as="label"
-                          variant="label"
-                          className="text-xs tracking-wide uppercase"
-                          muted
-                        >
-                          Account Closed Date
-                        </Typography>
+              <DetailsSection title="Important Dates">
+                {rowData.accountClosedDate && (
+                  <DetailField
+                    label={
+                      <div className="flex items-center gap-2 tracking-wide">
+                        <div className="h-2 w-2 rounded-full bg-purple-500"></div>{" "}
+                        Account Closed Date
                       </div>
-                      <Typography
-                        variant="body-sm"
-                        className="ml-4 text-sm font-medium"
-                      >
-                        {format(rowData.accountClosedDate, "PPP")}
-                      </Typography>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+                    }
+                    value={`${format(rowData.accountClosedDate, "PPP")}`}
+                    className="ml-4 font-medium"
+                  />
+                )}
+              </DetailsSection>
+            </DetailSectionGroup>
           </ScrollArea>
 
           <DialogFooter className="m-0">
