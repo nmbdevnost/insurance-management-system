@@ -1,12 +1,20 @@
 import { AppSidebar } from "@/shared/components/app-sidebar";
-import { SidebarInset, SidebarProvider } from "@/shared/components/ui/sidebar";
+import {
+  SIDEBAR_COOKIE_NAME,
+  SidebarInset,
+  SidebarProvider,
+} from "@/shared/components/ui/sidebar";
+import { getCookie } from "@/shared/lib/utils/cookie";
 import { Outlet, ScrollRestoration } from "react-router-dom";
 import AppSidebarTrigger from "../app-sidebar/app-sidebar-trigger";
 import { AppHeader } from "./app-header";
 
 const RootLayout = () => {
+  const sidebarCookieState = getCookie(SIDEBAR_COOKIE_NAME);
+  const initialOpen = sidebarCookieState === "true";
+
   return (
-    <SidebarProvider className="flex h-full flex-col">
+    <SidebarProvider defaultOpen={initialOpen} className="flex h-full flex-col">
       <AppSidebarTrigger className="absolute -left-2.5 md:pointer-events-none md:hidden" />
 
       <AppHeader />
