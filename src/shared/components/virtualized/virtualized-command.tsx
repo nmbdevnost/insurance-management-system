@@ -58,15 +58,27 @@ const VirtualizedCommand = ({
   // options to be displayed
   const virtualOptions = virtualizer.getVirtualItems();
 
-  const isAllSelected = useMemo(() => {
-    if (!multiple) return false;
+  const selectedSet = useMemo(() => {
+    if (!multiple) return new Set<string>();
 
-    const selectedOptions = (selectedOption as DropdownOption[]) || [];
-
-    return filteredOptions.every((option) =>
-      selectedOptions.some((item) => item.value === option.value)
+    return new Set(
+      ((selectedOption as DropdownOption[]) ?? []).map((o) => o.value)
     );
-  }, [multiple, filteredOptions, selectedOption]);
+  }, [multiple, selectedOption]);
+
+  const isAllSelected = useMemo(() => {
+    if (!multiple || filteredOptions.length === 0) return false;
+    return filteredOptions.every((o) => selectedSet.has(o.value));
+  }, [multiple, filteredOptions, selectedSet]);
+
+  const isOptionSelected = useCallback(
+    (value: string) => {
+      if (!multiple) return (selectedOption as DropdownOption)?.value === value;
+
+      return selectedSet.has(value);
+    },
+    [multiple, selectedOption, selectedSet]
+  );
 
   // custom function to handle search
   const handleSearch = useCallback(
@@ -86,46 +98,25 @@ const VirtualizedCommand = ({
     [options]
   );
 
-  // util function to get if an option is selected or not
-  const getIsOptionSelected = useCallback(
-    (value: string) => {
-      if (!multiple) {
-        const selectedValue = (selectedOption as DropdownOption)?.value;
-        return selectedValue === value;
-      } else {
-        const selectedOptions = (selectedOption as DropdownOption[]) || [];
-        return selectedOptions?.some((item) => item.value === value);
-      }
-    },
-    [selectedOption, multiple]
-  );
-
   // toggles an option selection
   const handleToggle = useCallback(
     (option: DropdownOption) => {
       if (!onValueChange) return;
 
-      const isSelected = getIsOptionSelected(option.value);
-
       if (multiple) {
-        const selectedOptions = (selectedOption as DropdownOption[]) || [];
+        const selectedOptions = (selectedOption as DropdownOption[]) ?? [];
+        const isCurrentSelected = isOptionSelected(option.value);
 
-        if (isSelected) {
-          // filter selected option
-          const newSelections = selectedOptions.filter(
-            (selectedOption) => option.value !== selectedOption.value
-          );
-          onValueChange(newSelections);
-        } else {
-          // add selected option
-          const newSelections = [...selectedOptions, option];
-          onValueChange(newSelections);
-        }
+        const newSelections = isCurrentSelected
+          ? selectedOptions.filter((o) => o.value !== option.value)
+          : [...selectedOptions, option];
+
+        onValueChange(newSelections);
       } else {
-        onValueChange(isSelected ? null : option);
+        onValueChange(option);
       }
     },
-    [onValueChange, multiple, selectedOption, getIsOptionSelected]
+    [multiple, selectedOption, onValueChange, isOptionSelected]
   );
 
   // toggles selection for all filtered options
@@ -212,9 +203,7 @@ const VirtualizedCommand = ({
 
                     if (!filteredOption) return null;
 
-                    const isSelected = getIsOptionSelected(
-                      filteredOption.value
-                    );
+                    const isSelected = isOptionSelected(filteredOption.value);
 
                     return (
                       <CommandItem

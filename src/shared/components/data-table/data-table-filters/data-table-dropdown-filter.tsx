@@ -10,13 +10,13 @@ import { Button } from "../../ui/button";
 import { Separator } from "../../ui/separator";
 import VirtualizedCombobox from "../../virtualized/virtualized-combobox";
 
-const DEFAULT_DISPLAY_OPTIONS = 1;
-
 type DataTableDropdownFilterProps = {
   filter: FilterConfig;
   columnFilters: ColumnFiltersState;
   onColumnFiltersChange: (filters: ColumnFiltersState) => void;
 };
+
+const DEFAULT_DISPLAY_OPTIONS = 1;
 
 const DataTableDropdownFilter = ({
   columnFilters,
@@ -79,27 +79,16 @@ const DataTableDropdownFilter = ({
     [columnFilters, onColumnFiltersChange, id]
   );
 
-  const isSelected =
-    selectedOption &&
-    (isMultiple
-      ? (selectedOption as DropdownOption[]).length > 0
-      : (selectedOption as DropdownOption).value);
-
-  const displayOptions = isMultiple
-    ? (selectedOption as DropdownOption[]).slice(0, DEFAULT_DISPLAY_OPTIONS)
-    : [selectedOption as DropdownOption];
-
   return (
     <VirtualizedCombobox
       selectedOption={selectedOption}
       placeholder={placeholder || formatString(label || "")}
       onValueChange={handleValueChange}
       modal={false}
-      trigger={
+      trigger={({ isSelected, displayedOptions }) => (
         <Button
           type="button"
           variant="outline"
-          size="sm"
           className={cn(
             "h-8 border-dashed",
             isSelected && "text-primary! border-primary"
@@ -125,7 +114,7 @@ const DataTableDropdownFilter = ({
               </Badge>
 
               <div className="hidden space-x-1 lg:flex">
-                {displayOptions?.map((option) => (
+                {displayedOptions?.map((option) => (
                   <Badge
                     key={"selected-option-badge-" + option.value}
                     variant="secondary"
@@ -149,7 +138,9 @@ const DataTableDropdownFilter = ({
             </>
           )}
         </Button>
-      }
+      )}
+      limit={DEFAULT_DISPLAY_OPTIONS}
+      triggerClassName="data-selected:text-primary! data-selected:border-primary h-8 border-dashed"
       {...filter}
     />
   );

@@ -12,8 +12,11 @@ import type { FilterConfig } from "@/shared/lib/types/table";
 
 // Branch Options
 const branchOptions: DropdownOption[] = [
-  { label: "Kathmandu Branchdsd asdsadsds", value: "kathmandu" },
-  { label: "Pokhara Branchdasd sdsd sdasdas", value: "pokhara" },
+  {
+    label: "Kathmandu Branch",
+    value: "kathmandu",
+  },
+  { label: "Pokhara Branch", value: "pokhara" },
   { label: "Biratnagar Branch", value: "biratnagar" },
   { label: "Butwal Branch", value: "butwal" },
   { label: "Dhangadhi Branch", value: "dhangadhi" },
