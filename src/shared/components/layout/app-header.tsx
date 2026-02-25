@@ -16,13 +16,16 @@ export function AppHeader() {
   return (
     <header className="bg-background/80 border-border sticky top-0 z-50 flex w-full items-center border-b backdrop-blur-xs">
       <div className="flex h-(--header-height) w-full items-center gap-2 px-4">
-        <Link to="/" className="flex h-full items-center gap-2 py-2">
-          <img src={Logo} alt="Logo" className="h-full" />
+        <div className="flex h-full items-center gap-4 py-2">
+          <Link to="/" className="flex h-full items-center gap-2">
+            <img src={Logo} alt="Logo" className="h-full" />
+          </Link>
 
           <span className="hidden truncate font-semibold sm:inline-block">
             Insurance Management System
           </span>
-        </Link>
+        </div>
+
         <div className="ml-auto flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger

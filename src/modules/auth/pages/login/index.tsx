@@ -1,4 +1,4 @@
-import { Logo, MountainBg } from "@/assets";
+import { Favicon, MountainBg } from "@/assets";
 import { Typography } from "@/shared/components/ui/typography";
 import LoginRightPanel from "./right-panel";
 
@@ -39,7 +39,7 @@ export default function LoginPage() {
       {/* Right — form */}
       <div className="relative flex flex-col justify-center p-4 sm:p-8">
         <img
-          src={Logo}
+          src={Favicon}
           className="absolute top-5 left-1/2 size-10 -translate-x-1/2 transform"
         />
 

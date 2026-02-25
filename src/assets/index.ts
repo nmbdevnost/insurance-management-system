@@ -1,4 +1,5 @@
+import Favicon from "./favicon.png";
 import Logo from "./logo.png";
 import MountainBg from "./mountainbg-white.png";
 
-export { Logo, MountainBg };
+export { Favicon, Logo, MountainBg };
