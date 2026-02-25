@@ -14,7 +14,10 @@ const RootLayout = () => {
   const initialOpen = sidebarCookieState === "true";
 
   return (
-    <SidebarProvider defaultOpen={initialOpen} className="flex h-full flex-col">
+    <SidebarProvider
+      defaultOpen={initialOpen}
+      className="flex h-screen flex-col overflow-y-auto"
+    >
       <AppSidebarTrigger className="absolute -left-2.5 md:pointer-events-none md:hidden" />
 
       <AppHeader />

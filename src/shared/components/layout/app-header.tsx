@@ -18,7 +18,7 @@ export function AppHeader() {
       <div className="flex h-(--header-height) w-full items-center gap-2 px-4">
         <div className="flex h-full items-center gap-4 py-2">
           <Link to="/" className="flex h-full items-center gap-2">
-            <img src={Logo} alt="Logo" className="h-full" />
+            <img src={Logo} alt="Logo" className="h-full w-full" />
           </Link>
 
           <span className="hidden truncate font-semibold sm:inline-block">
