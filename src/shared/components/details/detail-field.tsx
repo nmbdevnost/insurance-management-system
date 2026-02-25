@@ -19,7 +19,7 @@ const detailFieldVariants = cva("mt-1 text-sm", {
 });
 
 interface DetailFieldProps extends VariantProps<typeof detailFieldVariants> {
-  label: string;
+  label: string | React.ReactNode;
   value: React.ReactNode;
   className?: string;
 }

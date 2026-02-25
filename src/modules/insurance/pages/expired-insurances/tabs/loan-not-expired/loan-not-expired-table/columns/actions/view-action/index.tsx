@@ -1,6 +1,8 @@
+import { DetailField } from "@/shared/components/details/detail-field";
+import { DetailsSection } from "@/shared/components/details/detail-section";
+import DetailSectionGroup from "@/shared/components/details/detail-section-group";
 import InsuranceStatusBadge from "@/shared/components/status-badge";
 import { Button } from "@/shared/components/ui/button";
-import { Card } from "@/shared/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -11,6 +13,7 @@ import {
 } from "@/shared/components/ui/dialog";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { TooltipContent, TooltipTrigger } from "@/shared/components/ui/tooltip";
+import { Typography } from "@/shared/components/ui/typography";
 import type { Loan } from "@/shared/lib/types/loans";
 import { formatCurrency } from "@/shared/lib/utils/format";
 import { Tooltip } from "@base-ui/react";
@@ -42,7 +45,7 @@ const LoanNotExpiredViewAction = ({
       </Tooltip.Root>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-4xl! gap-0 overflow-hidden p-0">
+        <DialogContent className="max-w-3xl! gap-0 overflow-hidden p-0">
           <DialogHeader className="flex flex-row items-center space-y-1 border-b px-6 py-4">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg border">
               <RiShieldCheckLine className="size-5" />
@@ -52,7 +55,7 @@ const LoanNotExpiredViewAction = ({
               <DialogTitle className="flex items-center gap-3 text-lg font-semibold text-slate-900">
                 Loan Details
               </DialogTitle>
-              <DialogDescription className="text-muted-foreground text-sm font-normal">
+              <DialogDescription className="text-muted-foreground font-mono text-sm font-normal">
                 {rowData.policyNumber}
               </DialogDescription>
             </div>
@@ -63,10 +66,14 @@ const LoanNotExpiredViewAction = ({
             <div className="divide-border bg-muted/50 grid gap-px border-b max-md:divide-y md:grid-cols-4 md:divide-x">
               {/* Status  */}
               <div className="p-4">
-                <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                <Typography
+                  as="p"
+                  variant="label"
+                  className="text-xs tracking-wide uppercase"
+                  muted
+                >
                   Status
-                </div>
-
+                </Typography>
                 <InsuranceStatusBadge
                   status={rowData.status}
                   className="mt-2"
@@ -75,195 +82,141 @@ const LoanNotExpiredViewAction = ({
 
               {/* Days Left */}
               <div className="p-4">
-                <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                <Typography
+                  as="label"
+                  variant="label"
+                  className="text-xs tracking-wide uppercase"
+                  muted
+                >
                   Term Days
-                </div>
+                </Typography>
 
-                <div className="mt-1 text-lg font-semibold">
-                  {rowData.termDays}
-                </div>
+                <p className="mt-1 text-lg font-semibold">{rowData.termDays}</p>
               </div>
 
               <div className="p-4">
-                <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                <Typography
+                  as="label"
+                  variant="label"
+                  className="text-xs tracking-wide uppercase"
+                  muted
+                >
                   Premium
-                </div>
-                <div className="mt-1 text-lg font-semibold">
+                </Typography>
+                <p className="mt-1 text-lg font-semibold">
                   {formatCurrency(rowData.totalPremium)}
-                </div>
+                </p>
               </div>
 
               <div className="p-4">
-                <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                <Typography
+                  as="label"
+                  variant="label"
+                  className="text-muted-foreground text-xs font-medium tracking-wide uppercase"
+                >
                   Sum Insured
-                </div>
-                <div className="mt-1 text-lg font-semibold">
+                </Typography>
+                <p className="mt-1 text-lg font-semibold">
                   {formatCurrency(rowData.sumInsured)}
-                </div>
+                </p>
               </div>
             </div>
 
-            <div className="space-y-8 p-6">
+            <DetailSectionGroup>
               {/* Policy Information */}
-              <div>
-                <h3 className="mb-4 text-sm font-semibold tracking-wide uppercase">
-                  Policy Information
-                </h3>
-
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Policy Number
-                      </label>
-                      <div className="mt-1 font-mono text-sm">
-                        {rowData.policyNumber}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Reference Number
-                      </label>
-                      <div className="mt-1 font-mono text-sm">
-                        {rowData.referenceNo}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Asset Type
-                      </label>
-                      <div className="mt-1 text-sm">{rowData.assetType}</div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Insurance Company
-                      </label>
-                      <div className="mt-1 text-sm">
-                        {rowData.insuranceCompany}
-                      </div>
-                    </div>
-
-                    {/* <div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Segment
-                      </label>
-                      <div className="mt-1 text-sm">{rowData.segment}</div>
-                    </div> */}
-
-                    <div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Branch
-                      </label>
-                      <div className="mt-1 text-sm">{rowData.branchName}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <DetailsSection title="Policy Information">
+                <DetailField
+                  label="Policy Number"
+                  value={rowData.policyNumber}
+                  variant="mono"
+                />
+                <DetailField label="Branch" value={rowData.branchName} />
+                <DetailField
+                  label="Reference Number"
+                  value={rowData.referenceNo}
+                  variant="mono"
+                />
+                <DetailField label="Asset Type" value={rowData.assetType} />
+                <DetailField
+                  label="Insurance Company"
+                  value={rowData.assetType}
+                />
+              </DetailsSection>
 
               {/* Coverage Details */}
-              <div>
-                <h3 className="mb-4 text-sm font-semibold tracking-wide uppercase">
-                  Coverage Details
-                </h3>
 
-                <Card className="bg-muted/50 p-4">
-                  <div className="grid gap-6 sm:grid-cols-2">
-                    <div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Province
-                      </label>
-                      <div className="mt-1 text-sm">{rowData.province}</div>
-                    </div>
-
-                    <div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Coverage Period
-                      </label>
-                      <div className="mt-1 text-sm">
-                        {format(rowData.riskStartDate, "PP")} -{" "}
-                        {format(rowData.riskMaturityDate, "PP")}
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              </div>
+              <DetailsSection
+                title="Coverage Details"
+                className="bg-muted/50 rounded-lg border p-4"
+              >
+                <DetailField label="Province" value={rowData.province} />
+                <DetailField
+                  label="Coverage Period"
+                  value={`${format(rowData.riskStartDate, "PP")} -
+                        ${format(rowData.riskMaturityDate, "PP")}`}
+                />
+              </DetailsSection>
 
               {/* Financial Summary */}
-              <div>
-                <h3 className="mb-4 text-sm font-semibold tracking-wide uppercase">
-                  Financial Summary
-                </h3>
-
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div className="space-y-2">
+              <DetailsSection title="Financial Summary">
+                <DetailField
+                  label={
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Sum Insured
-                      </label>
+                      Sum Insured
                     </div>
-                    <div className="ml-4 text-sm font-medium">
-                      {formatCurrency(rowData.sumInsured)}
-                    </div>
-                  </div>
-                  <div className="space-y-2">
+                  }
+                  className="ml-4"
+                  value={`${formatCurrency(rowData.sumInsured)}`}
+                />
+                <DetailField
+                  label={
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-2 rounded-full bg-blue-500"></div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-                        Premium
-                      </label>
+                      Premium
                     </div>
-                    <div className="ml-4 text-sm font-medium">
-                      {formatCurrency(rowData.totalPremium)}
-                    </div>
-                  </div>
-                </div>
-              </div>
+                  }
+                  className="ml-4"
+                  value={`${formatCurrency(rowData.totalPremium)}`}
+                />
+              </DetailsSection>
 
               {/* Important Dates */}
-              <div>
-                <h3 className="mb-4 text-sm font-semibold tracking-wide uppercase">
-                  Important Dates
-                </h3>
-
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className="h-2 w-2 rounded-full bg-orange-500"></div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+              <DetailsSection title="Important Dates">
+                {rowData.riskStartDate && (
+                  <DetailField
+                    label={
+                      <div className="flex items-center gap-2">
+                        <div className="h-2 w-2 rounded-full bg-purple-500"></div>{" "}
                         Risk Start Date
-                      </label>
-                    </div>
-                    <div className="ml-4 text-sm font-medium">
-                      {format(rowData.riskStartDate, "PPP")}
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <div className="h-2 w-2 rounded-full bg-red-500"></div>
-                      <label className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+                      </div>
+                    }
+                    className="ml-4 font-medium"
+                    value={`${format(rowData.riskStartDate, "PPP")}`}
+                  />
+                )}
+
+                {rowData.riskMaturityDate && (
+                  <DetailField
+                    label={
+                      <div className="flex items-center gap-2">
+                        <div className="bg-destructive h-2 w-2 rounded-full"></div>{" "}
                         Risk Maturity Date
-                      </label>
-                    </div>
-                    <div className="ml-4 text-sm font-medium">
-                      {format(rowData.riskMaturityDate, "PPP")}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+                      </div>
+                    }
+                    className="ml-4 font-medium"
+                    value={`${format(rowData.riskMaturityDate, "PPP")}`}
+                  />
+                )}
+              </DetailsSection>
+            </DetailSectionGroup>
           </ScrollArea>
 
           <DialogFooter className="m-0">
             <div className="flex w-full items-center justify-between">
-              <div className="text-muted-foreground text-xs">
+              <Typography variant="body-sm" className="text-xs" muted>
                 Last updated: {new Date().toLocaleDateString()}
-              </div>
+              </Typography>
 
               <div className="flex gap-3">
                 <Button variant="outline" onClick={() => setOpen(false)}>
