@@ -8,6 +8,6 @@ export type FilterConfig = {
   type: "select" | "search" | "date" | "range";
   placeholder?: string;
   disableSearch?: boolean;
-  mode?: "single" | "multiple";
+  multiple?: boolean;
   disabled?: boolean;
 };
