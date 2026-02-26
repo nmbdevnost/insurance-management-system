@@ -16,12 +16,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 const DataTable = ({ className }: { className?: string }) => {
   const { table } = useDataTable();
+
   const headerRef = useRef<HTMLTableRowElement>(null);
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>({});
   const [isMeasured, setIsMeasured] = useState(false);
   const isMountedRef = useRef(false);
 
-  // const measureTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const measureTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const measureWidths = useCallback(() => {
     if (!headerRef.current || !isMountedRef.current) return;
@@ -115,53 +116,43 @@ const DataTable = ({ className }: { className?: string }) => {
     [columnStyles]
   );
 
+  // Debounced measure function
+  const debouncedMeasure = useCallback(() => {
+    if (measureTimeoutRef.current) {
+      clearTimeout(measureTimeoutRef.current);
+    }
+    measureTimeoutRef.current = setTimeout(() => {
+      measureWidths();
+    }, 150);
+  }, [measureWidths]);
+
   useEffect(() => {
     isMountedRef.current = true;
 
+    // Initial measurement (slight delay to ensure DOM is ready)
     const initialTimeout = setTimeout(() => {
       measureWidths();
     }, 0);
 
+    // Debounced resize listener
+    window.addEventListener("resize", debouncedMeasure);
+
+    // // ResizeObserver for the table header
+    const resizeObserver = new ResizeObserver(debouncedMeasure);
+    if (headerRef.current) {
+      resizeObserver.observe(headerRef.current);
+    }
+
     return () => {
       isMountedRef.current = false;
       clearTimeout(initialTimeout);
+      if (measureTimeoutRef.current) {
+        clearTimeout(measureTimeoutRef.current);
+      }
+      window.removeEventListener("resize", debouncedMeasure);
+      resizeObserver.disconnect();
     };
-  }, [measureWidths]);
-
-  // Debounced measure function
-  // const debouncedMeasure = useCallback(() => {
-  //   if (measureTimeoutRef.current) {
-  //     clearTimeout(measureTimeoutRef.current);
-  //   }
-  //   measureTimeoutRef.current = setTimeout(() => {
-  //     measureWidths();
-  //   }, 150);
-  // }, [measureWidths]);
-
-  // useEffect(() => {
-  //   // Initial measurement (slight delay to ensure DOM is ready)
-  //   const initialTimeout = setTimeout(() => {
-  //     measureWidths();
-  //   }, 0);
-
-  //   // Debounced resize listener
-  //   // window.addEventListener("resize", debouncedMeasure);
-
-  //   // // ResizeObserver for the table header
-  //   // const resizeObserver = new ResizeObserver(debouncedMeasure);
-  //   // if (headerRef.current) {
-  //   //   resizeObserver.observe(headerRef.current);
-  //   // }
-
-  //   return () => {
-  //     clearTimeout(initialTimeout);
-  //     if (measureTimeoutRef.current) {
-  //       clearTimeout(measureTimeoutRef.current);
-  //     }
-  //     // window.removeEventListener("resize", debouncedMeasure);
-  //     // resizeObserver.disconnect();
-  //   };
-  // }, [measureWidths]);
+  }, [measureWidths, debouncedMeasure]);
 
   return (
     <div className="relative grid">
@@ -212,7 +203,7 @@ const DataTable = ({ className }: { className?: string }) => {
                   <TableCell
                     key={cell.id}
                     style={{ ...getCommonPinningStyles(cell.column) }}
-                    className="bg-background"
+                    className="bg-background group-hover:bg-muted group-data-[state=selected]:bg-muted"
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>

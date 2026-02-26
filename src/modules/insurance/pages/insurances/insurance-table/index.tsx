@@ -1,17 +1,20 @@
+import DataTable from "@/shared/components/data-table";
+import DataTableActionBar from "@/shared/components/data-table/data-table-action-bar";
+import DataTableActionBarItem from "@/shared/components/data-table/data-table-action-bar/data-table-action-bar-item";
+import DataTablePagination from "@/shared/components/data-table/data-table-pagination";
+import DataTableToolbar from "@/shared/components/data-table/data-table-toolbar";
+import { Card, CardFooter, CardHeader } from "@/shared/components/ui/card";
 import { DEFAULT_TABLE_PARAMS } from "@/shared/lib/constants/data-table";
 import type { Insurance } from "@/shared/lib/types/insurance";
+import type { FilterConfig } from "@/shared/lib/types/table";
 import { generateQueryParams } from "@/shared/lib/utils/query-params";
 import {
   DataTableProvider,
   type TableParams,
 } from "@/shared/providers/data-table-provider";
+import { RiCheckLine, RiDeleteBinLine } from "@remixicon/react";
 import { useMemo, useState } from "react";
 import insuranceColumns from "./columns";
-import DataTable from "@/shared/components/data-table";
-import { Card, CardFooter, CardHeader } from "@/shared/components/ui/card";
-import DataTableToolbar from "@/shared/components/data-table/data-table-toolbar";
-import DataTablePagination from "@/shared/components/data-table/data-table-pagination";
-import type { FilterConfig } from "@/shared/lib/types/table";
 
 const insuranceMockData: Insurance[] = [
   {
@@ -115,6 +118,24 @@ const InsuranceTable = () => {
       disableSearch: true,
     },
   ];
+
+  const [isApplying, setIsApplying] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const actionPending = isApplying || isDeleting;
+
+  const handleApply = async () => {
+    setIsApplying(true);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setIsApplying(false);
+  };
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setIsDeleting(false);
+  };
+
   return (
     <>
       <DataTableProvider
@@ -123,6 +144,7 @@ const InsuranceTable = () => {
         pageCount={5}
         tableParams={tableParams}
         onTableParamsChange={setTableParams}
+        enableRowSelection
       >
         <Card className="gap-0 p-0">
           <CardHeader className="p-2">
@@ -135,6 +157,26 @@ const InsuranceTable = () => {
             <DataTablePagination className="w-full" />
           </CardFooter>
         </Card>
+
+        <DataTableActionBar actionPending={actionPending}>
+          <DataTableActionBarItem
+            variant="secondary"
+            onClick={handleApply}
+            disabled={actionPending}
+            isLoading={isApplying}
+          >
+            <RiCheckLine /> Apply
+          </DataTableActionBarItem>
+
+          <DataTableActionBarItem
+            variant="destructive"
+            onClick={handleDelete}
+            disabled={actionPending}
+            isLoading={isDeleting}
+          >
+            <RiDeleteBinLine /> Delete
+          </DataTableActionBarItem>
+        </DataTableActionBar>
       </DataTableProvider>
     </>
   );

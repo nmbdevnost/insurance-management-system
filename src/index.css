@@ -155,6 +155,12 @@
   --header-height: calc(var(--spacing) * 14);
 
   --animate-scan: scan 2s ease-in-out infinite;
+  --animate-slide-up-from-bottom: slide-up-from-bottom 0.3s ease-in-out;
+  --animate-slide-down-to-bottom: slide-down-to-bottom 0.3s ease-in-out;
+
+  --animate-slide-up-to-top: slide-up-to-top 0.3s ease-in-out;
+  --animate-slide-down-from-top: slide-down-from-top 0.3s ease-in-out;
+
   @keyframes scan {
     0%,
     100% {
@@ -164,6 +170,42 @@
     50% {
       transform: translateY(20px);
       opacity: 1;
+    }
+  }
+
+  @keyframes slide-up-from-bottom {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slide-down-to-bottom {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(100%);
+    }
+  }
+
+  @keyframes slide-up-to-top {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(-100%);
+    }
+  }
+
+  @keyframes slide-down-from-top {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(0);
     }
   }
 }

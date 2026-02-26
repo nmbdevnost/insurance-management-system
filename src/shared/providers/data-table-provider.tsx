@@ -285,6 +285,8 @@ export function DataTableProvider<TData>({
     columns,
     pageCount,
 
+    getRowId: (row) => (row as { id: string }).id,
+
     state: {
       globalFilter,
       columnFilters,
@@ -295,7 +297,7 @@ export function DataTableProvider<TData>({
     },
 
     enableColumnPinning: true,
-    enableRowSelection,
+    enableRowSelection: (row) => (enableRowSelection ? !!row.id : false),
     enableMultiRowSelection,
 
     onGlobalFilterChange: handleGlobalFilterChange,

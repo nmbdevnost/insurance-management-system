@@ -64,7 +64,6 @@ const expiredLoanColumns: ColumnDef<ExpiredLoan>[] = [
       return <>{formattedDate}</>;
     },
   },
-
   {
     accessorKey: "status",
     header: "Status",
@@ -84,12 +83,3 @@ const expiredLoanColumns: ColumnDef<ExpiredLoan>[] = [
 ];
 
 export default expiredLoanColumns;
-
-// {
-//   accessorKey: "riskMaturityDate",
-//   header: "Risk Maturity Date",
-//   cell: ({ row }) => {
-//     const formattedDate = formatDate(row.getValue("riskMaturityDate"), "PPP");
-//     return <>{formattedDate}</>;
-//   },
-// },
