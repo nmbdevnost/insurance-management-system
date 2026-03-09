@@ -7,6 +7,7 @@ type ActionBarItemProps = {
   isLoading?: boolean;
   onClick?: () => Promise<void>;
   onComplete?: () => void;
+  showLoader?: boolean;
 } & ComponentProps<typeof Button>;
 
 const ActionBarItem = ({
@@ -16,6 +17,7 @@ const ActionBarItem = ({
   disabled,
   onClick,
   onComplete,
+  showLoader = true,
   ...props
 }: ActionBarItemProps) => {
   const handleClick = async () => {
@@ -27,12 +29,13 @@ const ActionBarItem = ({
 
   return (
     <Button
+      data-loading={isLoading}
       disabled={disabled || isLoading}
-      className={cn(className, isLoading ? "[&>svg]:hidden" : "")}
+      className={cn(className, isLoading && showLoader ? "[&>svg]:hidden" : "")}
       onClick={handleClick}
       {...props}
     >
-      {isLoading && <Spinner className="block!" />}
+      {isLoading && showLoader && <Spinner className="block!" />}
       {children}
     </Button>
   );

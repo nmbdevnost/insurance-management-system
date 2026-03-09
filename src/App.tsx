@@ -10,7 +10,7 @@ export function App() {
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
       <RouterProvider router={router} />
-      <Toaster position="top-center" closeButton />
+      <Toaster position="top-center" closeButton richColors />
     </ThemeProvider>
   );
 }

@@ -4,17 +4,15 @@ import ActionBarSelection from "../../action-bar/action-bar-selection";
 import { Separator } from "../../ui/separator";
 
 type DataTableActionBarProps = {
-  actionPending?: boolean;
   children?: React.ReactNode;
 };
 
 const DataTableActionBar: React.FC<DataTableActionBarProps> = ({
-  actionPending,
   children,
 }) => {
   const { rowSelection, setRowSelection } = useDataTable();
 
-  const selections = Object.keys(rowSelection);
+  const selections = Object.keys(rowSelection || {});
 
   return (
     <>
@@ -22,7 +20,6 @@ const DataTableActionBar: React.FC<DataTableActionBarProps> = ({
         <ActionBarSelection
           selections={selections.length}
           onDeselect={() => setRowSelection({})}
-          disabled={actionPending}
         />
 
         {children && <Separator orientation="vertical" />}

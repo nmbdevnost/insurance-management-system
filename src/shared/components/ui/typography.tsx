@@ -1,6 +1,8 @@
-import { cn } from "@/shared/lib/utils";
+import { mergeProps } from "@base-ui/react/merge-props";
+import { useRender } from "@base-ui/react/use-render";
 import { cva, type VariantProps } from "class-variance-authority";
-import React from "react";
+
+import { cn } from "@/shared/lib/utils";
 
 const typographyVariants = cva("", {
   variants: {
@@ -66,12 +68,12 @@ const ELEMENT_MAP: Record<
 
 interface TypographyProps
   extends
-    React.HTMLAttributes<HTMLElement>,
+    useRender.ComponentProps<"span">,
     VariantProps<typeof typographyVariants> {
   /** Override the rendered HTML element. Base UI's render prop is also supported via composition. */
   as?: TypographyElement;
-  ref?: React.Ref<HTMLElement>;
 }
+
 /**
  * Unified typography primitive for the admin portal.
  * Built with CVA for variant management and compatible with Base UI's
@@ -84,23 +86,23 @@ interface TypographyProps
  * // Base UI slot usage:
  * <SomeBaseUIComponent render={<Typography variant="body" />} />
  */
-export const Typography = ({
+export function Typography({
   variant = "body",
   muted,
   as,
   className,
-  ref,
-  ...rest
-}: TypographyProps) => {
-  const Tag = (as ?? ELEMENT_MAP[variant!]) as React.ElementType;
+  render,
+  ...props
+}: TypographyProps) {
+  const defaultProps = {
+    className: cn(typographyVariants({ variant, muted }), className),
+  };
 
-  return (
-    <Tag
-      ref={ref}
-      className={cn(typographyVariants({ variant, muted }), className)}
-      {...rest}
-    />
-  );
-};
+  return useRender({
+    defaultTagName: as ?? ELEMENT_MAP[variant!],
+    render,
+    props: mergeProps<"span">(defaultProps, props),
+  });
+}
 
 Typography.displayName = "Typography";

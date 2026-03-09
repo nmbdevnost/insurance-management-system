@@ -15,4 +15,5 @@ export const DEFAULT_TABLE_PARAMS: TableParams = {
   sorting: [],
   columnFilters: [],
   globalFilter: "",
+  selections: {},
 };

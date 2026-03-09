@@ -31,6 +31,7 @@ export type TableParams = {
   sorting: SortingState;
   columnFilters: ColumnFiltersState;
   globalFilter: string;
+  selections: RowSelectionState;
 };
 
 export type DataTableContextValue<TData> = {
@@ -55,7 +56,7 @@ export type DataTableContextValue<TData> = {
   setPagination: React.Dispatch<React.SetStateAction<CustomPaginationState>>;
 
   // selection
-  rowSelection: RowSelectionState;
+  rowSelection?: RowSelectionState;
   setRowSelection: React.Dispatch<React.SetStateAction<RowSelectionState>>;
 };
 
@@ -91,13 +92,18 @@ export function DataTableProvider<TData>({
   pageCount,
   totalRows,
   onTableParamsChange,
-  enableRowSelection,
+  enableRowSelection = true,
   enableMultiRowSelection,
   tableParams,
   className,
 }: DataTableProviderProps<TData>) {
-  const { columnFilters, globalFilter, pagination, sorting } =
-    tableParams || {};
+  const {
+    columnFilters,
+    globalFilter,
+    pagination,
+    sorting,
+    selections: rowSelection = {},
+  } = tableParams || {};
 
   // Determine if pagination is controlled
   const isControlledPagination = !!pagination && !!onTableParamsChange;
@@ -109,8 +115,6 @@ export function DataTableProvider<TData>({
       pageSize: 10,
       page: 1,
     });
-
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
   /**
    * Handles changes to the global search filter.
@@ -248,6 +252,25 @@ export function DataTableProvider<TData>({
     [isControlledPagination, onTableParamsChange, pagination]
   );
 
+  const handleSelectionChange = useCallback(
+    (
+      updater:
+        | RowSelectionState
+        | ((old: RowSelectionState) => RowSelectionState)
+    ) => {
+      if (!rowSelection || !onTableParamsChange) return;
+
+      const newSelections =
+        typeof updater === "function" ? updater(rowSelection) : updater;
+
+      onTableParamsChange((prev) => ({
+        ...prev,
+        selections: newSelections,
+      }));
+    },
+    [rowSelection, onTableParamsChange]
+  );
+
   const filterPinned = useCallback(
     (
       pinnedDirection: ColumnMetaWithPinning["pin"],
@@ -304,7 +327,7 @@ export function DataTableProvider<TData>({
     onColumnFiltersChange: handleColumnFiltersChange,
     onSortingChange: handleSortingChange,
     onPaginationChange: handlePaginationChange,
-    onRowSelectionChange: setRowSelection,
+    onRowSelectionChange: handleSelectionChange,
     getCoreRowModel: getCoreRowModel(),
     // Include pagination row model for uncontrolled mode
     getPaginationRowModel: isControlledPagination
@@ -329,7 +352,7 @@ export function DataTableProvider<TData>({
     pagination: activePagination,
     setPagination: handleCustomPaginationChange,
     rowSelection,
-    setRowSelection,
+    setRowSelection: handleSelectionChange,
   };
 
   return (

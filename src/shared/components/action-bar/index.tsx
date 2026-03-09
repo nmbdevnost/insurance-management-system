@@ -28,15 +28,16 @@ const ActionBar: React.FC<ActionBarProps> = ({
         <DialogPrimitive.Popup
           data-slot="dialog-content"
           className={cn(
-            "bg-background ring-foreground/10 flex w-fit gap-2 rounded-xl p-2 text-sm ring-1 outline-none",
+            "bg-background ring-foreground/10 w-fit rounded-xl p-2 ring-1 outline-none",
             "fixed left-1/2 z-50 -translate-x-1/2",
-            "",
             side === "top"
               ? "data-open:animate-slide-down-from-top data-closed:animate-slide-up-to-top top-4 transition-all"
               : "data-open:animate-slide-up-from-bottom data-closed:animate-slide-down-to-bottom bottom-4 transition-all"
           )}
         >
-          {children}
+          <div className="flex gap-2 has-data-[loading=true]:pointer-events-none">
+            {children}
+          </div>
         </DialogPrimitive.Popup>
       </DialogPortal>
     </Dialog>

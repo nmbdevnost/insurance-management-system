@@ -1,6 +1,5 @@
 import DataTable from "@/shared/components/data-table";
 import DataTableActionBar from "@/shared/components/data-table/data-table-action-bar";
-import DataTableActionBarItem from "@/shared/components/data-table/data-table-action-bar/data-table-action-bar-item";
 import DataTablePagination from "@/shared/components/data-table/data-table-pagination";
 import DataTableToolbar from "@/shared/components/data-table/data-table-toolbar";
 import { Card, CardFooter, CardHeader } from "@/shared/components/ui/card";
@@ -12,8 +11,9 @@ import {
   DataTableProvider,
   type TableParams,
 } from "@/shared/providers/data-table-provider";
-import { RiCheckLine, RiDeleteBinLine } from "@remixicon/react";
 import { useMemo, useState } from "react";
+import InsuranceBulkApply from "./bulk-actions/insurance-bulk-apply";
+import InsuranceBulkDelete from "./bulk-actions/insurance-bulk-delete";
 import insuranceColumns from "./columns";
 
 const insuranceMockData: Insurance[] = [
@@ -119,23 +119,6 @@ const InsuranceTable = () => {
     },
   ];
 
-  const [isApplying, setIsApplying] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  const actionPending = isApplying || isDeleting;
-
-  const handleApply = async () => {
-    setIsApplying(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsApplying(false);
-  };
-
-  const handleDelete = async () => {
-    setIsDeleting(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsDeleting(false);
-  };
-
   return (
     <>
       <DataTableProvider
@@ -158,24 +141,10 @@ const InsuranceTable = () => {
           </CardFooter>
         </Card>
 
-        <DataTableActionBar actionPending={actionPending}>
-          <DataTableActionBarItem
-            variant="secondary"
-            onClick={handleApply}
-            disabled={actionPending}
-            isLoading={isApplying}
-          >
-            <RiCheckLine /> Apply
-          </DataTableActionBarItem>
+        <DataTableActionBar>
+          <InsuranceBulkApply />
 
-          <DataTableActionBarItem
-            variant="destructive"
-            onClick={handleDelete}
-            disabled={actionPending}
-            isLoading={isDeleting}
-          >
-            <RiDeleteBinLine /> Delete
-          </DataTableActionBarItem>
+          <InsuranceBulkDelete />
         </DataTableActionBar>
       </DataTableProvider>
     </>
