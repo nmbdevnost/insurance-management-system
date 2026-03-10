@@ -4,7 +4,6 @@ import DataTablePagination from "@/shared/components/data-table/data-table-pagin
 import DataTableToolbar from "@/shared/components/data-table/data-table-toolbar";
 import { Card, CardFooter, CardHeader } from "@/shared/components/ui/card";
 import { DEFAULT_TABLE_PARAMS } from "@/shared/lib/constants/data-table";
-import type { Insurance } from "@/shared/lib/types/insurance";
 import type { FilterConfig } from "@/shared/lib/types/table";
 import { generateQueryParams } from "@/shared/lib/utils/query-params";
 import {
@@ -15,84 +14,6 @@ import { useMemo, useState } from "react";
 import InsuranceBulkApply from "./bulk-actions/insurance-bulk-apply";
 import InsuranceBulkDelete from "./bulk-actions/insurance-bulk-delete";
 import insuranceColumns from "./columns";
-
-const insuranceMockData: Insurance[] = [
-  {
-    id: "INS-001",
-    policy_number: "POL-2023-3001",
-    cif_id: "CIF70001",
-    type: "Loan Insurance",
-    segment: "Retail",
-    branch: "Kathmandu Main Branch",
-    province: "Bagmati",
-    insurance_company: "Nepal Insurance Co.",
-    sum_insured: 1500000,
-    total_premium: 18000,
-    risk_start_date: "2023-01-15",
-    maturity_end_date: "2024-01-14",
-    status: "active",
-  },
-  {
-    id: "INS-002",
-    policy_number: "POL-2023-3002",
-    cif_id: "CIF70002",
-    type: "Property Insurance",
-    segment: "Corporate",
-    branch: "Lalitpur Branch",
-    province: "Bagmati",
-    insurance_company: "Shikhar Insurance",
-    sum_insured: 3000000,
-    total_premium: 25000,
-    risk_start_date: "2023-02-10",
-    maturity_end_date: "2024-02-09",
-    status: "active",
-  },
-  {
-    id: "INS-003",
-    policy_number: "POL-2023-3003",
-    cif_id: "CIF70003",
-    type: "Vehicle Insurance",
-    segment: "SME",
-    branch: "Pokhara Branch",
-    province: "Gandaki",
-    insurance_company: "IME General Insurance",
-    sum_insured: 800000,
-    total_premium: 12000,
-    risk_start_date: "2023-03-15",
-    maturity_end_date: "2024-03-14",
-    status: "active",
-  },
-  {
-    id: "INS-004",
-    policy_number: "POL-2023-3004",
-    cif_id: "CIF70004",
-    type: "Machinery Insurance",
-    segment: "Corporate",
-    branch: "Biratnagar Branch",
-    province: "Koshi",
-    insurance_company: "Sagarmatha Insurance",
-    sum_insured: 2000000,
-    total_premium: 22000,
-    risk_start_date: "2023-04-05",
-    maturity_end_date: "2024-04-04",
-    status: "active",
-  },
-  {
-    id: "INS-005",
-    policy_number: "POL-2023-3005",
-    cif_id: "CIF70005",
-    type: "Business Stock Insurance",
-    segment: "SME",
-    branch: "Chitwan Branch",
-    province: "Madhesh Pradesh",
-    insurance_company: "United Insurance",
-    sum_insured: 1200000,
-    total_premium: 16000,
-    risk_start_date: "2023-05-20",
-    maturity_end_date: "2024-05-19",
-    status: "active",
-  },
-];
 
 const InsuranceTable = () => {
   const [tableParams, setTableParams] =
@@ -122,9 +43,8 @@ const InsuranceTable = () => {
   return (
     <>
       <DataTableProvider
-        data={insuranceMockData}
+        data={[]}
         columns={insuranceColumns}
-        pageCount={5}
         tableParams={tableParams}
         onTableParamsChange={setTableParams}
         enableRowSelection

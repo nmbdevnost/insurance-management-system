@@ -1,4 +1,4 @@
-import InsuranceStatusBadge from "@/shared/components/status-badge";
+import StatusBadge from "@/shared/components/status-badge";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import type { Insurance } from "@/shared/lib/types/insurance";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -74,7 +74,7 @@ const insuranceColumns: ColumnDef<Insurance>[] = [
   {
     accessorKey: "status",
     header: "Status",
-    cell: ({ row }) => <InsuranceStatusBadge status={row.getValue("status")} />,
+    cell: ({ row }) => <StatusBadge status={row.getValue("status")} />,
     meta: {
       pin: "right",
     },

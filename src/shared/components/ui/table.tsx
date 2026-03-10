@@ -6,16 +6,19 @@ function Table({
   className,
   parentClassName,
   parentStyle,
+  parentRef,
   ...props
 }: React.ComponentProps<"table"> & {
   parentClassName?: string;
   parentStyle?: React.CSSProperties;
+  parentRef?: React.Ref<HTMLDivElement>;
 }) {
   return (
     <div
       data-slot="table-container"
       className={cn("relative w-full overflow-auto", parentClassName)}
       style={parentStyle}
+      ref={parentRef}
     >
       <table
         data-slot="table"

@@ -15,13 +15,15 @@ import type { CSSProperties } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { useFillHeight } from "@/shared/hooks/use-fill-height";
+import { useVirtualizer } from "@tanstack/react-virtual";
 
 const DataTable = ({ className }: { className?: string }) => {
   const { table, isLoading, isPaginationLoading } = useDataTable();
 
-  const tableRef = useRef<HTMLDivElement>(null);
+  const outerRef = useRef<HTMLDivElement>(null); // for useFillHeight
+  const scrollRef = useRef<HTMLDivElement>(null); // for virtualizer
 
-  const tableHeight = useFillHeight({ ref: tableRef, offset: 80 });
+  const tableHeight = useFillHeight({ ref: outerRef, offset: 80 });
 
   const headerRef = useRef<HTMLTableRowElement>(null);
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>({});
@@ -30,10 +32,11 @@ const DataTable = ({ className }: { className?: string }) => {
 
   const measureTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const headerGroups = table.getHeaderGroups();
+
   const measureWidths = useCallback(() => {
     if (!headerRef.current || !isMountedRef.current) return;
 
-    const headerGroups = table.getHeaderGroups();
     if (!headerGroups.length) return;
 
     const headers = headerRef.current.querySelectorAll("th");
@@ -57,7 +60,7 @@ const DataTable = ({ className }: { className?: string }) => {
     if (isMountedRef.current) {
       setIsMeasured(true);
     }
-  }, [table]);
+  }, [headerGroups]);
 
   const columnStyles = useMemo(() => {
     const styles: Record<string, CSSProperties> = {};
@@ -132,6 +135,22 @@ const DataTable = ({ className }: { className?: string }) => {
     }, 150);
   }, [measureWidths]);
 
+  // eslint-disable-next-line react-hooks/incompatible-library
+  const virtualizer = useVirtualizer({
+    count: table.getRowModel().rows.length,
+    getScrollElement: () => scrollRef.current,
+    estimateSize: () => 38,
+    overscan: 3,
+  });
+
+  const virtualItems = virtualizer.getVirtualItems();
+
+  const paddingTop = virtualItems.length > 0 ? virtualItems[0].start : 0;
+  const paddingBottom =
+    virtualItems.length > 0
+      ? virtualizer.getTotalSize() - virtualItems[virtualItems.length - 1].end
+      : 0;
+
   useEffect(() => {
     isMountedRef.current = true;
 
@@ -161,12 +180,13 @@ const DataTable = ({ className }: { className?: string }) => {
   }, [measureWidths, debouncedMeasure]);
 
   return (
-    <div className="relative grid" ref={tableRef}>
+    <div className="relative grid" ref={outerRef}>
       {isPaginationLoading && (
         <div className="bg-accent animate-progress absolute inset-y-0 z-20 h-1 w-1/3 rounded-full" />
       )}
 
       <Table
+        parentRef={scrollRef}
         parentStyle={{
           maxHeight: tableHeight,
         }}
@@ -202,7 +222,7 @@ const DataTable = ({ className }: { className?: string }) => {
           ))}
         </TableHeader>
 
-        <TableBody>
+        {/*<TableBody>
           {!isMeasured || (isLoading && !isPaginationLoading) ? (
             <>
               {Array.from({ length: 5 }).map((_, i) => (
@@ -234,6 +254,79 @@ const DataTable = ({ className }: { className?: string }) => {
                 ))}
               </TableRow>
             ))
+          ) : (
+            <TableRow>
+              <TableCell
+                colSpan={table.getAllColumns().length}
+                className="h-24 text-center"
+              >
+                <div className="flex flex-col items-center gap-2">
+                  <RiInbox2Line className="text-muted-foreground" />
+                  <span className="text-muted-foreground">No results.</span>
+                </div>
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>*/}
+
+        <TableBody>
+          {!isMeasured || (isLoading && !isPaginationLoading) ? (
+            <>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={`Skeleton-${i}`}>
+                  <TableCell
+                    colSpan={table.getAllColumns().length}
+                    className="h-10"
+                  >
+                    <Skeleton className="h-full w-full" />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </>
+          ) : table.getRowModel().rows?.length ? (
+            <>
+              {paddingTop > 0 && (
+                <TableRow>
+                  <TableCell
+                    colSpan={table.getAllColumns().length}
+                    style={{ height: paddingTop, padding: 0 }}
+                  />
+                </TableRow>
+              )}
+              {virtualItems.map((virtualRow) => {
+                const row = table.getRowModel().rows[virtualRow.index];
+                return (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    data-index={virtualRow.index}
+                    ref={virtualizer.measureElement}
+                    className="group"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell
+                        key={cell.id}
+                        style={{ ...getCommonPinningStyles(cell.column) }}
+                        className="bg-background group-hover:bg-muted group-data-[state=selected]:bg-muted"
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                );
+              })}
+              {paddingBottom > 0 && (
+                <TableRow>
+                  <TableCell
+                    colSpan={table.getAllColumns().length}
+                    style={{ height: paddingBottom, padding: 0 }}
+                  />
+                </TableRow>
+              )}
+            </>
           ) : (
             <TableRow>
               <TableCell

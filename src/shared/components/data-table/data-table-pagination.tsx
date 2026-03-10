@@ -55,7 +55,7 @@ const DataTablePagination = ({ className }: { className?: string }) => {
         <>
           {/* Selections */}
           <div className="text-muted-foreground flex-1 text-sm">
-            {totalRows && (
+            {!!totalRows && (
               <Typography variant="label" muted>
                 Showing{" "}
                 <Typography
