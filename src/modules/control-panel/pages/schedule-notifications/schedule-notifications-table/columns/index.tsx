@@ -1,5 +1,4 @@
-import InsuranceStatusBadge from "@/shared/components/status-badge";
-import { Badge } from "@/shared/components/ui/badge";
+import StatusBadge from "@/shared/components/status-badge";
 import type { ScheduledNotification } from "@/shared/lib/types/notifications";
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
@@ -34,18 +33,6 @@ const scheduleNotificationColumns: ColumnDef<ScheduledNotification>[] = [
   {
     accessorKey: "type",
     header: "Type",
-    cell: ({ row }) => {
-      const type = row.getValue("type");
-      if (!type) return "-";
-      return (
-        <Badge
-          className="text-primary border-primary bg-primary/10 capitalize"
-          variant="outline"
-        >
-          {type as string}
-        </Badge>
-      );
-    },
   },
   {
     accessorKey: "status",
@@ -53,7 +40,7 @@ const scheduleNotificationColumns: ColumnDef<ScheduledNotification>[] = [
     cell: ({ row }) => {
       const status = row.getValue("status");
       if (!status) return "-";
-      return <InsuranceStatusBadge status={status as string} />;
+      return <StatusBadge status={status as string} />;
     },
   },
   {

@@ -5,12 +5,17 @@ import { cn } from "@/shared/lib/utils/index";
 function Table({
   className,
   parentClassName,
+  parentStyle,
   ...props
-}: React.ComponentProps<"table"> & { parentClassName?: string }) {
+}: React.ComponentProps<"table"> & {
+  parentClassName?: string;
+  parentStyle?: React.CSSProperties;
+}) {
   return (
     <div
       data-slot="table-container"
       className={cn("relative w-full overflow-auto", parentClassName)}
+      style={parentStyle}
     >
       <table
         data-slot="table"

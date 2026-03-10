@@ -161,6 +161,17 @@
   --animate-slide-up-to-top: slide-up-to-top 0.3s ease-in-out;
   --animate-slide-down-from-top: slide-down-from-top 0.3s ease-in-out;
 
+  --animate-progress: progress 1.2s ease-in-out infinite;
+
+  @keyframes progress {
+    0% {
+      left: -33%;
+    }
+    100% {
+      left: 100%;
+    }
+  }
+
   @keyframes scan {
     0%,
     100% {

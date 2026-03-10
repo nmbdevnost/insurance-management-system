@@ -9,13 +9,19 @@ import {
 import { cn } from "@/shared/lib/utils";
 import { calculatePinnedOffset } from "@/shared/lib/utils/data-table";
 import { useDataTable } from "@/shared/providers/data-table-provider";
-import { RiInbox2Line, RiLoader4Line } from "@remixicon/react";
+import { RiInbox2Line } from "@remixicon/react";
 import { flexRender, type Column } from "@tanstack/react-table";
 import type { CSSProperties } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Skeleton } from "../ui/skeleton";
+import { useFillHeight } from "@/shared/hooks/use-fill-height";
 
 const DataTable = ({ className }: { className?: string }) => {
-  const { table } = useDataTable();
+  const { table, isLoading, isPaginationLoading } = useDataTable();
+
+  const tableRef = useRef<HTMLDivElement>(null);
+
+  const tableHeight = useFillHeight({ ref: tableRef, offset: 80 });
 
   const headerRef = useRef<HTMLTableRowElement>(null);
   const [columnWidths, setColumnWidths] = useState<Record<string, number>>({});
@@ -155,18 +161,23 @@ const DataTable = ({ className }: { className?: string }) => {
   }, [measureWidths, debouncedMeasure]);
 
   return (
-    <div className="relative grid">
-      {!isMeasured && (
-        <div className="bg-background/50 absolute inset-0 z-50 flex items-center justify-center">
-          <span className="text-muted-foreground flex items-center gap-1 text-sm">
-            <RiLoader4Line className="animate-spin" /> Loading...
-          </span>
-        </div>
+    <div className="relative grid" ref={tableRef}>
+      {isPaginationLoading && (
+        <div className="bg-accent animate-progress absolute inset-y-0 z-20 h-1 w-1/3 rounded-full" />
       )}
 
       <Table
+        parentStyle={{
+          maxHeight: tableHeight,
+        }}
         parentClassName={cn("overflow-auto rounded-xl border", className)}
-        className={cn(!isMeasured && "opacity-0")}
+        className={cn(
+          (!isMeasured || isPaginationLoading) && "pointer-events-none",
+          isPaginationLoading && "opacity-50"
+        )}
+        style={{
+          maxHeight: tableHeight,
+        }}
       >
         <TableHeader className="bg-muted sticky top-0 z-10">
           {table.getHeaderGroups().map((headerGroup) => (
@@ -192,7 +203,20 @@ const DataTable = ({ className }: { className?: string }) => {
         </TableHeader>
 
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {!isMeasured || (isLoading && !isPaginationLoading) ? (
+            <>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={`Skeleton-${i}`}>
+                  <TableCell
+                    colSpan={table.getAllColumns().length}
+                    className="h-10"
+                  >
+                    <Skeleton className="h-full w-full" />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </>
+          ) : table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}

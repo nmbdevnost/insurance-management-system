@@ -36,7 +36,8 @@ export type TableParams = {
 
 export type DataTableContextValue<TData> = {
   table: Table<TData>;
-
+  isLoading?: boolean;
+  isPaginationLoading?: boolean;
   totalRows?: number;
 
   // search
@@ -71,6 +72,7 @@ export type DataTableProviderProps<TData> = {
   enableMultiRowSelection?: boolean;
   tableParams?: TableParams;
   className?: string;
+  isLoading?: boolean;
 };
 
 const DataTableContext = createContext<DataTableContextValue<unknown> | null>(
@@ -96,6 +98,7 @@ export function DataTableProvider<TData>({
   enableMultiRowSelection,
   tableParams,
   className,
+  isLoading,
 }: DataTableProviderProps<TData>) {
   const {
     columnFilters,
@@ -342,6 +345,8 @@ export function DataTableProvider<TData>({
 
   const contextValue: DataTableContextValue<TData> = {
     table,
+    isLoading,
+    isPaginationLoading: isLoading && data && data.length > 0,
     totalRows,
     globalFilter,
     setGlobalFilter: handleGlobalFilterChange,

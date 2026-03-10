@@ -13,11 +13,18 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Typography } from "../ui/typography";
+import { Skeleton } from "../ui/skeleton";
 
 const DataTablePagination = ({ className }: { className?: string }) => {
-  const { table, setPagination } = useDataTable();
+  const { table, setPagination, isLoading, isPaginationLoading, totalRows } =
+    useDataTable();
 
-  const currentPage = table.getState().pagination.pageIndex;
+  const { pageIndex, pageSize } = table.getState().pagination;
+
+  const from = pageIndex * pageSize + 1;
+  const to = Math.min((pageIndex + 1) * pageSize, totalRows ?? 0);
+
+  const currentPage = pageIndex;
   const totalPages = table.getPageCount();
 
   const pageRange = useMemo(
@@ -32,92 +39,126 @@ const DataTablePagination = ({ className }: { className?: string }) => {
         className
       )}
     >
-      {/* Selections */}
-      <div className="text-muted-foreground flex-1 text-sm">
-        <Typography variant="label" muted>
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </Typography>
-      </div>
+      {isLoading && !isPaginationLoading ? (
+        <>
+          <div className="flex-1">
+            <Skeleton className="h-6 w-full max-w-48" />
+          </div>
 
-      {/* Page Controls */}
-      <div className="flex items-center">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          <span className="sr-only">Go to previous page</span>
-          <RiArrowLeftLine />
-        </Button>
+          <Skeleton className="h-8 w-full max-w-40" />
 
-        {/* Pages */}
-        {pageRange.map((page, index) =>
-          page === "..." ? (
-            <span
-              key={`ellipsis-${index}`}
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "icon" }),
-                "pointer-events-none"
-              )}
-            >
-              &#8230;
-            </span>
-          ) : (
+          <div className="flex flex-1 justify-end">
+            <Skeleton className="h-8 w-full max-w-32" />
+          </div>
+        </>
+      ) : (
+        <>
+          {/* Selections */}
+          <div className="text-muted-foreground flex-1 text-sm">
+            {totalRows && (
+              <Typography variant="label" muted>
+                Showing{" "}
+                <Typography
+                  variant="label"
+                  as="span"
+                  className="font-bold"
+                  muted
+                >
+                  {from}-{to}
+                </Typography>{" "}
+                of{" "}
+                <Typography
+                  variant="label"
+                  as="span"
+                  className="font-bold"
+                  muted
+                >
+                  {totalRows}
+                </Typography>
+              </Typography>
+            )}
+          </div>
+
+          {/* Page Controls */}
+          <div className="flex items-center">
             <Button
-              key={page}
-              variant={page === currentPage ? "default" : "ghost"}
+              variant="ghost"
               size="icon"
-              className="min-w-fit px-1"
-              onClick={() => table.setPageIndex(page)}
-              type="button"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
             >
-              {page + 1}
+              <span className="sr-only">Go to previous page</span>
+              <RiArrowLeftLine />
             </Button>
-          )
-        )}
 
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          <span className="sr-only">Go to next page</span>
-          <RiArrowRightLine />
-        </Button>
-      </div>
+            {/* Pages */}
+            {pageRange.map((page, index) =>
+              page === "..." ? (
+                <span
+                  key={`ellipsis-${index}`}
+                  className={cn(
+                    buttonVariants({ variant: "ghost", size: "icon" }),
+                    "pointer-events-none"
+                  )}
+                >
+                  &#8230;
+                </span>
+              ) : (
+                <Button
+                  key={page}
+                  variant={page === currentPage ? "default" : "ghost"}
+                  size="icon"
+                  className="min-w-fit px-1"
+                  onClick={() => table.setPageIndex(page)}
+                  type="button"
+                >
+                  {page + 1}
+                </Button>
+              )
+            )}
 
-      {/* Page Size */}
-      <div className="flex flex-1 justify-end">
-        <Select
-          items={PAGINATION_PAGE_SIZES.map((pageSize) => ({
-            value: `${pageSize}`,
-            label: `${pageSize}/page`,
-          }))}
-          value={`${table.getState().pagination.pageSize}`}
-          onValueChange={(value) => {
-            setPagination((prev) => ({
-              ...prev,
-              page: 1,
-              pageIndex: 0,
-              pageSize: Number(value),
-            }));
-          }}
-        >
-          <SelectTrigger className="h-8">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent side="top">
-            {PAGINATION_PAGE_SIZES.map((pageSize) => (
-              <SelectItem key={pageSize} value={`${pageSize}`}>
-                {pageSize}/page
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              <span className="sr-only">Go to next page</span>
+              <RiArrowRightLine />
+            </Button>
+          </div>
+
+          {/* Page Size */}
+          <div className="flex flex-1 justify-end">
+            <Select
+              items={PAGINATION_PAGE_SIZES.map((pageSize) => ({
+                value: `${pageSize}`,
+                label: `${pageSize}/page`,
+              }))}
+              value={`${table.getState().pagination.pageSize}`}
+              onValueChange={(value) => {
+                setPagination((prev) => ({
+                  ...prev,
+                  page: 1,
+                  pageIndex: 0,
+                  pageSize: Number(value),
+                }));
+              }}
+            >
+              <SelectTrigger className="h-8">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent side="top">
+                {PAGINATION_PAGE_SIZES.map((pageSize) => (
+                  <SelectItem key={pageSize} value={`${pageSize}`}>
+                    {pageSize}/page
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </>
+      )}
     </div>
   );
 };
