@@ -22,6 +22,7 @@
   --accent: oklch(0.5999 0.111351 222.5804);
   --accent-foreground: oklch(0.98 0.02 201);
   --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: var(--color-red-800);
   --border: oklch(0.92 0.004 286.32);
   --input: oklch(0.92 0.004 286.32);
   --ring: oklch(0.5999 0.111351 222.5804);
@@ -39,7 +40,7 @@
   --sidebar-accent-foreground: oklch(0.98 0.02 201);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
-  --destructive-foreground: var(--color-red-800);
+
   --success: var(--color-emerald-500);
   --success-foreground: var(--color-emerald-900);
   --info: var(--color-violet-500);
@@ -47,16 +48,6 @@
   --warning: var(--color-yellow-500);
   --warning-foreground: var(--color-yellow-900);
   --invert: var(--color-zinc-900);
-  --invert-foreground: var(--color-zinc-50);
-
-  --destructive-foreground: var(--color-red-600);
-  --success: var(--color-emerald-500);
-  --success-foreground: var(--color-emerald-600);
-  --info: var(--color-violet-500);
-  --info-foreground: var(--color-violet-600);
-  --warning: var(--color-yellow-500);
-  --warning-foreground: var(--color-yellow-600);
-  --invert: var(--color-zinc-700);
   --invert-foreground: var(--color-zinc-50);
 
   --chart-lightness: 0.7; /* 0–1, 0.6 = 60% */

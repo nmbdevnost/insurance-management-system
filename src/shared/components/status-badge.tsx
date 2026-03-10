@@ -4,12 +4,14 @@ import { RiCircleFill } from "@remixicon/react";
 import { mapColor } from "../lib/utils/status-badge";
 
 const StatusBadge = ({
-  status,
+  status = "",
   className,
 }: {
   status: string;
   className?: string;
 }) => {
+  if (!status) return null;
+
   const color = mapColor(status);
 
   return (

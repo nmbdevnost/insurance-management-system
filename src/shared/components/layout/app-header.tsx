@@ -11,19 +11,23 @@ import {
 } from "@/shared/components/ui/dropdown-menu";
 import { RiUserLine } from "@remixicon/react";
 import { Link } from "react-router-dom";
+import { Typography } from "../ui/typography";
 
 export function AppHeader() {
   return (
     <header className="bg-background/80 border-border sticky top-0 z-50 flex w-full items-center border-b backdrop-blur-xs">
       <div className="flex h-(--header-height) w-full items-center gap-2 px-4">
-        <div className="flex h-full items-center gap-4 py-2">
-          <Link to="/" className="flex h-full items-center gap-2">
+        <div className="flex items-center gap-4 py-2">
+          <Link
+            to="/"
+            className="flex h-[calc(var(--header-height)-20px)] items-center gap-2"
+          >
             <img src={Logo} alt="Logo" className="h-full w-full" />
           </Link>
 
-          <span className="hidden truncate font-semibold sm:inline-block">
+          <Typography className="hidden truncate font-semibold sm:inline-block">
             Insurance Management System
-          </span>
+          </Typography>
         </div>
 
         <div className="ml-auto flex items-center gap-2">
