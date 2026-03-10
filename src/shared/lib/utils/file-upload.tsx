@@ -37,3 +37,22 @@ export const getFileTypeLabel = (file: File | FileMetadata) => {
   if (type.includes("text")) return "Text";
   return "File";
 };
+
+// Get accepted file types from input props
+export const getAcceptedFileTypes = (accept?: string): string => {
+  if (!accept) return "All files";
+
+  const types = accept.split(",").map((type) => type.trim());
+  const formattedTypes = types.map((type) => {
+    if (type.startsWith(".")) {
+      return type.toUpperCase();
+    }
+    if (type.endsWith("/*")) {
+      const baseType = type.split("/")[0];
+      return baseType.charAt(0).toUpperCase() + baseType.slice(1) + " files";
+    }
+    return type;
+  });
+
+  return formattedTypes.join(", ");
+};

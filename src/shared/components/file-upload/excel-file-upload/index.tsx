@@ -4,7 +4,7 @@ import {
   formatBytes,
   type FileWithPreview,
 } from "@/shared/hooks/use-file-upload";
-import { cn } from "@/shared/lib/utils";
+import { cn, getAcceptedFileTypes } from "@/shared/lib/utils";
 import { useFileUpload } from "@/shared/providers/file-upload-provider";
 import { RiUploadLine } from "@remixicon/react";
 import { Separator } from "../../ui/separator";
@@ -30,27 +30,10 @@ export default function ExcelFileUpload({ className }: { className?: string }) {
     openFileDialog,
   } = fileUploadActions;
 
-  // Get accepted file types from input props
-  const getAcceptedFileTypes = (): string => {
-    const inputProps = getInputProps();
-    const accept = inputProps.accept;
+  const inputProps = getInputProps();
+  const accept = inputProps.accept;
 
-    if (!accept) return "All files";
-
-    const types = accept.split(",").map((type) => type.trim());
-    const formattedTypes = types.map((type) => {
-      if (type.startsWith(".")) {
-        return type.toUpperCase();
-      }
-      if (type.endsWith("/*")) {
-        const baseType = type.split("/")[0];
-        return baseType.charAt(0).toUpperCase() + baseType.slice(1) + " files";
-      }
-      return type;
-    });
-
-    return formattedTypes.join(", ");
-  };
+  const supportedFileTypes = getAcceptedFileTypes(accept);
 
   return (
     <div className={cn("w-full space-y-4", className)}>
@@ -95,7 +78,7 @@ export default function ExcelFileUpload({ className }: { className?: string }) {
             </p>
             <div className="flex flex-wrap items-center justify-center gap-2">
               <p className="text-muted-foreground text-xs">
-                Supported file types: {getAcceptedFileTypes()}
+                Supported file types: {supportedFileTypes}
               </p>
 
               {maxSize && (

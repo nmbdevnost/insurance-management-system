@@ -1,6 +1,6 @@
 import type { TableParams } from "@/shared/providers/data-table-provider";
 
-export const PAGINATION_PAGE_SIZES = [10, 20, 25, 30, 40, 50];
+export const PAGINATION_PAGE_SIZES = [10, 20, 25, 30, 40, 50, 100];
 
 export const DEFAULT_PAGE_INDEX = 0;
 
