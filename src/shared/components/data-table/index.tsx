@@ -17,82 +17,69 @@ import { Skeleton } from "../ui/skeleton";
 import { useFillHeight } from "@/shared/hooks/use-fill-height";
 import { useVirtualizer } from "@tanstack/react-virtual";
 
-const DataTable = ({ className }: { className?: string }) => {
+type DataTableProps = {
+  className?: string;
+  overscan?: number;
+  emptyText?: string;
+  autoFillHeight?: boolean;
+  autoFillHeightOffset?: number;
+  estimatedRowHeight?: number;
+  skeletonRows?: number;
+};
+
+const DataTable: React.FC<DataTableProps> = ({
+  className,
+  overscan = 3,
+  emptyText = "No results.",
+  autoFillHeight = true,
+  autoFillHeightOffset = 80,
+  estimatedRowHeight = 38,
+  skeletonRows = 5,
+}) => {
   const { table, isLoading, isPaginationLoading } = useDataTable();
 
-  const outerRef = useRef<HTMLDivElement>(null); // for useFillHeight
-  const scrollRef = useRef<HTMLDivElement>(null); // for virtualizer
+  const outerRef = useRef<HTMLDivElement>(null);
+  const tableHeight = useFillHeight({
+    ref: outerRef,
+    offset: autoFillHeightOffset,
+  });
 
-  const tableHeight = useFillHeight({ ref: outerRef, offset: 80 });
-
+  const scrollRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLTableRowElement>(null);
-  const [columnWidths, setColumnWidths] = useState<Record<string, number>>({});
-  const [isMeasured, setIsMeasured] = useState(false);
-  const isMountedRef = useRef(false);
-
   const measureTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const headerGroups = table.getHeaderGroups();
-
-  const measureWidths = useCallback(() => {
-    if (!headerRef.current || !isMountedRef.current) return;
-
-    if (!headerGroups.length) return;
-
-    const headers = headerRef.current.querySelectorAll("th");
-    const widths: Record<string, number> = {};
-
-    headers.forEach((header, index) => {
-      const columnId = headerGroups[0]?.headers[index]?.column.id;
-      if (columnId) {
-        widths[columnId] = header.getBoundingClientRect().width;
-      }
-    });
-
-    // Only update if widths actually changed
-    setColumnWidths((prev) => {
-      const hasChanged = Object.keys(widths).some(
-        (key) => prev[key] !== widths[key]
-      );
-      return hasChanged ? widths : prev;
-    });
-
-    if (isMountedRef.current) {
-      setIsMeasured(true);
-    }
-  }, [headerGroups]);
+  const [columnWidths, setColumnWidths] = useState<Record<string, number>>({});
+  const [isMeasured, setIsMeasured] = useState(false);
 
   const columnStyles = useMemo(() => {
     const styles: Record<string, CSSProperties> = {};
 
     table.getAllColumns().forEach((column) => {
       const isPinned = column.getIsPinned();
-
       const isLastLeftPinnedColumn =
         isPinned === "left" && column.getIsLastColumn("left");
       const isFirstRightPinnedColumn =
         isPinned === "right" && column.getIsFirstColumn("right");
 
-      let leftOffset = 0;
-      let rightOffset = 0;
+      const leftOffset =
+        isPinned === "left"
+          ? calculatePinnedOffset(
+              column,
+              table.getLeftLeafColumns(),
+              columnWidths,
+              "left"
+            )
+          : 0;
 
-      if (isPinned === "left") {
-        leftOffset = calculatePinnedOffset(
-          column,
-          table.getLeftLeafColumns(),
-          columnWidths,
-          "left"
-        );
-      }
-
-      if (isPinned === "right") {
-        rightOffset = calculatePinnedOffset(
-          column,
-          table.getRightLeafColumns(),
-          columnWidths,
-          "right"
-        );
-      }
+      const rightOffset =
+        isPinned === "right"
+          ? calculatePinnedOffset(
+              column,
+              table.getRightLeafColumns(),
+              columnWidths,
+              "right"
+            )
+          : 0;
 
       const size = column.getSize();
       const derivedColumnWidth = columnWidths[column.id];
@@ -110,7 +97,6 @@ const DataTable = ({ className }: { className?: string }) => {
         position: isPinned ? "sticky" : "relative",
         width: columnWidth,
         minWidth: size === 150 ? undefined : columnWidth,
-
         zIndex: isPinned ? 1 : 0,
       };
     });
@@ -119,61 +105,69 @@ const DataTable = ({ className }: { className?: string }) => {
   }, [columnWidths, table]);
 
   const getCommonPinningStyles = useCallback(
-    (column: Column<unknown>): CSSProperties => {
-      return columnStyles[column.id] || {};
-    },
+    (column: Column<unknown>): CSSProperties => columnStyles[column.id] ?? {},
     [columnStyles]
   );
 
-  // Debounced measure function
+  const measureWidths = useCallback(() => {
+    if (!headerRef.current) return;
+
+    const headerGroups = table.getHeaderGroups();
+    if (!headerGroups.length) return;
+
+    const headers = headerRef.current.querySelectorAll("th");
+    const widths: Record<string, number> = {};
+
+    headers.forEach((header, index) => {
+      const columnId = headerGroups[0]?.headers[index]?.column.id;
+      if (columnId) {
+        widths[columnId] = header.getBoundingClientRect().width;
+      }
+    });
+
+    setColumnWidths((prev) => {
+      const hasChanged = Object.keys(widths).some(
+        (key) => prev[key] !== widths[key]
+      );
+      return hasChanged ? widths : prev;
+    });
+
+    setIsMeasured(true);
+  }, [table]);
+
   const debouncedMeasure = useCallback(() => {
-    if (measureTimeoutRef.current) {
-      clearTimeout(measureTimeoutRef.current);
-    }
-    measureTimeoutRef.current = setTimeout(() => {
-      measureWidths();
-    }, 150);
+    if (measureTimeoutRef.current) clearTimeout(measureTimeoutRef.current);
+    measureTimeoutRef.current = setTimeout(measureWidths, 150);
   }, [measureWidths]);
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
     count: table.getRowModel().rows.length,
     getScrollElement: () => scrollRef.current,
-    estimateSize: () => 38,
-    overscan: 3,
+    estimateSize: () => estimatedRowHeight,
+    overscan,
   });
 
   const virtualItems = virtualizer.getVirtualItems();
+  const totalSize = virtualizer.getTotalSize();
 
   const paddingTop = virtualItems.length > 0 ? virtualItems[0].start : 0;
   const paddingBottom =
     virtualItems.length > 0
-      ? virtualizer.getTotalSize() - virtualItems[virtualItems.length - 1].end
+      ? totalSize - virtualItems[virtualItems.length - 1].end
       : 0;
 
   useEffect(() => {
-    isMountedRef.current = true;
+    const initialTimeout = setTimeout(measureWidths, 0);
 
-    // Initial measurement (slight delay to ensure DOM is ready)
-    const initialTimeout = setTimeout(() => {
-      measureWidths();
-    }, 0);
-
-    // Debounced resize listener
     window.addEventListener("resize", debouncedMeasure);
 
-    // // ResizeObserver for the table header
     const resizeObserver = new ResizeObserver(debouncedMeasure);
-    if (headerRef.current) {
-      resizeObserver.observe(headerRef.current);
-    }
+    if (headerRef.current) resizeObserver.observe(headerRef.current);
 
     return () => {
-      isMountedRef.current = false;
       clearTimeout(initialTimeout);
-      if (measureTimeoutRef.current) {
-        clearTimeout(measureTimeoutRef.current);
-      }
+      if (measureTimeoutRef.current) clearTimeout(measureTimeoutRef.current);
       window.removeEventListener("resize", debouncedMeasure);
       resizeObserver.disconnect();
     };
@@ -187,103 +181,47 @@ const DataTable = ({ className }: { className?: string }) => {
 
       <Table
         parentRef={scrollRef}
-        parentStyle={{
-          maxHeight: tableHeight,
-        }}
+        parentStyle={{ maxHeight: autoFillHeight ? tableHeight : undefined }}
         parentClassName={cn("overflow-auto rounded-xl border", className)}
         className={cn(
           (!isMeasured || isPaginationLoading) && "pointer-events-none",
           isPaginationLoading && "opacity-50"
         )}
-        style={{
-          maxHeight: tableHeight,
-        }}
       >
         <TableHeader className="bg-muted sticky top-0 z-10">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id} ref={headerRef}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead
-                    key={header.id}
-                    className="text-muted-foreground bg-muted font-semibold"
-                    style={{ ...getCommonPinningStyles(header.column) }}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                );
-              })}
+              {headerGroup.headers.map((header) => (
+                <TableHead
+                  key={header.id}
+                  className="text-muted-foreground bg-muted font-semibold"
+                  style={getCommonPinningStyles(header.column)}
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                </TableHead>
+              ))}
             </TableRow>
           ))}
         </TableHeader>
 
-        {/*<TableBody>
-          {!isMeasured || (isLoading && !isPaginationLoading) ? (
-            <>
-              {Array.from({ length: 5 }).map((_, i) => (
-                <TableRow key={`Skeleton-${i}`}>
-                  <TableCell
-                    colSpan={table.getAllColumns().length}
-                    className="h-10"
-                  >
-                    <Skeleton className="h-full w-full" />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </>
-          ) : table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-                className="group"
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell
-                    key={cell.id}
-                    style={{ ...getCommonPinningStyles(cell.column) }}
-                    className="bg-background group-hover:bg-muted group-data-[state=selected]:bg-muted"
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell
-                colSpan={table.getAllColumns().length}
-                className="h-24 text-center"
-              >
-                <div className="flex flex-col items-center gap-2">
-                  <RiInbox2Line className="text-muted-foreground" />
-                  <span className="text-muted-foreground">No results.</span>
-                </div>
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>*/}
-
         <TableBody>
           {!isMeasured || (isLoading && !isPaginationLoading) ? (
-            <>
-              {Array.from({ length: 5 }).map((_, i) => (
-                <TableRow key={`Skeleton-${i}`}>
-                  <TableCell
-                    colSpan={table.getAllColumns().length}
-                    className="h-10"
-                  >
-                    <Skeleton className="h-full w-full" />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </>
-          ) : table.getRowModel().rows?.length ? (
+            Array.from({ length: skeletonRows }).map((_, i) => (
+              <TableRow key={`skeleton-${i}`}>
+                <TableCell
+                  colSpan={table.getAllColumns().length}
+                  className="h-10"
+                >
+                  <Skeleton className="h-full w-full" />
+                </TableCell>
+              </TableRow>
+            ))
+          ) : table.getRowModel().rows.length ? (
             <>
               {paddingTop > 0 && (
                 <TableRow>
@@ -306,7 +244,7 @@ const DataTable = ({ className }: { className?: string }) => {
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
                         key={cell.id}
-                        style={{ ...getCommonPinningStyles(cell.column) }}
+                        style={getCommonPinningStyles(cell.column)}
                         className="bg-background group-hover:bg-muted group-data-[state=selected]:bg-muted"
                       >
                         {flexRender(
@@ -335,7 +273,7 @@ const DataTable = ({ className }: { className?: string }) => {
               >
                 <div className="flex flex-col items-center gap-2">
                   <RiInbox2Line className="text-muted-foreground" />
-                  <span className="text-muted-foreground">No results.</span>
+                  <span className="text-muted-foreground">{emptyText}</span>
                 </div>
               </TableCell>
             </TableRow>
