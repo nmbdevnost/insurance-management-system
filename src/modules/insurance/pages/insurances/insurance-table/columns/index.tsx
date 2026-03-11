@@ -1,30 +1,13 @@
+import DataTableSelect from "@/shared/components/data-table/data-table-select";
 import StatusBadge from "@/shared/components/status-badge";
-import { Checkbox } from "@/shared/components/ui/checkbox";
 import type { Insurance } from "@/shared/lib/types/insurance";
 import type { ColumnDef } from "@tanstack/react-table";
 import InsuranceActions from "./actions";
 const insuranceColumns: ColumnDef<Insurance>[] = [
   {
     id: "select",
-    header: ({ table }) => (
-      <div>
-        <Checkbox
-          checked={table.getIsAllPageRowsSelected()}
-          indeterminate={table.getIsSomePageRowsSelected()}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div>
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      </div>
-    ),
+    header: ({ table }) => <DataTableSelect variant="multiple" table={table} />,
+    cell: ({ row }) => <DataTableSelect variant="single" row={row} />,
     size: 30,
   },
   {
