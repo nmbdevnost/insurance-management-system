@@ -19,7 +19,7 @@ export const insuranceCompanySchema = z.object({
     ),
   phoneNumber: z.string().min(1, "Phone number is required."),
   contactPersonOne: z
-    .string(1)
+    .string()
     .min(1, "Atleast one contact person is required."),
   contactPersonTwo: z.string().optional(),
 });
