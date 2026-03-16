@@ -10,9 +10,9 @@ import { cn } from "@/shared/lib/utils";
 import { calculatePinnedOffset } from "@/shared/lib/utils/data-table";
 import { useDataTable } from "@/shared/providers/data-table-provider";
 import { RiInbox2Line } from "@remixicon/react";
-import { flexRender, type Column } from "@tanstack/react-table";
+import { flexRender, type Column, type Row } from "@tanstack/react-table";
 import type { CSSProperties } from "react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { useFillHeight } from "@/shared/hooks/use-fill-height";
 import { useVirtualizer } from "@tanstack/react-virtual";
@@ -25,7 +25,45 @@ type DataTableProps = {
   autoFillHeightOffset?: number;
   estimatedRowHeight?: number;
   skeletonRows?: number;
+  virtualized?: boolean;
 };
+
+type TableRowItemProps<TData> = {
+  row: Row<TData>;
+  rowIndex: number;
+  measureRef?: (el: Element | null) => void;
+  getCommonPinningStyles: (column: Column<TData>) => CSSProperties;
+};
+
+/**
+ * Memoized row component to prevent re-renders of visible rows during scroll.
+ * Re-renders only when selection state or row data changes.
+ */
+const TableRowItem = memo(
+  <TData,>({
+    row,
+    rowIndex,
+    measureRef,
+    getCommonPinningStyles,
+  }: TableRowItemProps<TData>) => (
+    <TableRow
+      data-state={row.getIsSelected() && "selected"}
+      data-index={rowIndex}
+      ref={measureRef}
+      className="group"
+    >
+      {row.getVisibleCells().map((cell) => (
+        <TableCell
+          key={cell.id}
+          style={getCommonPinningStyles(cell.column)}
+          className="bg-background group-hover:bg-muted group-data-[state=selected]:bg-muted"
+        >
+          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+        </TableCell>
+      ))}
+    </TableRow>
+  )
+) as <TData>(props: TableRowItemProps<TData>) => React.ReactElement;
 
 const DataTable: React.FC<DataTableProps> = ({
   className,
@@ -35,6 +73,7 @@ const DataTable: React.FC<DataTableProps> = ({
   autoFillHeightOffset = 80,
   estimatedRowHeight = 38,
   skeletonRows = 5,
+  virtualized = true,
 }) => {
   const { table, isLoading, isPaginationLoading } = useDataTable();
 
@@ -140,10 +179,13 @@ const DataTable: React.FC<DataTableProps> = ({
     measureTimeoutRef.current = setTimeout(measureWidths, 150);
   }, [measureWidths]);
 
+  /** Stable scroll element getter to avoid virtualizer re-initialization on each render. */
+  const getScrollElement = useCallback(() => scrollRef.current, []);
+
   // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
-    count: table.getRowModel().rows.length,
-    getScrollElement: () => scrollRef.current,
+    count: virtualized ? table.getRowModel().rows.length : 0,
+    getScrollElement,
     estimateSize: () => estimatedRowHeight,
     overscan,
   });
@@ -172,6 +214,8 @@ const DataTable: React.FC<DataTableProps> = ({
       resizeObserver.disconnect();
     };
   }, [measureWidths, debouncedMeasure]);
+
+  const rows = table.getRowModel().rows;
 
   return (
     <div className="relative grid" ref={outerRef}>
@@ -224,48 +268,45 @@ const DataTable: React.FC<DataTableProps> = ({
                 ))}
               </TableRow>
             ))
-          ) : table.getRowModel().rows.length ? (
+          ) : rows.length ? (
             <>
-              {paddingTop > 0 && (
-                <TableRow>
-                  <TableCell
-                    colSpan={table.getAllColumns().length}
-                    style={{ height: paddingTop, padding: 0 }}
-                  />
-                </TableRow>
-              )}
-              {virtualItems.map((virtualRow) => {
-                const row = table.getRowModel().rows[virtualRow.index];
-                return (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                    data-index={virtualRow.index}
-                    ref={virtualizer.measureElement}
-                    className="group"
-                  >
-                    {row.getVisibleCells().map((cell) => (
+              {virtualized ? (
+                <>
+                  {paddingTop > 0 && (
+                    <TableRow>
                       <TableCell
-                        key={cell.id}
-                        style={getCommonPinningStyles(cell.column)}
-                        className="bg-background group-hover:bg-muted group-data-[state=selected]:bg-muted"
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                );
-              })}
-              {paddingBottom > 0 && (
-                <TableRow>
-                  <TableCell
-                    colSpan={table.getAllColumns().length}
-                    style={{ height: paddingBottom, padding: 0 }}
+                        colSpan={table.getAllColumns().length}
+                        style={{ height: paddingTop, padding: 0 }}
+                      />
+                    </TableRow>
+                  )}
+                  {virtualItems.map((virtualRow) => (
+                    <TableRowItem
+                      key={rows[virtualRow.index].id}
+                      row={rows[virtualRow.index]}
+                      rowIndex={virtualRow.index}
+                      measureRef={virtualizer.measureElement}
+                      getCommonPinningStyles={getCommonPinningStyles}
+                    />
+                  ))}
+                  {paddingBottom > 0 && (
+                    <TableRow>
+                      <TableCell
+                        colSpan={table.getAllColumns().length}
+                        style={{ height: paddingBottom, padding: 0 }}
+                      />
+                    </TableRow>
+                  )}
+                </>
+              ) : (
+                rows.map((row, i) => (
+                  <TableRowItem
+                    key={row.id}
+                    row={row}
+                    rowIndex={i}
+                    getCommonPinningStyles={getCommonPinningStyles}
                   />
-                </TableRow>
+                ))
               )}
             </>
           ) : (

@@ -1,4 +1,3 @@
-import type { ExpiredPolicy } from "@/shared/lib/types/policies";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,13 +10,14 @@ import {
 } from "@/shared/components/ui/alert-dialog";
 import { Button } from "@/shared/components/ui/button";
 import { TooltipContent, TooltipTrigger } from "@/shared/components/ui/tooltip";
+import type { FormattedExpiredPolicy } from "@/shared/lib/types/policies";
 import { Tooltip } from "@base-ui/react";
 import { RiAuctionLine } from "@remixicon/react";
 import { useState } from "react";
 import { toast } from "sonner";
 
 type ExpiredInsuranceForceActionProps = {
-  policy: ExpiredPolicy;
+  policy: FormattedExpiredPolicy;
 };
 
 const ExpiredInsuranceForceAction = ({

@@ -14,15 +14,15 @@ import {
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { TooltipContent, TooltipTrigger } from "@/shared/components/ui/tooltip";
 import { Typography } from "@/shared/components/ui/typography";
-import type { ExpiredPolicy } from "@/shared/lib/types/policies";
-import { formatCurrency } from "@/shared/lib/utils/format";
+import type { FormattedExpiredPolicy } from "@/shared/lib/types/policies";
+import { formatCurrency, formatDate } from "@/shared/lib/utils/format";
 import { Tooltip } from "@base-ui/react";
 import { RiEyeLine, RiShieldCheckLine } from "@remixicon/react";
-import { format } from "date-fns";
+// import { format } from "date-fns";
 import { useState } from "react";
 
 type ExpiredInsuranceViewActionProps = {
-  policy: ExpiredPolicy;
+  policy: FormattedExpiredPolicy;
 };
 
 const ExpiredInsuranceViewAction = ({
@@ -115,9 +115,9 @@ const ExpiredInsuranceViewAction = ({
                 >
                   Sum Insured
                 </Typography>
-                <p className="mt-1 text-lg font-semibold">
+                {/*<p className="mt-1 text-lg font-semibold">
                   {formatCurrency(policy.sumInsured)}
-                </p>
+                </p>*/}
               </div>
             </div>
             <DetailSectionGroup>
@@ -134,7 +134,7 @@ const ExpiredInsuranceViewAction = ({
                 />
                 <DetailField
                   label="Reference No"
-                  value={policy.referenceNo}
+                  value={policy.referenceNumber}
                   variant="mono"
                 />
                 <DetailField
@@ -153,14 +153,14 @@ const ExpiredInsuranceViewAction = ({
                 <DetailField label="Province" value={policy.province} />
                 <DetailField
                   label="Coverage Period"
-                  value={`${format(policy.riskStartDate, "PP")} -
-                        ${format(policy.riskMaturityDate, "PP")}`}
+                  value={`${formatDate(policy.riskStartDate, "PP")} -
+                        ${formatDate(policy.riskMaturityDate, "PP")}`}
                 />
               </DetailsSection>
 
               {/* Financial Summary */}
               <DetailsSection title="Financial Summary">
-                <DetailField
+                {/*<DetailField
                   label={
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-2 rounded-full bg-green-500"></div>
@@ -169,7 +169,7 @@ const ExpiredInsuranceViewAction = ({
                   }
                   className="ml-4"
                   value={`${formatCurrency(policy.sumInsured)}`}
-                />
+                />*/}
                 <DetailField
                   label={
                     <div className="flex items-center gap-2">
@@ -193,7 +193,7 @@ const ExpiredInsuranceViewAction = ({
                       </div>
                     }
                     className="ml-4 font-medium"
-                    value={`${format(policy.riskStartDate, "PPP")}`}
+                    value={`${formatDate(policy.riskStartDate, "PPP")}`}
                   />
                 )}
 
@@ -206,7 +206,7 @@ const ExpiredInsuranceViewAction = ({
                       </div>
                     }
                     className="ml-4 font-medium"
-                    value={`${format(policy.riskMaturityDate, "PPP")}`}
+                    value={`${formatDate(policy.riskMaturityDate, "PPP")}`}
                   />
                 )}
               </DetailsSection>

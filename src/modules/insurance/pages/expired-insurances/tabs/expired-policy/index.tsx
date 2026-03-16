@@ -22,15 +22,26 @@ const ExpiredPolicyTab = () => {
   );
 
   const data = expiredListData?.result.expiringPoliciesDetails;
+  const totalRows = expiredListData?.result.totalCount;
+
+  const formattedData = data?.map(({ policyDetails, expiringIn }) => {
+    return {
+      ...policyDetails,
+      expiringIn,
+    };
+  });
+
+  console.log(formattedData);
 
   return (
     <>
       <DataTableProvider
-        data={data}
+        data={formattedData}
         columns={expiredPolicyColumns}
         tableParams={tableParams}
         onTableParamsChange={setTableParams}
         isLoading={isFetching}
+        totalRows={totalRows}
       >
         <ExpiredPolicyTable />
       </DataTableProvider>

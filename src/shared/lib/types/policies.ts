@@ -1,28 +1,40 @@
 export type ExpiredPolicy = {
-  details: ExpiredPolicyDetails;
+  policyDetails: ExpiredPolicyDetails;
   expiringIn: string;
 };
 
 export type ExpiredPolicyDetails = {
-  referenceNo: string;
+  policyId: number;
   policyNumber: string;
+  referenceNumber: string;
   cifId: string;
   customerName: string;
   accountNo: string;
+  mobileNo: string;
   email: string;
+  address: string;
+  branchId: number;
   branchName: string;
   province: string;
   insuranceCompany: string;
-  initiationType: "Manual" | "Online";
-  policyIssuedDate: string;
+  initiationTypeId: number;
+  policyIssueDate: string;
   riskStartDate: string;
   riskMaturityDate: string;
   termDays: number;
   assetType: string;
-  sumInsured: number;
+  coverageAmount: number;
   totalPremium: number;
+  riskCoverageDetails: string;
   status: string;
-  createdBy: string;
-  createdDate: string;
-  apiResponse: string;
+  workflowStage: string;
+  paymentStatus: string;
+  isReviewed: boolean;
+  insuranceApiRequestSent: boolean;
+  insuranceApiResponseReceived: boolean;
+  isRenewable: boolean;
+  autoRenewalEnabled: boolean;
 };
+
+export type FormattedExpiredPolicy = ExpiredPolicyDetails &
+  Pick<ExpiredPolicy, "expiringIn">;

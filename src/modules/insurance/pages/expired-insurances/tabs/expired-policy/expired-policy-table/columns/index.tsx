@@ -1,11 +1,11 @@
-import type { ExpiredPolicy } from "@/shared/lib/types/policies";
 import { Checkbox } from "@/shared/components/ui/checkbox";
+import type { FormattedExpiredPolicy } from "@/shared/lib/types/policies";
+import { formatDate } from "@/shared/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
-import ExpiredInsuranceActions from "./actions";
 import ExpiredInsuranceStatusBadge from "../../../../../../../../shared/components/status-badge";
-import { formatDate } from "@/shared/lib/utils/format";
+import ExpiredInsuranceActions from "./actions";
 
-const expiredPolicyColumns: ColumnDef<ExpiredPolicy>[] = [
+const expiredPolicyColumns: ColumnDef<FormattedExpiredPolicy>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -30,7 +30,7 @@ const expiredPolicyColumns: ColumnDef<ExpiredPolicy>[] = [
     size: 30,
   },
   {
-    accessorKey: "referenceNo",
+    accessorKey: "referenceNumber",
     header: "Reference No",
   },
   {
@@ -66,29 +66,33 @@ const expiredPolicyColumns: ColumnDef<ExpiredPolicy>[] = [
     header: "Insurance Company",
   },
   {
-    accessorKey: "initiationType",
+    accessorKey: "initiationTypeId",
     header: "Initiation Type",
   },
   {
-    accessorKey: "policyIssuedDate",
+    accessorKey: "policyIssueDate",
     header: "Policy Issued Date",
-  },
-  {
-    accessorKey: "riskStartDate",
-    header: "Risk Start Date",
     cell: ({ row }) => {
-      const formattedDate = formatDate(row.getValue("riskStartDate"), "PPP");
+      const formattedDate = formatDate(row.original.policyIssueDate);
       return <>{formattedDate}</>;
     },
   },
-  {
-    accessorKey: "riskMaturityDate",
-    header: "Risk Maturity Date",
-    cell: ({ row }) => {
-      const formattedDate = formatDate(row.getValue("riskMaturityDate"), "PPP");
-      return <>{formattedDate}</>;
-    },
-  },
+  // {
+  //   accessorKey: "riskStartDate",
+  //   header: "Risk Start Date",
+  //   cell: ({ row }) => {
+  //     const formattedDate = formatDate(row.getValue("riskStartDate"), "PPP");
+  //     return <>{formattedDate}</>;
+  //   },
+  // },
+  // {
+  //   accessorKey: "riskMaturityDate",
+  //   header: "Risk Maturity Date",
+  //   cell: ({ row }) => {
+  //     const formattedDate = formatDate(row.getValue("riskMaturityDate"), "PPP");
+  //     return <>{formattedDate}</>;
+  //   },
+  // },
   {
     accessorKey: "termDays",
     header: "Term Days",
@@ -119,16 +123,16 @@ const expiredPolicyColumns: ColumnDef<ExpiredPolicy>[] = [
     accessorKey: "createdBy",
     header: "Created By",
   },
+  // {
+  //   accessorKey: "createdDate",
+  //   header: "Created Date",
+  //   cell: ({ row }) => {
+  //     const formattedDate = formatDate(row.getValue("createdDate"), "PPP");
+  //     return <>{formattedDate}</>;
+  //   },
+  // },
   {
-    accessorKey: "createdDate",
-    header: "Created Date",
-    cell: ({ row }) => {
-      const formattedDate = formatDate(row.getValue("createdDate"), "PPP");
-      return <>{formattedDate}</>;
-    },
-  },
-  {
-    accessorKey: "apiResponse",
+    accessorKey: "insuranceApiResponseReceived",
     header: "API Response",
   },
   {
