@@ -1,5 +1,6 @@
 import BulkUploadPage from "./bulk-upload";
 import ExpiredInsurancesPage from "./expired-insurances";
+import InsuranceCompaniesPage from "./insurance-companies";
 import InsurancesPage from "./insurances";
 import BankInducedPage from "./new-insurance/bank-induced";
 import ClientInducedPage from "./new-insurance/client-induced";
@@ -10,6 +11,7 @@ export {
   BulkUploadPage,
   ClientInducedPage,
   ExpiredInsurancesPage,
+  InsuranceCompaniesPage,
   InsurancesPage,
   ReportsPage,
 };

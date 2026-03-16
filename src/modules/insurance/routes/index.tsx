@@ -4,6 +4,7 @@ import {
   BulkUploadPage,
   ClientInducedPage,
   ExpiredInsurancesPage,
+  InsuranceCompaniesPage,
   InsurancesPage,
 } from "../pages";
 
@@ -37,6 +38,10 @@ const insuranceRoutes: RouteObject[] = [
   {
     path: "/bulk-upload",
     element: <BulkUploadPage />,
+  },
+  {
+    path: "/insurance-companies",
+    element: <InsuranceCompaniesPage />,
   },
 ];
 

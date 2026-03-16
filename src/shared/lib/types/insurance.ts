@@ -41,3 +41,15 @@ export type ExcelExtractedRow = {
   maturity_date: string;
   status: "active" | "pending" | "expired" | "cancelled" | "matured";
 };
+
+export type InsuranceCompany = {
+  cif_id: string;
+  company_name: string;
+  account_number: string;
+  address: string;
+  email: string;
+  phone_number: string;
+  contact_person_one: string;
+  contact_person_two: string;
+  status: string;
+};

@@ -42,6 +42,11 @@ const SIDEBAR_MENU_ITEMS: MenuItem[] = [
         label: "Expired Insurances",
         icon: "ri-timer-line",
       },
+      {
+        path: "/insurance-companies",
+        label: "Insurance Companies",
+        icon: "ri-building-line",
+      },
     ],
   },
   {
