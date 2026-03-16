@@ -68,7 +68,6 @@ export type DataTableProviderProps<TData> = {
   data?: TData[];
   children: React.ReactNode;
   pageCount?: number;
-  totalRows?: number;
   onTableParamsChange?: React.Dispatch<React.SetStateAction<TableParams>>;
   enableRowSelection?: boolean;
   enableMultiRowSelection?: boolean;
@@ -76,6 +75,7 @@ export type DataTableProviderProps<TData> = {
   className?: string;
   isLoading?: boolean;
   manualPagination?: boolean;
+  totalRows?: number;
 };
 
 const DataTableContext = createContext<DataTableContextValue<unknown> | null>(
@@ -95,14 +95,14 @@ export function DataTableProvider<TData>({
   data = [],
   children,
   pageCount,
-  totalRows = 0,
+  tableParams,
   onTableParamsChange,
   enableRowSelection = true,
   enableMultiRowSelection,
-  tableParams,
   className,
   isLoading,
   manualPagination = true,
+  totalRows,
 }: DataTableProviderProps<TData>) {
   const {
     columnFilters,
@@ -311,7 +311,12 @@ export function DataTableProvider<TData>({
   const table = useReactTable({
     data,
     columns,
-    pageCount: manualPagination ? (pageCount ? pageCount : 1) : undefined,
+    pageCount: manualPagination
+      ? (pageCount ??
+        (totalRows != null
+          ? Math.ceil(totalRows / activePagination.pageSize)
+          : 1))
+      : undefined,
 
     getRowId: (row) => (row as { id: string }).id,
 
@@ -349,7 +354,7 @@ export function DataTableProvider<TData>({
     table,
     isLoading,
     isPaginationLoading: isLoading && data && data.length > 0,
-    totalRows,
+    totalRows: totalRows ?? data?.length,
     globalFilter,
     setGlobalFilter: handleGlobalFilterChange,
     columnFilters,

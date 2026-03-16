@@ -213,12 +213,15 @@ const DataTable: React.FC<DataTableProps> = ({
           {!isMeasured || (isLoading && !isPaginationLoading) ? (
             Array.from({ length: skeletonRows }).map((_, i) => (
               <TableRow key={`skeleton-${i}`}>
-                <TableCell
-                  colSpan={table.getAllColumns().length}
-                  className="h-10"
-                >
-                  <Skeleton className="h-full w-full" />
-                </TableCell>
+                {table.getAllColumns().map((column) => (
+                  <TableCell
+                    key={column.id}
+                    className="h-10"
+                    style={getCommonPinningStyles(column)}
+                  >
+                    <Skeleton className="h-full w-full" />
+                  </TableCell>
+                ))}
               </TableRow>
             ))
           ) : table.getRowModel().rows.length ? (

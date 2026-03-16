@@ -1,4 +1,9 @@
 export type ExpiredPolicy = {
+  details: ExpiredPolicyDetails;
+  expiringIn: string;
+};
+
+export type ExpiredPolicyDetails = {
   referenceNo: string;
   policyNumber: string;
   cifId: string;
