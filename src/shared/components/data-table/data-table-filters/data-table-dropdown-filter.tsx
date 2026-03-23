@@ -141,6 +141,7 @@ const DataTableDropdownFilter = ({
       )}
       limit={DEFAULT_DISPLAY_OPTIONS}
       triggerClassName="data-selected:text-primary! data-selected:border-primary h-8 border-dashed"
+      autoWidth={false}
       {...filter}
     />
   );

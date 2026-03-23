@@ -4,6 +4,7 @@ import { RiCloseLine } from "@remixicon/react";
 import SearchInput from "../search-input";
 import { Button } from "../ui/button";
 import { DataTableDropdownFilter } from "./data-table-filters";
+import DataTableInputFilter from "./data-table-filters/data-table-input-filter";
 
 type DataTableToolbarProps = {
   filters?: FilterConfig[];
@@ -39,14 +40,30 @@ const DataTableToolbar = ({
       <div className="flex items-center gap-2">
         {columnFilters &&
           filters?.map((filter) => {
-            return (
-              <DataTableDropdownFilter
-                key={filter.id}
-                filter={filter}
-                columnFilters={columnFilters}
-                onColumnFiltersChange={setColumnFilters}
-              />
-            );
+            const filterType = filter.type;
+
+            switch (filterType) {
+              case "select":
+                return (
+                  <DataTableDropdownFilter
+                    key={filter.id}
+                    filter={filter}
+                    columnFilters={columnFilters}
+                    onColumnFiltersChange={setColumnFilters}
+                  />
+                );
+              case "input":
+                return (
+                  <DataTableInputFilter
+                    key={filter.id}
+                    filter={filter}
+                    columnFilters={columnFilters}
+                    onColumnFiltersChange={setColumnFilters}
+                  />
+                );
+              default:
+                return null;
+            }
           })}
 
         {hasAppliedFilters && (

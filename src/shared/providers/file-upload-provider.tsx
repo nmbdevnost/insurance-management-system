@@ -6,6 +6,7 @@ import {
   type FileWithPreview,
 } from "../hooks/use-file-upload";
 import { cn } from "../lib/utils";
+import type { FileMimeType } from "../lib/types/file";
 
 export type FileUploadProviderProps = {
   uploadFiles: FileUploadItem[];
@@ -13,7 +14,7 @@ export type FileUploadProviderProps = {
 
   maxFiles?: number;
   maxSize?: number;
-  accept?: string;
+  accept?: FileMimeType | FileMimeType[];
 
   showProgress?: boolean;
 

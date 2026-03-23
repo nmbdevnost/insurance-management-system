@@ -33,7 +33,7 @@ type VirtualizedComboboxProps = {
 } & VirtualizedCommandProps;
 
 /** Extra horizontal space (in px) added to the calculated content width to account for popover padding. */
-const CONTENT_WIDTH_OFFSET = 48;
+const CONTENT_WIDTH_OFFSET = 60;
 
 /** Estimated average character width (in px) used to approximate label text width from character count. */
 const CHARACTER_OFFSET = 8;
@@ -165,11 +165,13 @@ const VirtualizedCombobox = ({
       <PopoverContent
         align="start"
         style={{
-          width: autoWidth
-            ? contentWidth + CONTENT_WIDTH_OFFSET
-            : "fit-content",
+          width: contentWidth + CONTENT_WIDTH_OFFSET,
         }}
-        className={cn("max-w-72 min-w-44 p-0", className)}
+        className={cn(
+          "p-0",
+          autoWidth ? "min-w-(--anchor-width)" : "",
+          className
+        )}
       >
         <VirtualizedCommand options={options} {...commandProps} />
       </PopoverContent>

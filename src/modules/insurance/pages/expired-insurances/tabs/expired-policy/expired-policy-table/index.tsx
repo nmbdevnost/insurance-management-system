@@ -45,6 +45,11 @@ const ExpiredPolicyTable = () => {
       type: "select",
       multiple: true,
     },
+    {
+      id: "days",
+      label: "Days",
+      type: "input",
+    },
   ];
 
   return (

@@ -1,5 +1,6 @@
 import { expiredInsurancesQueries } from "@/modules/insurance/lib/queries/expired-insurances-queries";
 import { DEFAULT_TABLE_PARAMS } from "@/shared/lib/constants/data-table";
+import { generateQueryParams } from "@/shared/lib/utils";
 import {
   DataTableProvider,
   type TableParams,
@@ -13,9 +14,11 @@ const ExpiredPolicyTab = () => {
   const [tableParams, setTableParams] =
     useState<TableParams>(DEFAULT_TABLE_PARAMS);
 
+  const queryParams = generateQueryParams(tableParams);
+
   const { data: expiredListData, isFetching } = useQuery(
     expiredInsurancesQueries.expiredList({
-      days: 30,
+      days: Number(queryParams.days ?? 30),
       pageNo: tableParams.pagination.page,
       pageSize: tableParams.pagination.pageSize,
     })
@@ -30,8 +33,6 @@ const ExpiredPolicyTab = () => {
       expiringIn,
     };
   });
-
-  console.log(formattedData);
 
   return (
     <>

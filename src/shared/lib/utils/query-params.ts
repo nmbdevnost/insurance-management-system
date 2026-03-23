@@ -6,7 +6,9 @@ import type { TableParams } from "@/shared/providers/data-table-provider";
  * @returns An object containing the query parameters.
  */
 
-export function generateQueryParams(tableParams: TableParams) {
+export function generateQueryParams(
+  tableParams: TableParams
+): Record<string, unknown> {
   const filterParams = tableParams.columnFilters.reduce(
     (acc, filter) => {
       acc[filter.id] = filter.value;

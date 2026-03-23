@@ -1,3 +1,4 @@
+import { type FileWithPreview } from "@/shared/hooks/use-file-upload";
 import { z } from "zod";
 
 export const AssetDetailSchema = z.object({
@@ -39,8 +40,13 @@ export const AssetDetailSchema = z.object({
   buildingType: z.string().optional(),
   fairMarketValue: z.string().nonempty("Fair market value is required"),
   assetDetail: z.string().optional(),
+  ownerType: z.enum(["individual", "company"]),
+  insuranceProvider: z.string().min(1, "Insurance provider is required."),
   additionalRemarks: z.string().optional(),
-  valuationReport: z.string().optional(),
+  valuationReport: z.custom<FileWithPreview[]>(
+    (val) => Array.isArray(val) && val.length > 0,
+    { message: "Valuation report is required" }
+  ),
 });
 export type AssetDetailFormData = z.infer<typeof AssetDetailSchema>;
 export const defaultAssetDetailValues: AssetDetailFormData = {
@@ -63,7 +69,9 @@ export const defaultAssetDetailValues: AssetDetailFormData = {
   noOfStorey: "",
   riskCoverage: "",
   sumInsured: "",
-  valuationReport: "",
+  valuationReport: [],
+  ownerType: "individual",
+  insuranceProvider: "",
 };
 
 export const PremiumQuerySchema = z.object({
@@ -101,38 +109,14 @@ export const defaultPremiumQueryValues: PremiumQueryFormData = {
   theftProtection: false,
 };
 
-export const bankInducedSchema = z.intersection(
-  AssetDetailSchema,
-  PremiumQuerySchema
-);
+export const bankInducedSchema = z.object({
+  ...AssetDetailSchema.shape,
+  ...PremiumQuerySchema.shape,
+});
 
 export type BankInducedFormData = z.infer<typeof bankInducedSchema>;
 
 export const defaultBankInducedValues: BankInducedFormData = {
-  branchId: "",
-  segment: "",
-  province: "",
-  customerCifId: "",
-  losId: "",
-  clientName: "",
-  contactNumber: "",
-  fairMarketValue: "",
-  plotNumber: "",
-  policyType: "",
-  additionalRemarks: "",
-  address: "",
-  assetDetail: "",
-  buildingLocation: "",
-  buildingOwner: "",
-  buildingType: "",
-  noOfStorey: "",
-  riskCoverage: "",
-  sumInsured: "",
-  valuationReport: "",
-  insurancePremium: "",
-  insuranceProvider: "",
-  claimSupport: false,
-  comprehensive: false,
-  naturalDisasterDeath: false,
-  theftProtection: false,
+  ...defaultAssetDetailValues,
+  ...defaultPremiumQueryValues,
 };

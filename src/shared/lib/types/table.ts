@@ -5,7 +5,7 @@ export type FilterConfig = {
   label: string;
   options?: DropdownOption[];
   loading?: boolean;
-  type: "select" | "search" | "date" | "range";
+  type: "select" | "input" | "date" | "range";
   placeholder?: string;
   disableSearch?: boolean;
   multiple?: boolean;

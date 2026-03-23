@@ -1,0 +1,18 @@
+export type FileMimeType =
+  | "*"
+  | "image/png"
+  | "image/jpeg"
+  | "image/gif"
+  | "image/webp"
+  | "image/svg+xml"
+  | "application/pdf"
+  | "application/msword"
+  | "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  | "application/vnd.ms-excel"
+  | "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  | "text/plain"
+  | "text/csv"
+  | "audio/mpeg"
+  | "audio/wav"
+  | "video/mp4"
+  | "video/webm";

@@ -1,4 +1,8 @@
-import { GET } from "@/shared/lib/api/api";
+import { GET, POST } from "@/shared/lib/api/api";
+import type {
+  CreateInsuranceBody,
+  CreateInsuranceResponse,
+} from "../types/insurances";
 
 export const getInsurances = async (tableParams?: Record<string, unknown>) => {
   const page = (tableParams?.page as number) ?? 1;
@@ -17,4 +21,13 @@ export const getInsurances = async (tableParams?: Record<string, unknown>) => {
   const data = response.data;
 
   return data;
+};
+
+export const createInsurance = async (insurance: CreateInsuranceBody) => {
+  const response = await POST<CreateInsuranceBody, CreateInsuranceResponse>(
+    "/insurance/policy",
+    insurance
+  );
+
+  return response.data;
 };

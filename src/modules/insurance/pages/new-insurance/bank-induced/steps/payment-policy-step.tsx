@@ -1,65 +1,81 @@
+import type { BankInducedFormData } from "@/modules/insurance/lib/schemas/bank-induced-schema";
 import { Alert, AlertDescription } from "@/shared/components/ui/alert";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/shared/components/ui/card";
+import { FieldDescription, FieldLegend } from "@/shared/components/ui/field";
 import { RiInformationFill } from "@remixicon/react";
+import { useFormContext } from "react-hook-form";
 
-const values = [
-  {
-    title: "Customer Name",
-    value: "Ram Hari",
-  },
-  {
-    title: "Customer CIF ID",
-    value: "CUST01",
-  },
-  {
-    title: "Premium Amount",
-    value: 2000,
-  },
-  {
-    title: "Insurance Provider",
-    value: "Nepal Life Insurance",
-  },
-];
 const PaymentPolicyStep = () => {
+  const form = useFormContext<BankInducedFormData>();
+
+  const customerName = form.getValues("clientName");
+  const customerCifId = form.getValues("customerCifId");
+  const premiumAmount = form.getValues("premiumAmount");
+  const insuranceProvider = form.getValues("insuranceProvider");
+
   return (
-    <div>
-      <div className="space-y-2 py-2">
-        <h1 className="font-bold">Payment & Policy Creation</h1>
-        <p>Process premium payment and creation insurance policy</p>
-      </div>
-      <div>
-        <Alert className="bg-gray-100 py-3">
-          <RiInformationFill />
-          <AlertDescription>
-            Premium will be debited from customer account and credited to
-            insurance provider
-          </AlertDescription>
-        </Alert>
-      </div>
-      <div className="my-4 bg-gray-100 px-4">
-        <h2 className="pt-2 font-semibold">Payment Summary</h2>
-        {values.map((item, index) => (
-          <div
-            key={index}
-            className="flex flex-col py-2 md:flex-row md:items-center"
-          >
-            <div className="md:w-1/3">{item.title}:</div>
-            <div>{item.value}</div>
+    <div className="space-y-4">
+      <FieldLegend>Payment & Policy Creation</FieldLegend>
+      <FieldDescription>
+        Process premium payment and creation insurance policy
+      </FieldDescription>
+
+      <Alert>
+        <RiInformationFill />
+        <AlertDescription>
+          Premium will be debited from customer account and credited to
+          insurance provider
+        </AlertDescription>
+      </Alert>
+
+      <Card className="gap-2">
+        <CardHeader>
+          <CardTitle>Payment Summary</CardTitle>
+        </CardHeader>
+
+        <CardContent className="space-y-4">
+          <div className="flex flex-col md:flex-row md:items-center">
+            <div className="md:w-1/3">Customer Name:</div>
+            <div>{customerName}</div>
           </div>
-        ))}
-      </div>
-      <div className="mt-4 bg-gray-100 px-2">
-        <h2 className="pt-3 font-semibold">Before Processing Payment</h2>
-        <ul className="list-inside list-disc py-2">
-          <li>Customer account balance will be verified</li>
-          <li>Premium amount will be debited from customer account</li>
-          <li>Insurance provider account will be credited</li>
-          <li>
-            Customer KYC, Assets details and documents will be provided to
-            insurance provider
-          </li>
-          <li>Policy number will be generated and stored</li>
-        </ul>
-      </div>
+          <div className="flex flex-col md:flex-row md:items-center">
+            <div className="md:w-1/3">Customer CIF ID:</div>
+            <div className="font-mono">{customerCifId}</div>
+          </div>
+          <div className="flex flex-col md:flex-row md:items-center">
+            <div className="md:w-1/3">Premium Amount:</div>
+            <div>{premiumAmount}</div>
+          </div>
+          <div className="flex flex-col md:flex-row md:items-center">
+            <div className="md:w-1/3">Insurance Provider:</div>
+            <div>{insuranceProvider}</div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="gap-2">
+        <CardHeader>
+          <CardTitle>Before Processing Payment</CardTitle>
+        </CardHeader>
+
+        <CardContent>
+          <ul className="list-inside list-disc">
+            <li>Customer account balance will be verified</li>
+            <li>Premium amount will be debited from customer account</li>
+            <li>Insurance provider account will be credited</li>
+            <li>
+              Customer KYC, Assets details and documents will be provided to
+              insurance provider
+            </li>
+            <li>Policy number will be generated and stored</li>
+          </ul>
+        </CardContent>
+      </Card>
     </div>
   );
 };

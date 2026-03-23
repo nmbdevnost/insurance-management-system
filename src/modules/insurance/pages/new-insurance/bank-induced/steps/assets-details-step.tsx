@@ -1,6 +1,8 @@
 import type { AssetDetailFormData } from "@/modules/insurance/lib/schemas/bank-induced-schema";
 import FormFieldCombobox from "@/shared/components/form/form-fields/form-field-combobox";
+import FormFieldFileUpload from "@/shared/components/form/form-fields/form-field-file-upload";
 import FormFieldInput from "@/shared/components/form/form-fields/form-field-input";
+import FormFieldRadioGroup from "@/shared/components/form/form-fields/form-field-radio-group";
 import FormFieldTextarea from "@/shared/components/form/form-fields/form-field-textarea";
 import {
   FieldDescription,
@@ -24,10 +26,11 @@ const AssetsDetailsStep = ({ mode }: { mode?: string }) => {
         <FormFieldCombobox
           control={control}
           name="branchId"
-          label="Branch ID"
+          label="Branch"
           placeholder="Select a branch"
           options={[]}
           disabled={mode === "view"}
+          modal={false}
         />
 
         <FormFieldCombobox
@@ -37,6 +40,7 @@ const AssetsDetailsStep = ({ mode }: { mode?: string }) => {
           placeholder="Select a segment"
           options={[]}
           disabled={mode === "view"}
+          modal={false}
         />
 
         <FormFieldCombobox
@@ -46,6 +50,7 @@ const AssetsDetailsStep = ({ mode }: { mode?: string }) => {
           placeholder="Select a province"
           options={[]}
           disabled={mode === "view"}
+          modal={false}
         />
 
         <FormFieldInput
@@ -63,10 +68,11 @@ const AssetsDetailsStep = ({ mode }: { mode?: string }) => {
           placeholder="Select LOS ID"
           disabled={mode === "view"}
         />
+
         <FormFieldInput
           control={control}
           name="clientName"
-          label="Name"
+          label="Client Name"
           placeholder="Enter Name of Client"
           disabled={mode === "view"}
         />
@@ -78,6 +84,7 @@ const AssetsDetailsStep = ({ mode }: { mode?: string }) => {
           placeholder="Select policy type"
           options={[]}
           disabled={mode === "view"}
+          modal={false}
         />
         <FormFieldInput
           control={control}
@@ -140,6 +147,7 @@ const AssetsDetailsStep = ({ mode }: { mode?: string }) => {
           placeholder="Enter Sum Insured"
           disabled={mode === "view"}
         />
+
         <FormFieldCombobox
           control={control}
           name="buildingType"
@@ -147,6 +155,7 @@ const AssetsDetailsStep = ({ mode }: { mode?: string }) => {
           disabled={mode === "view"}
           placeholder="Select Building Type"
           options={[]}
+          modal={false}
         />
 
         <FormFieldInput
@@ -154,13 +163,6 @@ const AssetsDetailsStep = ({ mode }: { mode?: string }) => {
           name="fairMarketValue"
           label="Fair Market Value"
           placeholder="Enter Fair Market Value"
-          disabled={mode === "view"}
-        />
-        <FormFieldInput
-          control={control}
-          name="valuationReport"
-          label="Valuation Report"
-          placeholder="Input Valuation Report"
           disabled={mode === "view"}
         />
 
@@ -171,6 +173,65 @@ const AssetsDetailsStep = ({ mode }: { mode?: string }) => {
           placeholder="Any Additional Information about asset detail"
           disabled={mode === "view"}
         />
+
+        <FormFieldRadioGroup
+          name="ownerType"
+          label="Owner Type"
+          control={control}
+          options={[
+            {
+              value: "individual",
+              label: "Individual",
+            },
+            { value: "company", label: "Company" },
+          ]}
+          orientation="horizontal"
+        />
+
+        <FormFieldCombobox
+          control={control}
+          name="insuranceProvider"
+          label="Insurance Provider"
+          disabled={mode === "view"}
+          placeholder="Select Insurance Provider"
+          options={[]}
+          modal={false}
+        />
+
+        <FormFieldFileUpload
+          control={control}
+          name="valuationReport"
+          label="Valuation Report"
+          disabled={mode === "view"}
+          accept={["image/png", "image/jpeg"]}
+          showPreview
+        />
+
+        <FormFieldFileUpload
+          control={control}
+          name="constructionCompletionCertificate"
+          label="Construction Completion Certificate"
+          disabled={mode === "view"}
+          accept={["image/png", "image/jpeg"]}
+          showPreview={true}
+        />
+
+        <FormFieldFileUpload
+          control={control}
+          name="lorc"
+          label="LORC"
+          disabled={mode === "view"}
+          accept={["image/png", "image/jpeg"]}
+        />
+
+        <FormFieldFileUpload
+          control={control}
+          name="citizenship"
+          label="Citizenship"
+          disabled={mode === "view"}
+          accept={["image/png", "image/jpeg"]}
+        />
+
         <FormFieldTextarea
           control={control}
           name="additionalRemarks"

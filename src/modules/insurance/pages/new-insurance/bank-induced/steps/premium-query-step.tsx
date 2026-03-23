@@ -26,7 +26,7 @@ const PremiumQueryStep = ({ mode }: { mode?: string }) => {
       <Alert>
         <RiInformationFill />
         <AlertDescription>
-          Premium calculated based on asset type, value, and location{" "}
+          Premium calculated based on asset type, value, and location
         </AlertDescription>
       </Alert>
 
