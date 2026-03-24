@@ -24,8 +24,8 @@ const ExpiredPolicyTab = () => {
     })
   );
 
-  const data = expiredListData?.result.expiringPoliciesDetails;
-  const totalRows = expiredListData?.result.totalCount;
+  const data = expiredListData?.result?.expiringPoliciesDetails;
+  const totalRows = expiredListData?.result?.totalCount;
 
   const formattedData = data?.map(({ policyDetails, expiringIn }) => {
     return {
