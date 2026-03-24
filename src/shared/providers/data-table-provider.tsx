@@ -61,6 +61,9 @@ export type DataTableContextValue<TData> = {
   // selection
   rowSelection?: RowSelectionState;
   setRowSelection: React.Dispatch<React.SetStateAction<RowSelectionState>>;
+
+  isError?: boolean;
+  error?: string;
 };
 
 export type DataTableProviderProps<TData> = {
@@ -76,6 +79,8 @@ export type DataTableProviderProps<TData> = {
   isLoading?: boolean;
   manualPagination?: boolean;
   totalRows?: number;
+  isError?: boolean;
+  error?: string;
 };
 
 const DataTableContext = createContext<DataTableContextValue<unknown> | null>(
@@ -103,6 +108,8 @@ export function DataTableProvider<TData>({
   isLoading,
   manualPagination = true,
   totalRows,
+  isError,
+  error,
 }: DataTableProviderProps<TData>) {
   const {
     columnFilters,
@@ -365,6 +372,8 @@ export function DataTableProvider<TData>({
     setPagination: handleControlledPaginationChange,
     rowSelection,
     setRowSelection: handleSelectionChange,
+    isError,
+    error,
   };
 
   return (

@@ -6,16 +6,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/components/ui/table";
+import { useFillHeight } from "@/shared/hooks/use-fill-height";
 import { cn } from "@/shared/lib/utils";
 import { calculatePinnedOffset } from "@/shared/lib/utils/data-table";
 import { useDataTable } from "@/shared/providers/data-table-provider";
-import { RiInbox2Line } from "@remixicon/react";
+import { RiCloseCircleLine, RiInbox2Line } from "@remixicon/react";
 import { flexRender, type Column, type Row } from "@tanstack/react-table";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import type { CSSProperties } from "react";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
-import { useFillHeight } from "@/shared/hooks/use-fill-height";
-import { useVirtualizer } from "@tanstack/react-virtual";
 
 type DataTableProps = {
   className?: string;
@@ -75,7 +75,8 @@ const DataTable: React.FC<DataTableProps> = ({
   skeletonRows = 5,
   virtualized = true,
 }) => {
-  const { table, isLoading, isPaginationLoading } = useDataTable();
+  const { table, isLoading, isPaginationLoading, isError, error } =
+    useDataTable();
 
   const outerRef = useRef<HTMLDivElement>(null);
   const tableHeight = useFillHeight({
@@ -309,6 +310,18 @@ const DataTable: React.FC<DataTableProps> = ({
                 ))
               )}
             </>
+          ) : isError || error ? (
+            <TableRow>
+              <TableCell
+                colSpan={table.getAllColumns().length}
+                className="h-24 text-center"
+              >
+                <div className="flex flex-col items-center gap-2">
+                  <RiCloseCircleLine className="text-muted-foreground" />
+                  <span className="text-muted-foreground">{error}</span>
+                </div>
+              </TableCell>
+            </TableRow>
           ) : (
             <TableRow>
               <TableCell
