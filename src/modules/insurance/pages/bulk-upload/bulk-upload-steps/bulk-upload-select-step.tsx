@@ -127,7 +127,6 @@ const BulkUploadSelectStep = ({
         fileName: file.file.name,
         status: "draft",
       }));
-      console.log("🚀 ~ processFile ~ newRows:", newRows);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       setExtractedRows((prev) => [...prev, ...newRows] as any);
@@ -213,7 +212,7 @@ const BulkUploadSelectStep = ({
         <FileUploadProvider
           uploadFiles={uploadFiles}
           onUploadFilesChange={handleFilesChange}
-          accept=".xlsx"
+          accept="application/vnd.ms-excel"
           maxSize={1024 * 1024 * 50}
           maxFiles={5}
           showProgress={true}

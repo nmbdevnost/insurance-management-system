@@ -43,10 +43,10 @@ export const AssetDetailSchema = z.object({
   ownerType: z.enum(["individual", "company"]),
   insuranceProvider: z.string().min(1, "Insurance provider is required."),
   additionalRemarks: z.string().optional(),
-  valuationReport: z.custom<FileWithPreview[]>(
-    (val) => Array.isArray(val) && val.length > 0,
-    { message: "Valuation report is required" }
-  ),
+  valuationReport: z.custom<FileWithPreview[]>(),
+  constructionCompletionCertificate: z.custom<FileWithPreview[]>(),
+  lorc: z.custom<FileWithPreview[]>(),
+  citizenship: z.custom<FileWithPreview[]>(),
 });
 export type AssetDetailFormData = z.infer<typeof AssetDetailSchema>;
 export const defaultAssetDetailValues: AssetDetailFormData = {
@@ -72,6 +72,9 @@ export const defaultAssetDetailValues: AssetDetailFormData = {
   valuationReport: [],
   ownerType: "individual",
   insuranceProvider: "",
+  constructionCompletionCertificate: [],
+  citizenship: [],
+  lorc: [],
 };
 
 export const PremiumQuerySchema = z.object({
@@ -94,6 +97,7 @@ export const PremiumQuerySchema = z.object({
   comprehensive: z.boolean().optional(),
   naturalDisasterDeath: z.boolean().optional(),
   theftProtection: z.boolean().optional(),
+  premiumAmount: z.number().optional(),
 });
 
 export type PremiumQueryFormData = z.infer<typeof PremiumQuerySchema>;

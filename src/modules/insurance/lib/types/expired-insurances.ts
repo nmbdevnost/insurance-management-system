@@ -7,12 +7,6 @@ export type ExpiredInsurancesExpiredListBody = {
 };
 
 export type ExpiredInsurancesExpiredListResponse = {
-  response: {
-    responseCode: string;
-    responseMessage: string;
-  };
-  result: {
-    totalCount: number;
-    expiringPoliciesDetails: Array<ExpiredPolicy>;
-  };
+  totalCount: number;
+  expiringPoliciesDetails: Array<ExpiredPolicy>;
 };
