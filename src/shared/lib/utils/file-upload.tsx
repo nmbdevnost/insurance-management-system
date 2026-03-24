@@ -8,6 +8,7 @@ import {
   RiImageLine,
   RiVideoLine,
 } from "@remixicon/react";
+import { FILE_TYPE_MAP } from "../constants/file-map";
 
 export const getFileIcon = (file: File | FileMetadata) => {
   const type = file instanceof File ? file.type : file.type;
@@ -42,19 +43,17 @@ export const getFileTypeLabel = (file: File | FileMetadata) => {
 export const getAcceptedFileTypes = (accept?: string): string => {
   if (!accept) return "All files";
 
-  const types = accept.split(",").map((type) => type.trim());
-  const formattedTypes = types.map((type) => {
-    if (type.startsWith(".")) {
-      return type.toUpperCase();
-    }
-    if (type.endsWith("/*")) {
-      const baseType = type.split("/")[0];
-      return baseType.charAt(0).toUpperCase() + baseType.slice(1) + " files";
-    }
-    return type;
-  });
+  const mimeToLabel = Object.entries(FILE_TYPE_MAP).reduce<
+    Record<string, string>
+  >((acc, [key, mime]) => {
+    if (key !== "*") acc[mime] = `.${key}`;
+    return acc;
+  }, {});
 
-  return formattedTypes.join(", ");
+  return accept
+    .split(",")
+    .map((mime) => mimeToLabel[mime.trim()] ?? mime.trim())
+    .join(", ");
 };
 
 export const toBase64 = (file: File): Promise<string> =>

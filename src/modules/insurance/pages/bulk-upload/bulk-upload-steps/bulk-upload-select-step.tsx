@@ -15,7 +15,11 @@ import type {
 import { parseExcelFile } from "@/shared/lib/utils/excel";
 import type { FileUploadItem } from "@/shared/providers/file-upload-provider";
 import FileUploadProvider from "@/shared/providers/file-upload-provider";
-import { RiAlertLine, RiArrowRightLine } from "@remixicon/react";
+import {
+  RiAlertLine,
+  RiArrowRightLine,
+  RiDownloadLine,
+} from "@remixicon/react";
 import {
   useEffect,
   useRef,
@@ -208,11 +212,21 @@ const BulkUploadSelectStep = ({
 
   return (
     <>
+      <div className="-mb-4 flex justify-end px-4">
+        <Button
+          type="button"
+          render={<a href="/bulk-upload-sample.xlsx" download />}
+        >
+          <RiDownloadLine className="size-4" />
+          Download Sample File
+        </Button>
+      </div>
+
       <CardContent className="space-y-4 p-4">
         <FileUploadProvider
           uploadFiles={uploadFiles}
           onUploadFilesChange={handleFilesChange}
-          accept="application/vnd.ms-excel"
+          accept="xlsx"
           maxSize={1024 * 1024 * 50}
           maxFiles={5}
           showProgress={true}

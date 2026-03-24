@@ -4,7 +4,7 @@ import {
   type FileUploadOptions,
   type FileWithPreview,
 } from "@/shared/hooks/use-file-upload";
-import { cn } from "@/shared/lib/utils";
+import { cn, getAcceptedFileTypes } from "@/shared/lib/utils";
 import { RiAddLine, RiCloseLine, RiFileLine } from "@remixicon/react";
 import {
   Controller,
@@ -67,7 +67,9 @@ const FieldFileUploadInner = ({
   const { setError, clearErrors } = useFormContext();
 
   const isMultiple = multiple || (!!maxFiles && maxFiles > 1);
-  const acceptString = Array.isArray(accept) ? accept.join(",") : accept;
+  const accepted = Array.isArray(accept) ? accept.join(",") : accept;
+
+  const supportedFileTypes = getAcceptedFileTypes(accepted);
 
   const [
     { files, isDragging, errors },
@@ -147,15 +149,10 @@ const FieldFileUploadInner = ({
                 <p className="text-muted-foreground text-sm">
                   Drop files here or click to browse
                   {maxFiles && maxFiles > 1 ? ` (max ${maxFiles})` : ""}
-                  {acceptString && acceptString !== "*" && (
+                  {supportedFileTypes !== "*" && (
                     <span className="text-muted-foreground">
                       {" "}
-                      (Supported:{" "}
-                      {acceptString
-                        .split(",")
-                        .map((type) => type.split("/").pop()?.toUpperCase())
-                        .join(", ")}
-                      )
+                      (Supported: {supportedFileTypes})
                     </span>
                   )}
                 </p>

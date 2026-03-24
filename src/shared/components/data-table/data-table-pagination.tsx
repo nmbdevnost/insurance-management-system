@@ -92,30 +92,32 @@ const DataTablePagination = ({ className }: { className?: string }) => {
             </Button>
 
             {/* Pages */}
-            {pageRange.map((page, index) =>
-              page === "..." ? (
-                <span
-                  key={`ellipsis-${index}`}
-                  className={cn(
-                    buttonVariants({ variant: "ghost", size: "icon" }),
-                    "pointer-events-none"
-                  )}
-                >
-                  &#8230;
-                </span>
-              ) : (
-                <Button
-                  key={page}
-                  variant={page === currentPage ? "default" : "ghost"}
-                  size="icon"
-                  className="min-w-fit px-1"
-                  onClick={() => table.setPageIndex(page)}
-                  type="button"
-                >
-                  {page + 1}
-                </Button>
-              )
-            )}
+            <div className="flex min-w-64 items-center justify-center">
+              {pageRange.map((page, index) =>
+                page === "..." ? (
+                  <span
+                    key={`ellipsis-${index}`}
+                    className={cn(
+                      buttonVariants({ variant: "ghost", size: "icon" }),
+                      "pointer-events-none"
+                    )}
+                  >
+                    &#8230;
+                  </span>
+                ) : (
+                  <Button
+                    key={page}
+                    variant={page === currentPage ? "default" : "ghost"}
+                    size="icon"
+                    className="min-w-fit px-1"
+                    onClick={() => table.setPageIndex(page)}
+                    type="button"
+                  >
+                    {page + 1}
+                  </Button>
+                )
+              )}
+            </div>
 
             <Button
               variant="ghost"

@@ -4,12 +4,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/components/ui/card";
+import { Typography } from "@/shared/components/ui/typography";
 import type { InsuranceBulkUploadRow } from "@/shared/lib/types/insurance";
 import { RiArrowRightLine } from "@remixicon/react";
 import React, { Activity, useState } from "react";
 import BulkUploadSelectStep from "./bulk-upload-steps/bulk-upload-select-step";
 import UploadPreviewStep from "./bulk-upload-steps/upload-preview-step";
-import { Typography } from "@/shared/components/ui/typography";
 
 const UPLOAD_STEPS = [
   "Upload Excel",

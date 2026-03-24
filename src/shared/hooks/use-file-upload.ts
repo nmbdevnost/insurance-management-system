@@ -9,7 +9,7 @@ import {
   type DragEvent,
   type InputHTMLAttributes,
 } from "react";
-import type { FileMimeType } from "../lib/types/file";
+import { FILE_TYPE_MAP, type FileType } from "../lib/constants/file-map";
 
 export type FileMetadata = {
   name: string;
@@ -28,7 +28,7 @@ export type FileWithPreview = {
 export type FileUploadOptions = {
   maxFiles?: number;
   maxSize?: number;
-  accept?: FileMimeType | FileMimeType[];
+  accept?: FileType | FileType[];
   multiple?: boolean;
   initialFiles?: FileMetadata[];
   onFilesChange?: (files: FileWithPreview[]) => void;
@@ -75,8 +75,8 @@ export const useFileUpload = (
   } = options;
 
   const acceptString = Array.isArray(acceptProp)
-    ? acceptProp.join(",")
-    : acceptProp;
+    ? acceptProp.map((t) => FILE_TYPE_MAP[t]).join(",")
+    : FILE_TYPE_MAP[acceptProp];
 
   const [state, setState] = useState<FileUploadState>({
     files: initialFiles.map((file) => ({

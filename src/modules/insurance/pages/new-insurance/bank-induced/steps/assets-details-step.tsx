@@ -203,7 +203,7 @@ const AssetsDetailsStep = ({ mode }: { mode?: string }) => {
           name="valuationReport"
           label="Valuation Report"
           disabled={mode === "view"}
-          accept={["image/png", "image/jpeg"]}
+          accept={["png", "jpeg", "pdf"]}
           showPreview
         />
 
@@ -212,7 +212,7 @@ const AssetsDetailsStep = ({ mode }: { mode?: string }) => {
           name="constructionCompletionCertificate"
           label="Construction Completion Certificate"
           disabled={mode === "view"}
-          accept={["image/png", "image/jpeg"]}
+          accept={["png", "jpeg", "pdf"]}
           showPreview={true}
         />
 
@@ -221,7 +221,7 @@ const AssetsDetailsStep = ({ mode }: { mode?: string }) => {
           name="lorc"
           label="LORC"
           disabled={mode === "view"}
-          accept={["image/png", "image/jpeg"]}
+          accept={["png", "jpeg", "pdf"]}
         />
 
         <FormFieldFileUpload
@@ -229,7 +229,7 @@ const AssetsDetailsStep = ({ mode }: { mode?: string }) => {
           name="citizenship"
           label="Citizenship"
           disabled={mode === "view"}
-          accept={["image/png", "image/jpeg"]}
+          accept={["png", "jpeg", "pdf"]}
         />
 
         <FormFieldTextarea
