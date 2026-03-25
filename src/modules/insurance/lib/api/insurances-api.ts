@@ -44,7 +44,7 @@ export const createBankInducedInsurance = async (data: BankInducedFormData) => {
       houseAssetDetails: {
         buildingLocation: data.buildingLocation,
         buildingType: data.buildingType,
-        constructionCompletionCertificate: "",
+        constructionCompletionCertificate: undefined,
         fmv: Number(data.fairMarketValue),
         lorc: "",
         nameOfBuildingOwner: data.buildingOwner,
@@ -64,7 +64,7 @@ export const createBankInducedInsurance = async (data: BankInducedFormData) => {
       segment: data.segment,
       uploadDocuments: [],
       vehicleAssetDetails: {
-        blueBook: "",
+        blueBook: undefined,
         chassisNumber: "",
         color: "",
         engineNumber: "",
