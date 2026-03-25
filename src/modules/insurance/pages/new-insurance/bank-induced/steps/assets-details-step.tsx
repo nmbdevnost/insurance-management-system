@@ -145,15 +145,6 @@ const AssetsDetailsStep = ({ mode }: { mode?: string }) => {
           disabled={mode === "view"}
         />
 
-        <FormFieldInput
-          control={control}
-          name="sumInsured"
-          label="Sum Insured"
-          type="number"
-          placeholder="Enter Sum Insured"
-          disabled={mode === "view"}
-        />
-
         <FormFieldCombobox
           control={control}
           name="buildingType"

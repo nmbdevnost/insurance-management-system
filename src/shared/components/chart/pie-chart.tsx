@@ -1,8 +1,6 @@
 "use client";
-
 import * as React from "react";
 import { Label, Pie, PieChart as RePieChart } from "recharts";
-
 import {
   ChartContainer,
   ChartTooltip,
@@ -18,6 +16,7 @@ type RawChartData = {
   icon?: React.ComponentType;
   key: string;
   value: number;
+  color?: string;
 };
 
 type ChartData = {
@@ -25,6 +24,7 @@ type ChartData = {
   label: string;
   key: string;
   value: number;
+  color?: string;
   icon?: React.ComponentType;
 };
 
@@ -52,17 +52,17 @@ const PieChart: React.FC<PieChartProps> = ({
     [data]
   );
 
-  const chartConfig = React.useMemo(() => {
-    return chartData.reduce((prev, data, index) => {
+  const chartConfig = React.useMemo((): ChartConfig => {
+    return chartData.reduce<ChartConfig>((prev, item, index) => {
       return {
         ...prev,
-        [data.key]: {
-          label: data.label,
-          icon: data.icon,
-          color: generateGoldenRatioColor({ index }),
+        [item.key]: {
+          label: item.label,
+          icon: item.icon,
+          color: item.color ?? generateGoldenRatioColor({ index }),
         },
       };
-    }, {}) satisfies ChartConfig;
+    }, {});
   }, [chartData]);
 
   const total = React.useMemo(() => {
@@ -79,7 +79,6 @@ const PieChart: React.FC<PieChartProps> = ({
           cursor={false}
           content={<ChartTooltipContent hideLabel />}
         />
-
         <Pie
           data={chartData}
           dataKey="value"
@@ -107,7 +106,6 @@ const PieChart: React.FC<PieChartProps> = ({
                         >
                           {total.toLocaleString()}
                         </tspan>
-
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 24}
@@ -118,7 +116,6 @@ const PieChart: React.FC<PieChartProps> = ({
                       </text>
                     );
                   }
-
                   return label(viewBox);
                 }
               }}

@@ -19,7 +19,7 @@ const typographyVariants = cva("", {
       label: "text-sm font-medium text-foreground leading-none",
       "label-sm": "text-xs font-normal text-foreground leading-none",
       caption: "text-xs leading-none",
-      overline: "text-xs font-semibold uppercase tracking-widest",
+      overline: "text-sm font-semibold uppercase tracking-widest font-heading",
       code: "rounded bg-muted px-1.5 py-0.5 font-mono text-sm font-medium text-primary",
       mono: "rounded-md bg-muted p-4 font-mono text-sm text-foreground overflow-x-auto leading-relaxed",
     },

@@ -1,84 +1,86 @@
+import { Badge } from "@/shared/components/ui/badge";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Typography } from "@/shared/components/ui/typography";
 import { cn } from "@/shared/lib/utils";
 import {
-  RiArrowRightDownLine,
-  RiArrowRightUpLine,
+  RiCornerRightUpLine,
   type RemixiconComponentType,
 } from "@remixicon/react";
+
+export type TrendDirection = "up" | "down" | "same";
+
+export interface TrendInfo {
+  value: string;
+  direction: TrendDirection;
+}
 
 export interface StatItem {
   label: string;
   value: string;
   icon: RemixiconComponentType;
-  trend: string;
-  up: boolean;
-  /** Tailwind classes for the left border accent */
-  borderColor: string;
-  /** Tailwind classes for the icon badge background */
-  iconBg: string;
-  /** Tailwind classes for the icon color */
+  trend: TrendInfo;
   iconColor: string;
-  /** Tailwind classes for the badge */
-  badgeBg: string;
-  badgeText: string;
 }
+
+const trendConfig: Record<
+  TrendDirection,
+  {
+    badgeVariant: "success-light" | "destructive-light" | "secondary";
+    rotation: string;
+  }
+> = {
+  up: { badgeVariant: "success-light", rotation: "rotate-0" },
+  down: { badgeVariant: "destructive-light", rotation: "rotate-90" },
+  same: { badgeVariant: "secondary", rotation: "rotate-45" },
+};
 
 const StatCard: React.FC<StatItem> = ({
   label,
   value,
   icon: Icon,
   trend,
-  up,
-  borderColor,
-  iconBg,
   iconColor,
-}) => (
-  <Card
-    className={cn(
-      "relative overflow-hidden border-l-4 transition-shadow duration-200 hover:shadow-md",
-      borderColor
-    )}
-  >
-    <CardContent className="space-y-4">
-      <div className="flex items-start justify-between">
-        <div>
-          <Typography variant="overline" className="text-xs">
+}) => {
+  const { badgeVariant, rotation } = trendConfig[trend.direction];
+
+  return (
+    <Card className="border-border/40 py-0 shadow-none">
+      <CardContent className="p-5">
+        {/* Label + icon — same visual weight, neither dominates */}
+        <div className="flex items-center justify-between">
+          <Typography variant="overline" className="font-medium" muted>
             {label}
           </Typography>
+          <Icon className={cn("size-4", iconColor)} />
+        </div>
 
-          <Typography variant="h2" as="p">
-            {value}
+        {/* Value — the whole point */}
+        <Typography
+          variant="h2"
+          className="mt-3 text-3xl leading-none tracking-tight"
+        >
+          {value}
+        </Typography>
+
+        {/* Trend — quiet, contextual */}
+        <div className="mt-4 flex items-center gap-1.5">
+          <Badge
+            variant={badgeVariant}
+            className="gap-1 px-1.5 py-0 text-xs font-medium"
+          >
+            <RiCornerRightUpLine className={cn("size-3", rotation)} />
+            {trend.value}
+          </Badge>
+          <Typography
+            variant="label"
+            className="text-muted-foreground/60 text-xs"
+          >
+            vs last period
           </Typography>
         </div>
-        <div
-          className={cn(
-            "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
-            iconBg
-          )}
-        >
-          <Icon size={16} className={iconColor} />
-        </div>
-      </div>
-
-      <div className="flex items-center gap-1">
-        {up ? (
-          <RiArrowRightUpLine size={14} className="text-success" />
-        ) : (
-          <RiArrowRightDownLine size={14} className="text-destructive" />
-        )}
-        <span
-          className={`text-sm font-bold ${up ? "text-success" : "text-destructive"}`}
-        >
-          {trend}
-        </span>
-
-        <Typography muted variant="body-sm" className="ml-0.5">
-          vs last month
-        </Typography>
-      </div>
-    </CardContent>
-  </Card>
-);
+      </CardContent>
+    </Card>
+  );
+};
 
 export default StatCard;
