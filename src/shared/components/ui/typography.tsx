@@ -7,7 +7,7 @@ import { cn } from "@/shared/lib/utils";
 const typographyVariants = cva("", {
   variants: {
     variant: {
-      h1: "scroll-m-20 text-3xl font-extrabold tracking-tight text-foreground lg:text-4xl leading-[1.1]",
+      h1: "scroll-m-20 text-3xl font-bold tracking-tight text-foreground lg:text-4xl leading-[1.1]",
       h2: "scroll-m-20 text-2xl font-bold tracking-tight text-foreground leading-snug",
       h3: "scroll-m-20 text-xl font-semibold tracking-tight text-foreground leading-snug",
       h4: "scroll-m-20 text-lg font-semibold tracking-tight text-foreground leading-snug",

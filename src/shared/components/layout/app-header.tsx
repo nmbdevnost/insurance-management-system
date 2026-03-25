@@ -25,7 +25,10 @@ export function AppHeader() {
             <img src={Logo} alt="Logo" className="h-full w-full" />
           </Link>
 
-          <Typography className="hidden truncate font-semibold sm:inline-block">
+          <Typography
+            className="hidden truncate font-semibold sm:inline-block"
+            as="h1"
+          >
             Insurance Management System
           </Typography>
         </div>
