@@ -342,7 +342,6 @@ export const useFileUpload = (
     }),
     [acceptString, multiple, handleFileChange]
   );
-  console.log("acceptString", acceptString);
 
   return [
     state,

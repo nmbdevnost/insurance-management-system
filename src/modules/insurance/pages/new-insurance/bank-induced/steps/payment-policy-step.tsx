@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 import { FieldDescription, FieldLegend } from "@/shared/components/ui/field";
+import { insuranceProviderOptions } from "@/shared/lib/constants/options";
 import { RiInformationFill } from "@remixicon/react";
 import { useFormContext } from "react-hook-form";
 
@@ -15,8 +16,12 @@ const PaymentPolicyStep = () => {
 
   const customerName = form.getValues("clientName");
   const customerCifId = form.getValues("customerCifId");
-  const premiumAmount = form.getValues("premiumAmount");
-  const insuranceProvider = form.getValues("insuranceProvider");
+  const premiumAmount = form.getValues("insurancePremium");
+  const insuranceProviderId = form.getValues("insuranceProvider");
+
+  const insuranceProvider = insuranceProviderOptions?.find(
+    (provider) => provider.value === insuranceProviderId
+  )?.label;
 
   return (
     <div className="space-y-4">

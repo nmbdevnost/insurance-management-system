@@ -24,7 +24,7 @@ export interface AssetDetails {
   contactNumber: string;
   address?: string;
   insuranceProvider: string;
-  uploadDocuments: string[];
+  uploadDocuments: File[];
   houseAssetDetails: HouseAssetDetails;
   vehicleAssetDetails: VehicleAssetDetails;
 }
@@ -39,8 +39,8 @@ export interface HouseAssetDetails {
   buildingType?: string;
   fmv: number;
   ownerType: string;
-  valuationReport?: string;
-  constructionCompletionCertificate: string;
+  valuationReport?: File;
+  constructionCompletionCertificate?: File;
   lorc: string;
   others: string;
 }
@@ -56,8 +56,8 @@ export interface VehicleAssetDetails {
   manufacturedYear: number;
   sumInsured: number;
   ownerType: string;
-  taxInvoice: string;
-  blueBook: string;
+  taxInvoice?: File;
+  blueBook?: File;
   registration: string;
   panVat: string;
 }

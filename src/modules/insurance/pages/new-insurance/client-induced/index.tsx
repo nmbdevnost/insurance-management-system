@@ -1,15 +1,17 @@
+import { createClientInducedInsurance } from "@/modules/insurance/lib/mutations/insurance-mutations";
 import {
   ClientInducedSchema,
   defaultClientInducedValues,
   type ClientInducedFormData,
 } from "@/modules/insurance/lib/schemas/client-induced-schema";
 import MultiStepForm from "@/shared/components/form/multi-step-form";
+import { Typography } from "@/shared/components/ui/typography";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RiEye2Line, RiUser2Line } from "@remixicon/react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import PolicyDetailsStep from "./steps/policy-details-step";
-import { Typography } from "@/shared/components/ui/typography";
 
 const steps = [
   {
@@ -27,24 +29,22 @@ const steps = [
 ];
 
 const ClientInducedPage = () => {
+  const [step, setStep] = useState(0);
+
   const form = useForm<ClientInducedFormData>({
     resolver: zodResolver(ClientInducedSchema),
     defaultValues: defaultClientInducedValues,
   });
 
-  const onSubmitPolicyDetails = async () => {
-    const success = Math.random() > 0.3;
+  const createInsuranceMutaion = useMutation(createClientInducedInsurance);
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    if (!success) {
-      toast.error("An unexpected error occurred. Please try again.");
-      return;
-    }
-
-    return {
-      losId: "LOS-ID-API123",
-    };
+  const handleSubmit: SubmitHandler<ClientInducedFormData> = async (data) => {
+    createInsuranceMutaion.mutate(data, {
+      onSuccess: () => {
+        form.reset();
+        setStep(0);
+      },
+    });
   };
 
   return (
@@ -59,20 +59,13 @@ const ClientInducedPage = () => {
       </div>
 
       <MultiStepForm
+        step={step}
+        setStep={setStep}
         steps={steps}
         form={form}
         schemas={[ClientInducedSchema]}
-        onComplete={async (data) => {
-          console.log("🚀 ~ BankInducedForm ~ data:", data);
-        }}
-        onStepComplete={async (step) => {
-          console.log("🚀 ~ ClientInducedPage ~ step:", step);
-          const result = await onSubmitPolicyDetails();
-
-          if (!result) return false;
-
-          return true;
-        }}
+        isLoading={createInsuranceMutaion.isPending}
+        onComplete={handleSubmit}
         footerClassName="-mx-4 px-4"
       />
     </div>

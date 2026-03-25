@@ -23,13 +23,14 @@ export function useMultiStepForm<T extends FieldValues>({
   handleScrollToTop,
 }: UseMultiStepFormProps<T>) {
   const goToStep = useCallback(
-    async (targetStep: number): Promise<boolean> => {
-      const clamped = Math.max(0, Math.min(targetStep, stepCount));
-      if (clamped === currentStep) return true;
+    async (step: number) => {
+      const targetStep = Math.max(0, Math.min(step, stepCount - 1));
+
+      if (targetStep === currentStep) return true;
 
       // Backwards navigation is always allowed
-      if (clamped < currentStep) {
-        setCurrentStep(clamped);
+      if (targetStep < currentStep) {
+        setCurrentStep(targetStep);
         form.clearErrors();
         handleScrollToTop();
         return true;
@@ -38,30 +39,50 @@ export function useMultiStepForm<T extends FieldValues>({
       // Forward → validate each intermediate step
       let canProceed = true;
 
-      for (let i = currentStep; i < clamped; i++) {
-        const fields = getSchemaFields<T>(schemas[i]);
-        const isValid = await form.trigger(fields);
+      await form.handleSubmit(
+        async (data) => {
+          for (let i = currentStep; i < targetStep; i++) {
+            if (onStepComplete) {
+              const result = await onStepComplete?.(i, data);
 
-        if (!isValid) {
-          canProceed = false;
-          setCurrentStep(i);
-          handleScrollToTop();
-          break;
-        }
+              if (!result) {
+                canProceed = false;
+                setCurrentStep(i);
+                handleScrollToTop();
+                break;
+              }
 
-        if (onStepComplete) {
-          const result = await onStepComplete(i, form.getValues());
-          if (!result) {
-            canProceed = false;
-            setCurrentStep(i);
-            handleScrollToTop();
-            break;
+              canProceed = result;
+            }
+          }
+        },
+        async (errors) => {
+          for (let i = currentStep; i < targetStep; i++) {
+            const stepFields = getSchemaFields<T>(schemas[i]);
+
+            const stepHasErrors = stepFields.some((field) => field in errors);
+
+            let isStepCompleted = !stepHasErrors;
+
+            if (!stepHasErrors && onStepComplete) {
+              const result = await onStepComplete(i, form.getValues());
+              isStepCompleted = !!result;
+            }
+
+            if (isStepCompleted) {
+              canProceed = true;
+            } else {
+              canProceed = false;
+              setCurrentStep(i);
+              handleScrollToTop();
+              break;
+            }
           }
         }
-      }
+      )();
 
       if (canProceed) {
-        setCurrentStep(clamped);
+        setCurrentStep(targetStep);
         form.clearErrors();
         handleScrollToTop();
       }
@@ -70,12 +91,12 @@ export function useMultiStepForm<T extends FieldValues>({
     },
     [
       currentStep,
+      form,
+      handleScrollToTop,
       setCurrentStep,
       stepCount,
-      form,
-      schemas,
       onStepComplete,
-      handleScrollToTop,
+      schemas,
     ]
   );
 

@@ -1,0 +1,102 @@
+import type { DropdownOption } from "../types/dropdown";
+
+export const branchOptions: DropdownOption[] = [
+  { value: "001", label: "BABARMAHAL BRANCH", isActive: true },
+  { value: "002", label: "BANEPA BRANCH", isActive: true },
+  { value: "003", label: "PUTALISADAK BRANCH", isActive: true },
+  { value: "004", label: "BUTWAL BRANCH", isActive: true },
+  { value: "005", label: "POKHARA BRANCH", isActive: true },
+  { value: "006", label: "DHARAN BRANCH", isActive: true },
+  { value: "007", label: "BIRATNAGAR BRANCH", isActive: true },
+  { value: "008", label: "THAMEL BRANCH", isActive: true },
+  { value: "009", label: "NEPALGUNJ BRANCH", isActive: true },
+  { value: "010", label: "DHANGADI BRANCH", isActive: true },
+  { value: "011", label: "KUMARIPATI BRANCH", isActive: true },
+  { value: "012", label: "CHABAHIL BRANCH", isActive: true },
+  { value: "013", label: "BIRGUNJ BRANCH", isActive: true },
+  { value: "014", label: "KANTIPATH BRANCH", isActive: true },
+  { value: "015", label: "BHAKTAPUR BRANCH", isActive: true },
+  { value: "016", label: "KALANKI BRANCH", isActive: true },
+  { value: "017", label: "BIRTAMOD BRANCH", isActive: true },
+  { value: "018", label: "JANAKPUR BRANCH", isActive: true },
+  { value: "019", label: "LAHAN BRANCH", isActive: true },
+  { value: "020", label: "TRAFFIC CHOWK BUTWAL", isActive: true },
+  { value: "021", label: "MURGIYA BRANCH", isActive: true },
+  { value: "022", label: "ITAHARI BRANCH", isActive: true },
+  { value: "023", label: "BHAIRAHAWA BRANCH", isActive: true },
+  { value: "024", label: "DAMAK BRANCH", isActive: true },
+  { value: "025", label: "MAHENDRANAGAR BRANCH", isActive: true },
+  { value: "026", label: "SURKHET BRANCH", isActive: true },
+  { value: "027", label: "TULSIPUR BRANCH", isActive: true },
+  { value: "028", label: "CHIPLEDHUNGA POKHARA", isActive: true },
+  { value: "029", label: "BAGAR BRANCH", isActive: true },
+  { value: "030", label: "LIONS CHOWK NGT BRANCH", isActive: true },
+  { value: "031", label: "LAKESIDE BRANCH", isActive: true },
+  { value: "032", label: "BOUDDHA BRANCH", isActive: true },
+  { value: "033", label: "MANIGRAM BRANCH_NEW", isActive: true },
+  { value: "034", label: "BANESHWOR BRANCH", isActive: true },
+  { value: "035", label: "DHANGADHI BRANCH", isActive: true },
+  { value: "036", label: "ZERO KILOMETER BRANCH", isActive: true },
+  { value: "037", label: "KHUSIBU BRANCH", isActive: true },
+  { value: "038", label: "KARKADO BRANCH", isActive: true },
+];
+
+export const provinceOptions: DropdownOption[] = [
+  { value: "1", label: "PROVINCE-1", isActive: true },
+  { value: "2", label: "PROVINCE-2", isActive: true },
+  { value: "3", label: "PROVINCE-3", isActive: true },
+  { value: "4", label: "PROVINCE-4", isActive: true },
+  { value: "5", label: "PROVINCE-5", isActive: true },
+  { value: "6", label: "PROVINCE-6", isActive: true },
+  { value: "7", label: "PROVINCE-7", isActive: true },
+];
+
+export const policyOptions: DropdownOption[] = [
+  { value: "1", label: "BUILING", isActive: true },
+  { value: "2", label: "LAND AND BUILDING", isActive: true },
+  { value: "3", label: "VEHICLE", isActive: true },
+  { value: "4", label: "STOCK", isActive: true },
+];
+
+export const segmentOptions: DropdownOption[] = [
+  { value: "1", label: "RETAIL", isActive: true },
+  { value: "2", label: "MSME", isActive: true },
+  { value: "3", label: "CORPORATE", isActive: true },
+  { value: "4", label: "ARGICULTURE", isActive: true },
+];
+
+export const insuranceProviderOptions: DropdownOption[] = [
+  { value: "1", label: "Shikhar Insurance", isActive: true },
+  { value: "2", label: "Nepal Insurance Company", isActive: true },
+  { value: "3", label: "Siddhartha Insurance", isActive: true },
+  { value: "4", label: "Rastriya Beema Company", isActive: true },
+  { value: "5", label: "Everest Insurance", isActive: true },
+  { value: "6", label: "United Insurance", isActive: true },
+  { value: "7", label: "Prabhu Insurance", isActive: true },
+  { value: "8", label: "Himalayan General Insurance", isActive: true },
+  { value: "9", label: "NLG Insurance", isActive: true },
+  { value: "10", label: "Sagarmatha Insurance", isActive: true },
+  { value: "11", label: "Gurans Life Insurance", isActive: true },
+  { value: "12", label: "Sun Nepal Life Insurance", isActive: true },
+  { value: "13", label: "Life Insurance Corporation Nepal", isActive: true },
+  { value: "14", label: "Citizen Life Insurance", isActive: true },
+  { value: "15", label: "Metropolitan Life Insurance", isActive: true },
+];
+
+export const policyTypeOptions: DropdownOption[] = [
+  { value: "1", label: "FIRE", isActive: true },
+  { value: "2", label: "MARINE", isActive: true },
+  { value: "3", label: "MOTOR", isActive: true },
+  { value: "4", label: "ENGINEERING", isActive: true },
+  { value: "5", label: "HEALTH", isActive: true },
+  { value: "6", label: "TRAVEL", isActive: true },
+  { value: "7", label: "MICRO INSURANCE", isActive: true },
+  { value: "8", label: "AGRICULTURE", isActive: true },
+  { value: "9", label: "LIABILITY", isActive: true },
+  { value: "10", label: "MISCELLANEOUS", isActive: true },
+  { value: "11", label: "LIFE - TERM", isActive: true },
+  { value: "12", label: "LIFE - ENDOWMENT", isActive: true },
+  { value: "13", label: "LIFE - MONEY BACK", isActive: true },
+  { value: "14", label: "LIFE - WHOLE LIFE", isActive: true },
+  { value: "15", label: "LIFE - ULIP", isActive: true },
+];

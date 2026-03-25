@@ -45,7 +45,7 @@ export default function MultiStepForm<T extends FieldValues>({
   isLoading = false,
   className,
 }: MultiStepFormProps<T>) {
-  const stepCount = steps.length - 1;
+  const stepCount = steps.length;
   const topRef = useRef<HTMLDivElement>(null);
 
   const isSubmitting = form.formState.isSubmitting || isLoading;
@@ -56,7 +56,7 @@ export default function MultiStepForm<T extends FieldValues>({
     onChange: setStep,
   });
 
-  const isLastStep = currentStep === stepCount;
+  const isLastStep = currentStep === stepCount - 1;
 
   const scrollToTop = useCallback(() => {
     topRef.current?.scrollIntoView({ block: "end", behavior: "smooth" });

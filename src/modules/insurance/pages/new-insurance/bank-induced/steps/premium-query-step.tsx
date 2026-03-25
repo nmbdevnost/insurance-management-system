@@ -10,6 +10,7 @@ import {
   FieldLegend,
   FieldSet,
 } from "@/shared/components/ui/field";
+import { insuranceProviderOptions } from "@/shared/lib/constants/options";
 import { RiInformationFill } from "@remixicon/react";
 import { useFormContext } from "react-hook-form";
 
@@ -53,7 +54,7 @@ const PremiumQueryStep = ({ mode }: { mode?: string }) => {
             name="insuranceProvider"
             label="Insurance Provider"
             placeholder="Nepal Life Insurance"
-            options={[]}
+            options={insuranceProviderOptions}
             disabled={mode === "view"}
           />
         </div>

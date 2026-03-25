@@ -9,6 +9,13 @@ import {
   FieldLegend,
   FieldSet,
 } from "@/shared/components/ui/field";
+import {
+  branchOptions,
+  insuranceProviderOptions,
+  policyTypeOptions,
+  provinceOptions,
+  segmentOptions,
+} from "@/shared/lib/constants/options";
 import { useFormContext } from "react-hook-form";
 
 const PolicyDetailsStep = ({ mode }: { mode?: string }) => {
@@ -36,7 +43,7 @@ const PolicyDetailsStep = ({ mode }: { mode?: string }) => {
             name="branchId"
             label="Branch ID"
             placeholder="Select a branch"
-            options={[]}
+            options={branchOptions}
             disabled={mode === "view"}
           />
 
@@ -45,7 +52,7 @@ const PolicyDetailsStep = ({ mode }: { mode?: string }) => {
             name="segment"
             label="Segment"
             placeholder="Select a segment"
-            options={[]}
+            options={segmentOptions}
             disabled={mode === "view"}
           />
         </div>
@@ -56,7 +63,7 @@ const PolicyDetailsStep = ({ mode }: { mode?: string }) => {
             name="province"
             label="Province"
             placeholder="Select a province"
-            options={[]}
+            options={provinceOptions}
             disabled={mode === "view"}
           />
 
@@ -82,7 +89,6 @@ const PolicyDetailsStep = ({ mode }: { mode?: string }) => {
             control={control}
             name="policyNumber"
             label="Policy Number"
-            type="number"
             placeholder="Enter policy number"
             readOnly={mode === "view"}
           />
@@ -94,7 +100,7 @@ const PolicyDetailsStep = ({ mode }: { mode?: string }) => {
             name="insuranceCompany"
             label="Insurance Company"
             placeholder="Select insurance company"
-            options={[]}
+            options={insuranceProviderOptions}
             disabled={mode === "view"}
           />
 
@@ -103,7 +109,7 @@ const PolicyDetailsStep = ({ mode }: { mode?: string }) => {
             name="policyType"
             label="Policy Type"
             placeholder="Select policy type"
-            options={[]}
+            options={policyTypeOptions}
             disabled={mode === "view"}
           />
         </div>

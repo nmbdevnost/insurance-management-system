@@ -10,6 +10,12 @@ import {
   FieldLegend,
   FieldSet,
 } from "@/shared/components/ui/field";
+import {
+  branchOptions,
+  policyOptions,
+  provinceOptions,
+  segmentOptions,
+} from "@/shared/lib/constants/options";
 import { useFormContext } from "react-hook-form";
 
 const AssetsDetailsStep = ({ mode }: { mode?: string }) => {
@@ -28,7 +34,7 @@ const AssetsDetailsStep = ({ mode }: { mode?: string }) => {
           name="branchId"
           label="Branch"
           placeholder="Select a branch"
-          options={[]}
+          options={branchOptions}
           disabled={mode === "view"}
           modal={false}
         />
@@ -38,7 +44,7 @@ const AssetsDetailsStep = ({ mode }: { mode?: string }) => {
           name="segment"
           label="Segment"
           placeholder="Select a segment"
-          options={[]}
+          options={segmentOptions}
           disabled={mode === "view"}
           modal={false}
         />
@@ -48,7 +54,7 @@ const AssetsDetailsStep = ({ mode }: { mode?: string }) => {
           name="province"
           label="Province"
           placeholder="Select a province"
-          options={[]}
+          options={provinceOptions}
           disabled={mode === "view"}
           modal={false}
         />
@@ -82,7 +88,7 @@ const AssetsDetailsStep = ({ mode }: { mode?: string }) => {
           name="policyType"
           label="Policy Type"
           placeholder="Select policy type"
-          options={[]}
+          options={policyOptions}
           disabled={mode === "view"}
           modal={false}
         />
@@ -186,16 +192,6 @@ const AssetsDetailsStep = ({ mode }: { mode?: string }) => {
             { value: "company", label: "Company" },
           ]}
           orientation="horizontal"
-        />
-
-        <FormFieldCombobox
-          control={control}
-          name="insuranceProvider"
-          label="Insurance Provider"
-          disabled={mode === "view"}
-          placeholder="Select Insurance Provider"
-          options={[]}
-          modal={false}
         />
 
         <FormFieldFileUpload

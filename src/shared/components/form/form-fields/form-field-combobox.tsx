@@ -29,6 +29,7 @@ const FormFieldCombobox = <T extends FieldValues>({
   label,
   description,
   control,
+  modal = false,
   ...commandProps
 }: FormFieldComboboxProps<T>) => {
   const isMultiple = commandProps.multiple;
@@ -84,7 +85,7 @@ const FormFieldCombobox = <T extends FieldValues>({
                 handleValueChange(option, field.onChange)
               }
               invalid={fieldState.invalid}
-              modal
+              modal={modal}
               {...commandProps}
             />
 

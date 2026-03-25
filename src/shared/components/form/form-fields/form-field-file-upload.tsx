@@ -1,6 +1,7 @@
 import {
   formatBytes,
   useFileUpload,
+  type FileMetadata,
   type FileUploadOptions,
   type FileWithPreview,
 } from "@/shared/hooks/use-file-upload";
@@ -290,17 +291,32 @@ const FormFieldFileUpload = <T extends FieldValues>({
     <Controller
       name={name}
       control={control}
-      render={({ field, fieldState }) => (
-        <FieldFileUploadInner
-          field={field}
-          fieldState={fieldState}
-          label={label}
-          description={description}
-          className={className}
-          disabled={disabled}
-          {...fileUploadOptions}
-        />
-      )}
+      render={({ field, fieldState }) => {
+        const initialFileWithPreview = field.value as FileWithPreview[];
+
+        const initialFiles: FileMetadata[] = initialFileWithPreview?.map(
+          (f) => ({
+            id: f.id,
+            name: f.file.name,
+            size: f.file.size,
+            type: f.file.type,
+            url: f.preview ?? "",
+          })
+        );
+
+        return (
+          <FieldFileUploadInner
+            field={field}
+            fieldState={fieldState}
+            label={label}
+            description={description}
+            className={className}
+            disabled={disabled}
+            initialFiles={initialFiles}
+            {...fileUploadOptions}
+          />
+        );
+      }}
     />
   );
 };

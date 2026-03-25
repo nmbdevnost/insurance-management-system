@@ -50,6 +50,7 @@ const VirtualizedCombobox = ({
   invalid,
   options = [],
   triggerClassName,
+  onValueChange,
   ...commandProps
 }: VirtualizedComboboxProps) => {
   const { value, onChange } = useControlledState({
@@ -84,7 +85,7 @@ const VirtualizedCombobox = ({
     const newOptions = selectedOptions.filter(
       (item) => item.value !== option.value
     );
-    commandProps.onValueChange?.(newOptions);
+    onValueChange?.(newOptions);
   };
 
   const contentWidth = useMemo(() => {
@@ -173,7 +174,16 @@ const VirtualizedCombobox = ({
           className
         )}
       >
-        <VirtualizedCommand options={options} {...commandProps} />
+        <VirtualizedCommand
+          options={options}
+          onValueChange={(option) => {
+            onValueChange?.(option);
+            if (!commandProps.multiple) {
+              onChange(false);
+            }
+          }}
+          {...commandProps}
+        />
       </PopoverContent>
     </Popover>
   );
