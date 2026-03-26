@@ -4,12 +4,12 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/shared/components/ui/tabs";
+import { Typography } from "@/shared/components/ui/typography";
 import { format } from "date-fns";
 import { useState } from "react";
 import ExpiredLoanTab from "./tabs/expired-loan";
 import ExpiredPolicyTab from "./tabs/expired-policy";
 import LoanNotExpiredTab from "./tabs/loan-not-expired";
-import { Typography } from "@/shared/components/ui/typography";
 
 const ExpiredIsurancePage = () => {
   const [tab, setTab] = useState("expired-policy");

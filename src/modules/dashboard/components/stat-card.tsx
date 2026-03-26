@@ -1,3 +1,4 @@
+import { KPIValue } from "@/shared/components/dashboardblocks/kpi";
 import { Badge } from "@/shared/components/ui/badge";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Typography } from "@/shared/components/ui/typography";
@@ -48,7 +49,7 @@ const StatCard: React.FC<StatItem> = ({
       <CardContent className="p-5">
         {/* Label + icon — same visual weight, neither dominates */}
         <div className="flex items-center justify-between">
-          <Typography variant="overline" className="font-medium" muted>
+          <Typography variant="overline" className="text-xs font-medium" muted>
             {label}
           </Typography>
           <Icon className={cn("size-4", iconColor)} />
@@ -59,7 +60,7 @@ const StatCard: React.FC<StatItem> = ({
           variant="h2"
           className="mt-3 text-3xl leading-none tracking-tight"
         >
-          {value}
+          <KPIValue value={Number(value)} animated />
         </Typography>
 
         {/* Trend — quiet, contextual */}

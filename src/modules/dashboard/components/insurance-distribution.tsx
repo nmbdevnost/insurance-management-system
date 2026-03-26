@@ -50,9 +50,7 @@ const InsuranceDistribution: FC = () => {
     <Card>
       <CardHeader className="flex items-center justify-between">
         <div>
-          <CardTitle className="text-base font-bold tracking-tight">
-            Insurance Portfolio
-          </CardTitle>
+          <CardTitle>Insurance Portfolio</CardTitle>
           <CardDescription>Distribution by type</CardDescription>
         </div>
 

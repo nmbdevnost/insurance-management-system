@@ -35,9 +35,7 @@ const PolicyBreakdown: React.FC = () => {
     <>
       <Card>
         <CardHeader>
-          <CardTitle className="text-base font-bold tracking-tight">
-            Policy Breakdown
-          </CardTitle>
+          <CardTitle>Policy Breakdown</CardTitle>
           <CardDescription>Status across all policies</CardDescription>
         </CardHeader>
 

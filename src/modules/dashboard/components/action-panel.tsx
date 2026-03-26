@@ -55,9 +55,7 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
           )}
 
           <div className="min-w-0 flex-1">
-            <CardTitle className="text-base font-bold tracking-tight">
-              {title}
-            </CardTitle>
+            <CardTitle>{title}</CardTitle>
             <CardDescription>{description}</CardDescription>
           </div>
           {totalData && (
