@@ -12,6 +12,7 @@ import {
 import { RiUserLine } from "@remixicon/react";
 import { Link } from "react-router-dom";
 import { Typography } from "../ui/typography";
+import { ThemeSwitcher } from "../theme-switcher";
 
 export function AppHeader() {
   return (
@@ -33,7 +34,9 @@ export function AppHeader() {
           </Typography>
         </div>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center">
+          <ThemeSwitcher />
+
           <DropdownMenu>
             <DropdownMenuTrigger
               render={<Button variant="ghost" className="h-full py-1" />}
