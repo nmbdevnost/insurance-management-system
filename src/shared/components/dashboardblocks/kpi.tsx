@@ -1,5 +1,5 @@
 import { AnimatedNumber } from "@/shared/components/dashboardblocks/animated-number";
-import { ComponentProps } from "react";
+import { type ComponentProps } from "react";
 
 import { Card, CardContent } from "@/shared/components/ui/card";
 
