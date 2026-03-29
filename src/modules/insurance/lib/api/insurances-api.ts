@@ -2,6 +2,8 @@ import { GET, POST } from "@/shared/lib/api/api";
 import type { BankInducedFormData } from "../schemas/bank-induced-schema";
 import type { ClientInducedFormData } from "../schemas/client-induced-schema";
 import type {
+  AccountBalanceBody,
+  AccountBalanceResponse,
   CreateInsuranceBody,
   CreateInsuranceResponse,
 } from "../types/insurances";
@@ -168,6 +170,25 @@ export const createClientInducedInsurance = async (
     "/insurance/policy",
     formData
   );
+
+  return response.data;
+};
+
+export const checkAccountBalances = async (
+  accountNumbers: AccountBalanceBody
+) => {
+  const response = await POST<
+    { accounts: AccountBalanceBody },
+    AccountBalanceResponse[]
+  >("/account-inquiry/account-available-balance-details", {
+    accounts: accountNumbers,
+  });
+
+  const responseCode = Number(response.data.response.responseCode);
+
+  if (responseCode < 200 || responseCode >= 300) {
+    throw new Error(response.data.response.responseMessage);
+  }
 
   return response.data;
 };

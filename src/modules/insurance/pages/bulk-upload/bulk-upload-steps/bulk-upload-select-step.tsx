@@ -1,3 +1,4 @@
+import { useBulkUpload } from "@/modules/insurance/providers/bulk-upload-provider";
 import ExcelFileUpload from "@/shared/components/file-upload/excel-file-upload";
 import FileUploadErrors from "@/shared/components/file-upload/excel-file-upload/file-upload-errors";
 import UploadedFilesTable from "@/shared/components/file-upload/excel-file-upload/uploaded-files-table";
@@ -20,19 +21,17 @@ import {
   RiArrowRightLine,
   RiDownloadLine,
 } from "@remixicon/react";
-import {
-  useEffect,
-  useRef,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { useEffect, useRef, useState } from "react";
 
 const EXPECTED_COLUMNS = [
   "reference_number",
   "cif_id",
   "policy_number",
   "debit_account_number",
+  "credit_account_number",
+  "amount",
+  "tran_particular",
+  "tran_remarks",
   "uploaded_by",
   "uploaded_date",
 ] as const;
@@ -43,13 +42,9 @@ interface FileError {
   errors: string[];
 }
 
-const BulkUploadSelectStep = ({
-  setExtractedRows,
-  setTab,
-}: {
-  setExtractedRows: Dispatch<SetStateAction<InsuranceBulkUploadRow[]>>;
-  setTab: Dispatch<SetStateAction<"uploader" | "preview">>;
-}) => {
+const BulkUploadSelectStep = () => {
+  const { setExtractedRows, setTab } = useBulkUpload();
+
   const [uploadFiles, setUploadFiles] = useState<FileUploadItem[]>([]);
   const [fileErrors, setFileErrors] = useState<FileError[]>([]);
 

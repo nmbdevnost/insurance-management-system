@@ -1,7 +1,6 @@
 import DataTable from "@/shared/components/data-table";
-import DataTablePagination from "@/shared/components/data-table/data-table-pagination";
 import DataTableToolbar from "@/shared/components/data-table/data-table-toolbar";
-import { Card, CardFooter, CardHeader } from "@/shared/components/ui/card";
+import { Card, CardHeader } from "@/shared/components/ui/card";
 import type { FilterConfig } from "@/shared/lib/types/table";
 
 const ExpiredLoanTable = () => {
@@ -27,9 +26,9 @@ const ExpiredLoanTable = () => {
 
         <DataTable className="rounded-none border-x-0" />
 
-        <CardFooter className="bg-background border-t-0 p-2">
+        {/*<CardFooter className="bg-background border-t-0 p-2">
           <DataTablePagination className="w-full" />
-        </CardFooter>
+        </CardFooter>*/}
       </Card>
     </>
   );

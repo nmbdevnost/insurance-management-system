@@ -31,17 +31,10 @@ export const AssetDetailSchema = z.object({
       message: "No of Storey must contain only numbers",
     }),
   riskCoverage: z.string().optional(),
-  sumInsured: z
-    .string()
-    .optional()
-    .refine((val) => !isNaN(Number(val)), {
-      message: "No of Storey must contain only numbers",
-    }),
   buildingType: z.string().optional(),
   fairMarketValue: z.string().nonempty("Fair market value is required"),
   assetDetail: z.string().optional(),
   ownerType: z.enum(["individual", "company"]),
-  insuranceProvider: z.string().min(1, "Insurance provider is required."),
   additionalRemarks: z.string().optional(),
   valuationReport: z.custom<FileWithPreview[]>(),
   constructionCompletionCertificate: z.custom<FileWithPreview[]>(),
@@ -68,7 +61,6 @@ export const defaultAssetDetailValues: AssetDetailFormData = {
   buildingType: "",
   noOfStorey: "",
   riskCoverage: "",
-  sumInsured: "",
   valuationReport: [],
   ownerType: "individual",
   insuranceProvider: "",

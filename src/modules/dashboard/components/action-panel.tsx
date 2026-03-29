@@ -1,3 +1,4 @@
+import IconFrame from "@/shared/components/icon-frame";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import {
@@ -49,9 +50,9 @@ const ActionPanel: React.FC<ActionPanelProps> = ({
       <CardHeader>
         <div className="flex items-center gap-3">
           {Icon && (
-            <div className="bg-primary/10 text-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-xl">
-              <Icon className="size-4" />
-            </div>
+            <IconFrame>
+              <Icon className="size-5" />
+            </IconFrame>
           )}
 
           <div className="min-w-0 flex-1">

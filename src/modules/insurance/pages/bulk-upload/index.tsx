@@ -5,11 +5,14 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 import { Typography } from "@/shared/components/ui/typography";
-import type { InsuranceBulkUploadRow } from "@/shared/lib/types/insurance";
 import { RiArrowRightLine } from "@remixicon/react";
 import React, { Activity, useState } from "react";
+import { BulkUploadProvider } from "../../providers/bulk-upload-provider";
+import BulkUploadBalanceStep from "./bulk-upload-steps/bulk-upload-balance-step";
 import BulkUploadSelectStep from "./bulk-upload-steps/bulk-upload-select-step";
 import UploadPreviewStep from "./bulk-upload-steps/upload-preview-step";
+
+export type BulkUploadSteps = "uploader" | "preview" | "balance";
 
 const UPLOAD_STEPS = [
   "Upload Excel",
@@ -18,14 +21,10 @@ const UPLOAD_STEPS = [
 ];
 
 const BulkUploadPage = () => {
-  const [tab, setTab] = useState<"uploader" | "preview">("uploader");
-
-  const [extractedRows, setExtractedRows] = useState<InsuranceBulkUploadRow[]>(
-    []
-  );
+  const [tab, setTab] = useState<BulkUploadSteps>("uploader");
 
   return (
-    <>
+    <BulkUploadProvider tab={tab} setTab={setTab}>
       <Card className="p-0">
         <CardHeader className="bg-primary p-4 text-center">
           <CardTitle>
@@ -55,17 +54,16 @@ const BulkUploadPage = () => {
         </CardHeader>
 
         <Activity mode={tab === "uploader" ? "visible" : "hidden"}>
-          <BulkUploadSelectStep
-            setExtractedRows={setExtractedRows}
-            setTab={setTab}
-          />
+          <BulkUploadSelectStep />
         </Activity>
-
         <Activity mode={tab === "preview" ? "visible" : "hidden"}>
-          <UploadPreviewStep extractedRows={extractedRows} setTab={setTab} />
+          <UploadPreviewStep />
+        </Activity>
+        <Activity mode={tab === "balance" ? "visible" : "hidden"}>
+          <BulkUploadBalanceStep />
         </Activity>
       </Card>
-    </>
+    </BulkUploadProvider>
   );
 };
 

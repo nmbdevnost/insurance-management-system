@@ -37,7 +37,6 @@ function useThemeIcon(resolvedTheme: string | undefined): React.ReactNode {
 /** Dropdown menu for switching between light, dark, and system themes. */
 export function ThemeSwitcher() {
   const { theme, setTheme, resolvedTheme } = useTheme();
-  console.log(theme);
   const triggerIcon = useThemeIcon(resolvedTheme);
 
   const handleSelect = useCallback(
@@ -60,7 +59,7 @@ export function ThemeSwitcher() {
             key={value}
             onClick={handleSelect(value)}
             data-active={theme === value}
-            className="gap-2 data-[active=true]:font-medium"
+            className="data-[active=true]:bg-accent/80 data-[active=true]:text-accent-foreground gap-2"
           >
             {icon}
             {label}

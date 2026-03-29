@@ -7,16 +7,20 @@ const AnimatedBar = ({
   index,
   color,
   className,
+  startHue,
 }: {
   value: number;
   index?: number;
   color?: string;
   className?: string;
+  startHue?: number;
 }) => {
   const [mounted, setMounted] = useState(false);
 
   const generatedColor =
-    index !== undefined ? generateGoldenRatioColor({ index }) : undefined;
+    index !== undefined
+      ? generateGoldenRatioColor({ index, startHue })
+      : undefined;
   const bgColor = color ? color : generatedColor;
 
   useEffect(() => {

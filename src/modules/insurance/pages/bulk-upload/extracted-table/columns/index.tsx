@@ -20,6 +20,22 @@ const extractedColumns: ColumnDef<InsuranceBulkUploadRow>[] = [
     header: "Debit Account Number",
   },
   {
+    accessorKey: "credit_account_number",
+    header: "Credit Account Number",
+  },
+  {
+    accessorKey: "amount",
+    header: "Amount",
+  },
+  {
+    accessorKey: "tran_particular",
+    header: "Transaction Particular",
+  },
+  {
+    accessorKey: "tran_remarks",
+    header: "Transation Remarks",
+  },
+  {
     accessorKey: "uploaded_by",
     header: "Uploaded By",
   },

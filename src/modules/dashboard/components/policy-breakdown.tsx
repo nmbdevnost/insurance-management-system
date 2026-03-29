@@ -60,6 +60,7 @@ const PolicyBreakdown: React.FC = () => {
                 <AnimatedBar
                   value={(item.value / item.total) * 100}
                   index={index}
+                  startHue={170}
                 />
               </div>
             ))}

@@ -19,7 +19,7 @@ export function LinkNavItem({ item }: LinkNavItemProps) {
     <SidebarMenuItem>
       <NavLink to={path} end={path === "/"}>
         <SidebarMenuButton
-          className="cursor-pointer"
+          className="data-active:hover:bg-sidebar-accent/90! cursor-pointer"
           tooltip={item.label}
           isActive={isActive}
         >

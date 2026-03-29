@@ -1,4 +1,5 @@
 import { KPIValue } from "@/shared/components/dashboardblocks/kpi";
+import IconFrame from "@/shared/components/icon-frame";
 import { Badge } from "@/shared/components/ui/badge";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Typography } from "@/shared/components/ui/typography";
@@ -20,7 +21,6 @@ export interface StatItem {
   value: string;
   icon: RemixiconComponentType;
   trend: TrendInfo;
-  iconColor: string;
 }
 
 const trendConfig: Record<
@@ -30,41 +30,42 @@ const trendConfig: Record<
     rotation: string;
   }
 > = {
-  up: { badgeVariant: "success-light", rotation: "rotate-0" },
-  down: { badgeVariant: "destructive-light", rotation: "rotate-90" },
-  same: { badgeVariant: "secondary", rotation: "rotate-45" },
+  up: { badgeVariant: "success-light", rotation: "rotate-45" },
+  down: { badgeVariant: "destructive-light", rotation: "-rotate-125" },
+  same: { badgeVariant: "secondary", rotation: "rotate-0" },
 };
 
-const StatCard: React.FC<StatItem> = ({
-  label,
-  value,
-  icon: Icon,
-  trend,
-  iconColor,
-}) => {
+const StatCard: React.FC<StatItem> = ({ label, value, icon: Icon, trend }) => {
   const { badgeVariant, rotation } = trendConfig[trend.direction];
 
   return (
-    <Card className="border-border/40 py-0 shadow-none">
-      <CardContent className="p-5">
+    <Card className="border-border/40 shadow-none">
+      <CardContent>
         {/* Label + icon — same visual weight, neither dominates */}
         <div className="flex items-center justify-between">
           <Typography variant="overline" className="text-xs font-medium" muted>
             {label}
           </Typography>
-          <Icon className={cn("size-4", iconColor)} />
+
+          <IconFrame>
+            <Icon className={cn("text-primary size-5")} />
+          </IconFrame>
+
+          {/*<div className="ring-ring/20 rounded-full ring-2 ring-offset-8">
+            <Icon className={cn("text-primary size-4")} />
+          </div>*/}
         </div>
 
         {/* Value — the whole point */}
         <Typography
           variant="h2"
-          className="mt-3 text-3xl leading-none tracking-tight"
+          className="text-3xl leading-none tracking-tight"
         >
           <KPIValue value={Number(value)} animated />
         </Typography>
 
         {/* Trend — quiet, contextual */}
-        <div className="mt-4 flex items-center gap-1.5">
+        <div className="mt-2 flex items-center gap-1.5">
           <Badge
             variant={badgeVariant}
             className="gap-1 px-1.5 py-0 text-xs font-medium"

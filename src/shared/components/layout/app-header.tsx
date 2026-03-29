@@ -11,12 +11,12 @@ import {
 } from "@/shared/components/ui/dropdown-menu";
 import { RiUserLine } from "@remixicon/react";
 import { Link } from "react-router-dom";
-import { Typography } from "../ui/typography";
 import { ThemeSwitcher } from "../theme-switcher";
+import { Typography } from "../ui/typography";
 
 export function AppHeader() {
   return (
-    <header className="bg-background/80 border-border sticky top-0 z-50 flex w-full items-center border-b backdrop-blur-xs">
+    <header className="bg-background dark:bg-sidebar border-border sticky top-0 z-50 flex w-full items-center border-b backdrop-blur-xs">
       <div className="flex h-(--header-height) w-full items-center gap-2 px-4">
         <div className="flex items-center gap-4 py-2">
           <Link

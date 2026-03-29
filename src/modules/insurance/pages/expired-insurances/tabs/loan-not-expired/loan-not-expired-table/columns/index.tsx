@@ -1,11 +1,11 @@
 import { Checkbox } from "@/shared/components/ui/checkbox";
-import type { Loan } from "@/shared/lib/types/loans";
+import type { FormattedExpiredPolicy } from "@/shared/lib/types/policies";
+import { formatDate } from "@/shared/lib/utils/format";
 import type { ColumnDef } from "@tanstack/react-table";
 import ExpiredInsuranceStatusBadge from "../../../../../../../../shared/components/status-badge";
 import LoanNotExpiredActions from "./actions";
-import { formatDate } from "@/shared/lib/utils/format";
 
-const loanNotExpiredColumns: ColumnDef<Loan>[] = [
+const loanNotExpiredColumns: ColumnDef<FormattedExpiredPolicy>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -30,7 +30,7 @@ const loanNotExpiredColumns: ColumnDef<Loan>[] = [
     size: 30,
   },
   {
-    accessorKey: "referenceNo",
+    accessorKey: "referenceNumber",
     header: "Reference No",
   },
   {

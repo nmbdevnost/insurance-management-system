@@ -11,7 +11,7 @@ import { AppHeader } from "./app-header";
 
 const RootLayout = () => {
   const sidebarCookieState = getCookie(SIDEBAR_COOKIE_NAME);
-  const initialOpen = sidebarCookieState === "true";
+  const initialOpen = sidebarCookieState ? sidebarCookieState === "true" : true;
 
   return (
     <SidebarProvider

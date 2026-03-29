@@ -13,7 +13,6 @@ export const createBankInducedInsurance = mutationOptions({
   },
   onError: (error) => {
     handleErrorResponse(error);
-    console.log(error);
   },
 });
 
@@ -24,6 +23,5 @@ export const createClientInducedInsurance = mutationOptions({
   },
   onError: (error) => {
     handleErrorResponse(error);
-    console.log(error);
   },
 });

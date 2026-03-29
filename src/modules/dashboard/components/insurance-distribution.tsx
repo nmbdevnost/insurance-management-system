@@ -65,6 +65,7 @@ const InsuranceDistribution: FC = () => {
             className="w-45"
             innerRadius={60}
             outerRadius={80}
+            startHue={255}
           />
         </Suspense>
 
@@ -84,7 +85,11 @@ const InsuranceDistribution: FC = () => {
                     </div>
                   </div>
 
-                  <AnimatedBar value={(item.value / max) * 100} index={index} />
+                  <AnimatedBar
+                    value={(item.value / max) * 100}
+                    index={index}
+                    startHue={255}
+                  />
                 </div>
               );
             })}

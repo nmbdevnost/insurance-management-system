@@ -1,6 +1,4 @@
 "use client";
-import * as React from "react";
-import { Label, Pie, PieChart as RePieChart } from "recharts";
 import {
   ChartContainer,
   ChartTooltip,
@@ -9,6 +7,8 @@ import {
 } from "@/shared/components/ui/chart";
 import { cn } from "@/shared/lib/utils";
 import { generateGoldenRatioColor } from "@/shared/lib/utils/color";
+import * as React from "react";
+import { Label, Pie, PieChart as RePieChart } from "recharts";
 import type { PolarViewBox } from "recharts/types/util/types";
 
 type RawChartData = {
@@ -34,6 +34,7 @@ type PieChartProps = {
   className?: string;
   innerRadius?: number;
   outerRadius?: number;
+  startHue?: number;
 };
 
 const PieChart: React.FC<PieChartProps> = ({
@@ -42,6 +43,7 @@ const PieChart: React.FC<PieChartProps> = ({
   className,
   innerRadius = 60,
   outerRadius,
+  startHue,
 }) => {
   const chartData: ChartData[] = React.useMemo(
     () =>
@@ -59,11 +61,11 @@ const PieChart: React.FC<PieChartProps> = ({
         [item.key]: {
           label: item.label,
           icon: item.icon,
-          color: item.color ?? generateGoldenRatioColor({ index }),
+          color: item.color ?? generateGoldenRatioColor({ index, startHue }),
         },
       };
     }, {});
-  }, [chartData]);
+  }, [chartData, startHue]);
 
   const total = React.useMemo(() => {
     return data.reduce((acc, curr) => acc + curr.value, 0);

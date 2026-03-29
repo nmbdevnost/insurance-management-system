@@ -19,6 +19,10 @@ export type InsuranceBulkUploadRow = {
   cif_id: string;
   policy_number: string;
   debit_account_number: string;
+  credit_account_number: string;
+  amount: number;
+  tran_particular: string;
+  tran_remarks: string;
   uploaded_by: string;
   uploaded_date: string;
 };

@@ -1,21 +1,21 @@
+import { useBulkUpload } from "@/modules/insurance/providers/bulk-upload-provider";
 import { Button } from "@/shared/components/ui/button";
 import { CardContent, CardFooter } from "@/shared/components/ui/card";
-import type { InsuranceBulkUploadRow } from "@/shared/lib/types/insurance";
-import { RiArrowLeftLine, RiCheckLine, RiInboxLine } from "@remixicon/react";
-import ExtractedTable from "../extracted-table";
 import { Typography } from "@/shared/components/ui/typography";
 import useLeaveConfirmation from "@/shared/hooks/use-leave-confirmation";
+import {
+  RiArrowLeftLine,
+  RiArrowRightLine,
+  RiInboxLine,
+} from "@remixicon/react";
+import ExtractedTable from "../extracted-table";
 
-const UploadPreviewStep = ({
-  extractedRows,
-  setTab,
-}: {
-  extractedRows: InsuranceBulkUploadRow[];
-  setTab: (tab: "uploader" | "preview") => void;
-}) => {
-  const handleSubmit = () => {};
+const UploadPreviewStep = () => {
+  const { extractedRows, setTab } = useBulkUpload();
 
   useLeaveConfirmation();
+
+  const handleSaveAsDraft = () => {};
 
   return (
     <>
@@ -37,19 +37,22 @@ const UploadPreviewStep = ({
           Back
         </Button>
 
-        <div className="ml-auto space-x-1">
+        <div className="ml-auto flex items-center gap-1">
           <Button
             disabled={extractedRows.length === 0}
-            onClick={handleSubmit}
+            onClick={handleSaveAsDraft}
             variant="outline"
             className="border-dashed"
           >
             <RiInboxLine />
             Save as Draft
           </Button>
-          <Button disabled={extractedRows.length === 0} onClick={handleSubmit}>
-            <RiCheckLine />
-            Process All Valid Rows
+          <Button
+            disabled={extractedRows.length === 0}
+            onClick={() => setTab("balance")}
+          >
+            Continue
+            <RiArrowRightLine />
           </Button>
         </div>
       </CardFooter>
