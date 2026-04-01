@@ -1,7 +1,8 @@
+export type ResponseStatus = {
+  responseCode: string;
+  responseMessage: string;
+};
 export type ResponseMetaData<T> = {
-  response: {
-    responseCode: string;
-    responseMessage: string;
-  };
+  response: ResponseStatus;
   result: T;
 };

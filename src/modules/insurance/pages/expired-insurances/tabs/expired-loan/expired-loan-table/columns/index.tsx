@@ -1,34 +1,17 @@
 import InsuranceStatusBadge from "@/shared/components/status-badge";
-import { Checkbox } from "@/shared/components/ui/checkbox";
+import type { ExpiredLoan } from "@/shared/lib/types/loans";
 import type { FormattedExpiredPolicy } from "@/shared/lib/types/policies";
 import { formatDate } from "@/shared/lib/utils/format";
 import type { ColumnDef } from "@tanstack/react-table";
 import ExpiredLoanActions from "./actions";
 
 const expiredLoanColumns: ColumnDef<FormattedExpiredPolicy>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <div>
-        <Checkbox
-          checked={table.getIsAllPageRowsSelected()}
-          indeterminate={table.getIsSomePageRowsSelected()}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div>
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      </div>
-    ),
-    size: 30,
-  },
+  // {
+  //   id: "select",
+  //   header: ({ table }) => <DataTableSelect variant="multiple" table={table} />,
+  //   cell: ({ row }) => <DataTableSelect variant="single" row={row} />,
+  //   size: 30,
+  // },
   {
     accessorKey: "referenceNumber",
     header: "Reference No",
@@ -75,7 +58,9 @@ const expiredLoanColumns: ColumnDef<FormattedExpiredPolicy>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row }) => <ExpiredLoanActions rowData={row.original} />,
+    cell: ({ row }) => (
+      <ExpiredLoanActions rowData={row.original as unknown as ExpiredLoan} />
+    ),
     meta: {
       pin: "right",
     },

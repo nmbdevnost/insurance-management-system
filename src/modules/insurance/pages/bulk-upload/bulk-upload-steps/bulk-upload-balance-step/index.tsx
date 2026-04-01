@@ -11,12 +11,7 @@ import {
 } from "@/shared/components/ui/alert";
 import { Button } from "@/shared/components/ui/button";
 import { CardContent, CardFooter } from "@/shared/components/ui/card";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/shared/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { Typography } from "@/shared/components/ui/typography";
 import useLeaveConfirmation from "@/shared/hooks/use-leave-confirmation";
 import {
@@ -25,7 +20,7 @@ import {
   RiArrowRightLine,
 } from "@remixicon/react";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { Activity, useMemo, useState } from "react";
 import BalanceTable from "./balance-table";
 
 type BalanceTab = "all" | "available" | "not-available";
@@ -52,6 +47,8 @@ const FALLBACK_BALANCE_INFO: AccountBalanceResponse = {
 const BulkUploadBalanceStep = () => {
   const { extractedRows, setTab } = useBulkUpload();
 
+  const [balanceCheckTab, setBalanceCheckTab] = useState("all");
+
   const accounts = extractedRows.map((row) => ({
     accountNumber: row.debit_account_number.toString(),
   }));
@@ -61,10 +58,10 @@ const BulkUploadBalanceStep = () => {
   );
 
   const balanceResults = useMemo<BalanceCheckResult[]>(() => {
-    if (!data?.data.result) return [];
+    if (!data?.result) return [];
 
     const balanceMap = new Map<string, AccountBalanceResponse>(
-      data.data.result.map((b) => [b.foracid, b])
+      data.result.map((b) => [b.foracid, b])
     );
 
     return extractedRows.map((row) => {
@@ -107,7 +104,11 @@ const BulkUploadBalanceStep = () => {
           </Alert>
         )}
 
-        <Tabs defaultValue="all">
+        <Tabs
+          defaultValue="all"
+          value={balanceCheckTab}
+          onValueChange={setBalanceCheckTab}
+        >
           <TabsList>
             <TabsTrigger value="all">All ({tabData.all.length})</TabsTrigger>
             <TabsTrigger value="available">
@@ -120,13 +121,16 @@ const BulkUploadBalanceStep = () => {
 
           {(["all", "available", "not-available"] as BalanceTab[]).map(
             (tabKey) => (
-              <TabsContent key={tabKey} value={tabKey}>
+              <Activity
+                key={tabKey}
+                mode={tabKey === balanceCheckTab ? "visible" : "hidden"}
+              >
                 <BalanceTable
                   key={tabKey}
                   rows={tabData[tabKey]}
                   isLoading={isPending}
                 />
-              </TabsContent>
+              </Activity>
             )
           )}
         </Tabs>

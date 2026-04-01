@@ -1,6 +1,7 @@
 import type { ClientInducedFormData } from "@/modules/insurance/lib/schemas/client-induced-schema";
 import FormFieldCheckbox from "@/shared/components/form/form-fields/form-field-checkbox";
 import FormFieldCombobox from "@/shared/components/form/form-fields/form-field-combobox";
+import FormFieldDatePicker from "@/shared/components/form/form-fields/form-field-date-picker";
 import FormFieldInput from "@/shared/components/form/form-fields/form-field-input";
 import FormFieldTextarea from "@/shared/components/form/form-fields/form-field-textarea";
 import {
@@ -115,20 +116,18 @@ const PolicyDetailsStep = ({ mode }: { mode?: string }) => {
         </div>
 
         <div className="flex gap-4">
-          <FormFieldInput
+          <FormFieldDatePicker
             control={control}
             name="riskStartDate"
             label="Risk Start Date"
-            type="date"
-            readOnly={mode === "view"}
+            readonly={mode === "view"}
           />
 
-          <FormFieldInput
+          <FormFieldDatePicker
             control={control}
             name="maturityEndDate"
             label="Maturity End Date"
-            type="date"
-            readOnly={mode === "view"}
+            readonly={mode === "view"}
           />
         </div>
       </FieldGroup>

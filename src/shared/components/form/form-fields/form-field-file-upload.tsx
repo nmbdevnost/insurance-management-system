@@ -111,7 +111,7 @@ const FieldFileUploadInner = ({
       <div className={cn("space-y-3", className)}>
         <div
           className={cn(
-            "flex cursor-pointer flex-col gap-3 rounded-lg border border-dashed p-3 transition-colors",
+            "bg-input/30 flex cursor-pointer flex-col gap-3 rounded-lg border border-dashed p-3 transition-colors",
             isDragging
               ? "border-primary bg-primary/5"
               : "border-muted-foreground/25 hover:border-muted-foreground/50",

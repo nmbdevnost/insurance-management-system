@@ -10,7 +10,11 @@ const ExtractedTable = ({
   extractedRows: InsuranceBulkUploadRow[];
 }) => {
   return (
-    <DataTableProvider columns={extractedColumns} data={extractedRows}>
+    <DataTableProvider
+      columns={extractedColumns}
+      data={extractedRows}
+      manualPagination={false}
+    >
       <DataTable />
       <DataTablePagination />
     </DataTableProvider>

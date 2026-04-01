@@ -88,7 +88,7 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
 
-  --info: var(--color-violet-600);
+  --info: var(--color-violet-700);
 
   --chart-lightness: 0.6;
   --chart-chroma: 0.15;

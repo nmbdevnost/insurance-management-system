@@ -1,6 +1,7 @@
 import { DetailField } from "@/shared/components/details/detail-field";
 import { DetailsSection } from "@/shared/components/details/detail-section";
 import DetailSectionGroup from "@/shared/components/details/detail-section-group";
+import IconFrame from "@/shared/components/icon-frame";
 import InsuranceStatusBadge from "@/shared/components/status-badge";
 import { Button } from "@/shared/components/ui/button";
 import {
@@ -47,12 +48,12 @@ const ExpiredInsuranceViewAction = ({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-3xl! gap-0 overflow-hidden p-0">
           <DialogHeader className="flex flex-row items-center space-y-1 border-b px-6 py-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg border">
+            <IconFrame>
               <RiShieldCheckLine className="size-5" />
-            </div>
+            </IconFrame>
 
             <div>
-              <DialogTitle className="flex items-center gap-3 text-lg font-semibold text-slate-900">
+              <DialogTitle className="flex items-center gap-3 text-lg font-semibold">
                 Policy Details
               </DialogTitle>
               <DialogDescription className="text-muted-foreground font-mono text-sm font-normal">

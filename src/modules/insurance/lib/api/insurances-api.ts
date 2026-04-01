@@ -1,4 +1,5 @@
 import { GET, POST } from "@/shared/lib/api/api";
+import { handleResponse } from "@/shared/lib/api/response";
 import type { BankInducedFormData } from "../schemas/bank-induced-schema";
 import type { ClientInducedFormData } from "../schemas/client-induced-schema";
 import type {
@@ -82,23 +83,25 @@ export const createBankInducedInsurance = async (data: BankInducedFormData) => {
         vehicleType: "",
       },
     },
-    assetType: "",
-    endDate: "",
-    initiationType: "bank",
+    assetType: data.policyType,
+    endDate: data.maturityEndDate,
+    initiationType: "Bank",
     loanId: 11,
     nomineeName: "",
     nomineeRelationship: "",
     planId: 22,
-    startDate: "",
+    startDate: data.riskStartDate,
     userId: 33,
   };
 
-  const formData = createInsuranceFormData(requestData);
+  // const formData = createInsuranceFormData(requestData);
 
-  const response = await POST<FormData, CreateInsuranceResponse>(
+  const response = await POST<CreateInsuranceBody, CreateInsuranceResponse>(
     "/insurance/policy",
-    formData
+    requestData
   );
+
+  handleResponse(response.data.response);
 
   return response.data;
 };
@@ -155,7 +158,7 @@ export const createClientInducedInsurance = async (
     },
     assetType: "",
     endDate: "",
-    initiationType: "client",
+    initiationType: "Customer ",
     loanId: 0,
     nomineeName: "",
     nomineeRelationship: "",

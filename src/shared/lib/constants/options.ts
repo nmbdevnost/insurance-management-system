@@ -52,7 +52,7 @@ export const provinceOptions: DropdownOption[] = [
 ];
 
 export const policyOptions: DropdownOption[] = [
-  { value: "1", label: "BUILING", isActive: true },
+  { value: "House", label: "House", isActive: true },
   { value: "2", label: "LAND AND BUILDING", isActive: true },
   { value: "3", label: "VEHICLE", isActive: true },
   { value: "4", label: "STOCK", isActive: true },

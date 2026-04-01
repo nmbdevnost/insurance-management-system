@@ -63,7 +63,6 @@ export const defaultAssetDetailValues: AssetDetailFormData = {
   riskCoverage: "",
   valuationReport: [],
   ownerType: "individual",
-  insuranceProvider: "",
   constructionCompletionCertificate: [],
   citizenship: [],
   lorc: [],
@@ -84,6 +83,18 @@ export const PremiumQuerySchema = z.object({
     .refine((val) => !isNaN(Number(val)), {
       message: "Value must be in number",
     }),
+  riskStartDate: z
+    .string()
+    .nonempty("Risk Start Date is required")
+    .refine((date) => !isNaN(Date.parse(date)), {
+      message: "Invalid Risk Start Date",
+    }),
+  maturityEndDate: z
+    .string()
+    .nonempty("Maturity End Date is required")
+    .refine((date) => !isNaN(Date.parse(date)), {
+      message: "Invalid Maturity End Date",
+    }),
   assetDetail: z.string().optional(),
   claimSupport: z.boolean().optional(),
   comprehensive: z.boolean().optional(),
@@ -99,6 +110,8 @@ export const defaultPremiumQueryValues: PremiumQueryFormData = {
   policyType: "",
   sumInsured: "",
   assetDetail: "",
+  maturityEndDate: "",
+  riskStartDate: "",
   claimSupport: false,
   comprehensive: false,
   naturalDisasterDeath: false,

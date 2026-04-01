@@ -1,32 +1,25 @@
-import {
-  Controller,
-  type Control,
-  type FieldValues,
-  type Path,
-} from "react-hook-form";
+import { cn } from "@/shared/lib/utils";
 import {
   Field,
   FieldContent,
   FieldDescription,
-  FieldError,
   FieldLabel,
   FieldTitle,
 } from "../../ui/field";
 import { Label } from "../../ui/label";
 import { RadioGroup, RadioGroupItem } from "../../ui/radio-group";
+import { FormFieldBase, type FormControlFunction } from "./form-field-base";
+import type { RemixiconComponentType } from "@remixicon/react";
 
 type RadioOption = {
   label: string;
   value: string;
   description?: string;
   disabled?: boolean;
+  icon?: RemixiconComponentType;
 };
 
-type FormFieldRadioGroupProps<T extends FieldValues> = {
-  name: Path<T>;
-  label?: string;
-  description?: string;
-  control?: Control<T>;
+type ExtraProps = {
   options: RadioOption[];
   orientation?: "vertical" | "horizontal";
   variant?: "default" | "choice-card";
@@ -40,7 +33,7 @@ const DefaultOption = ({
   option: RadioOption;
   fieldName: string;
 }) => (
-  <div key={option.value} className="flex items-start gap-2">
+  <div className="flex items-start gap-2">
     <RadioGroupItem
       value={option.value}
       id={`${fieldName}-${option.value}`}
@@ -75,11 +68,16 @@ const ChoiceCardOption = ({
   <FieldLabel
     htmlFor={`${fieldName}-${option.value}`}
     data-disabled={option.disabled}
-    className={option.disabled ? "cursor-not-allowed opacity-50" : undefined}
+    className={cn(
+      "dark:bg-input/30",
+      option.disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+    )}
   >
     <Field orientation="horizontal">
       <FieldContent>
-        <FieldTitle>{option.label}</FieldTitle>
+        <FieldTitle>
+          {option.icon && <option.icon className="size-4" />} {option.label}
+        </FieldTitle>
         {option.description && (
           <FieldDescription>{option.description}</FieldDescription>
         )}
@@ -93,56 +91,40 @@ const ChoiceCardOption = ({
   </FieldLabel>
 );
 
-const FormFieldRadioGroup = <T extends FieldValues>({
-  name,
-  label,
-  description,
-  control,
+const FormFieldRadioGroup: FormControlFunction<ExtraProps> = ({
   options,
   orientation = "vertical",
   variant = "default",
-}: FormFieldRadioGroupProps<T>) => {
-  return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field, fieldState }) => (
-        <Field data-invalid={fieldState.invalid}>
-          {label && <FieldLabel>{label}</FieldLabel>}
-          <RadioGroup
-            value={field.value}
-            onValueChange={field.onChange}
-            onBlur={field.onBlur}
-            ref={field.ref}
-            aria-invalid={fieldState.invalid}
-            className={
-              orientation === "horizontal"
-                ? "flex flex-row gap-4"
-                : "flex flex-col gap-2"
-            }
-          >
-            {options.map((option) =>
-              variant === "choice-card" ? (
-                <ChoiceCardOption
-                  key={option.value}
-                  option={option}
-                  fieldName={field.name}
-                />
-              ) : (
-                <DefaultOption
-                  key={option.value}
-                  option={option}
-                  fieldName={field.name}
-                />
-              )
-            )}
-          </RadioGroup>
-          {description && <FieldDescription>{description}</FieldDescription>}
-          {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-        </Field>
-      )}
-    />
-  );
-};
+  ...props
+}) => (
+  <FormFieldBase {...props}>
+    {({ onChange, onBlur, value, ref, "aria-invalid": ariaInvalid, id }) => (
+      <RadioGroup
+        value={value}
+        onValueChange={onChange}
+        onBlur={onBlur}
+        ref={ref}
+        aria-invalid={ariaInvalid}
+        className={
+          orientation === "horizontal"
+            ? "flex flex-row gap-4"
+            : "flex flex-col gap-2"
+        }
+      >
+        {options.map((option) =>
+          variant === "choice-card" ? (
+            <ChoiceCardOption
+              key={option.value}
+              option={option}
+              fieldName={id}
+            />
+          ) : (
+            <DefaultOption key={option.value} option={option} fieldName={id} />
+          )
+        )}
+      </RadioGroup>
+    )}
+  </FormFieldBase>
+);
 
 export default FormFieldRadioGroup;

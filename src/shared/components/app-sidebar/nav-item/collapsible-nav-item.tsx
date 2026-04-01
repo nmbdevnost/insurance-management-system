@@ -56,6 +56,7 @@ export function CollapsibleNavItem({ item }: CollapsibleNavItemProps) {
   return (
     <SidebarMenuItem>
       <Collapsible
+        defaultOpen={isChildActive}
         open={expanded}
         onOpenChange={setExpanded}
         className="group/collapsible"
@@ -148,6 +149,7 @@ function NestedCollapsibleItem({
     <SidebarMenuSubItem>
       <Collapsible
         open={expanded}
+        defaultOpen={isChildActive}
         onOpenChange={setExpanded}
         className={groupClass}
       >

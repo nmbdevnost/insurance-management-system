@@ -11,21 +11,20 @@ import { generateQueryParams } from "@/shared/lib/utils";
 import type { TableParams } from "@/shared/providers/data-table-provider";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { loanAccountDetailsQuery } from "../../lib/queries/account-inquiry-queries";
-import type { FormattedPolicy } from "../../lib/types/expired-insurances";
+import ExpiredListTab from "./tabs/expired-list";
 import ExpiredLoanTab from "./tabs/expired-loan";
-import ExpiredPolicyTab from "./tabs/expired-policy";
 import LoanNotExpiredTab from "./tabs/loan-not-expired";
 
 const ExpiredInsurancePage = () => {
   const [tab, setTab] = useState("expired-policy");
+
   const [tableParams, setTableParams] =
     useState<TableParams>(DEFAULT_TABLE_PARAMS);
 
   const queryParams = generateQueryParams(tableParams);
 
-  // Fetch 1: paginated expiring policies
   const { data: expiredListData, isFetching: isFetchingPolicies } = useQuery(
     expiredInsurancesQueries.expiredList({
       days: Number(queryParams.days ?? 30),
@@ -43,7 +42,6 @@ const ExpiredInsurancePage = () => {
     ? expiredListData?.response?.responseMessage
     : undefined;
 
-  // Extract accountNo from current page for 2nd fetch
   const accountNumbers = useMemo(
     () =>
       rawPolicies?.map(({ policyDetails }) => ({
@@ -52,7 +50,6 @@ const ExpiredInsurancePage = () => {
     [rawPolicies]
   );
 
-  // Fetch 2: loan details — blocked until Fetch 1 resolves
   const {
     data: loanDetails,
     isFetching: isFetchingLoan,
@@ -75,11 +72,7 @@ const ExpiredInsurancePage = () => {
 
   const isLoading = isFetchingPolicies || isFetchingLoan;
 
-  /**
-   * Flattens policyDetails + expiringIn and attaches the matched loanDetail.
-   * Join key: policyDetails.accountNo === loanDetail.foracid
-   */
-  const formattedData = useMemo<FormattedPolicy[] | undefined>(() => {
+  const getFormattedData = useCallback(() => {
     if (!rawPolicies) return undefined;
 
     const loanMap = new Map(loanDetails?.result?.map((l) => [l.foracid, l]));
@@ -90,8 +83,20 @@ const ExpiredInsurancePage = () => {
       loanDetail: loanMap.get(policyDetails.accountNo),
     }));
   }, [rawPolicies, loanDetails]);
+  const formattedData = getFormattedData();
 
-  // Derived slices for loan tabs — client-side, based on current page only
+  // const formattedData = useMemo(() => {
+  //   if (!rawPolicies) return undefined;
+
+  //   const loanMap = new Map(loanDetails?.result?.map((l) => [l.foracid, l]));
+
+  //   return rawPolicies.map(({ policyDetails, expiringIn }) => ({
+  //     ...policyDetails,
+  //     expiringIn,
+  //     loanDetail: loanMap.get(policyDetails.accountNo),
+  //   }));
+  // }, [rawPolicies, loanDetails]);
+
   const closedLoans = useMemo(
     () => formattedData?.filter((p) => p.loanDetail?.accT_CLS_FLG === "Y"),
     [formattedData]
@@ -136,28 +141,40 @@ const ExpiredInsurancePage = () => {
             Loan Not Closed
           </TabsTrigger>
         </TabsList>
+
         <TabsContent value="expired-policy">
-          <ExpiredPolicyTab
+          <ExpiredListTab
             data={formattedData}
             totalRows={totalRows}
-            isLoading={isLoading}
+            isLoading={isFetchingPolicies}
             error={error}
             tableParams={tableParams}
             onTableParamsChange={setTableParams}
+            key="expired-policy-tab"
           />
         </TabsContent>
+
         <TabsContent value="expired-loan">
           <ExpiredLoanTab
             data={closedLoans}
+            totalRows={totalRows}
             isLoading={isLoading}
             error={loanDetailsError}
+            tableParams={tableParams}
+            onTableParamsChange={setTableParams}
+            key="expired-loan-tab"
           />
         </TabsContent>
+
         <TabsContent value="loan-not-expired">
           <LoanNotExpiredTab
             data={notClosedLoans}
+            totalRows={totalRows}
             isLoading={isLoading}
             error={loanDetailsError}
+            // tableParams={tableParams}
+            // onTableParamsChange={setTableParams}
+            key="not-expired-loan-tab"
           />
         </TabsContent>
       </Tabs>

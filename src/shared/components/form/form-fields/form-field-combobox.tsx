@@ -1,100 +1,60 @@
 import type { DropdownOption } from "@/shared/lib/types/dropdown";
-import React from "react";
-import {
-  Controller,
-  type Control,
-  type FieldValues,
-  type Path,
-} from "react-hook-form";
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldLabel,
-} from "../../ui/field";
+import type { ComponentProps } from "react";
+import { useCallback } from "react";
 import VirtualizedCombobox from "../../virtualized/virtualized-combobox";
+import { FormFieldBase, type FormControlFunction } from "./form-field-base";
 
-type FormFieldComboboxProps<T extends FieldValues> = {
-  name: Path<T>;
-  label?: string;
-  placeholder?: string;
-  description?: string;
-  control?: Control<T>;
-  options: DropdownOption[];
-  emptyMessage?: string;
-} & React.ComponentProps<typeof VirtualizedCombobox>;
+type ExtraProps = Omit<
+  ComponentProps<typeof VirtualizedCombobox>,
+  "selectedOption" | "onValueChange" | "invalid"
+>;
 
-const FormFieldCombobox = <T extends FieldValues>({
-  name,
-  label,
-  description,
-  control,
+const FormFieldCombobox: FormControlFunction<ExtraProps> = ({
   modal = false,
-  ...commandProps
-}: FormFieldComboboxProps<T>) => {
-  const isMultiple = commandProps.multiple;
+  ...props
+}) => {
+  const isMultiple = props.multiple;
 
-  const getSelectedOption = React.useCallback(
+  const getSelectedOption = useCallback(
     (value: unknown, options: DropdownOption[]) => {
       if (isMultiple) {
-        return options?.filter((item) =>
+        return options.filter((item) =>
           (value as string[])?.includes(item.value)
         );
       }
-      return options?.find((item) => item.value === value);
+      return options.find((item) => item.value === value);
     },
     [isMultiple]
   );
 
-  const handleValueChange = React.useCallback(
+  const handleValueChange = useCallback(
     (
       option: DropdownOption | DropdownOption[] | null,
       onChange: (value: unknown) => void
     ) => {
       if (option === null) return;
-
       if (isMultiple) {
-        const selectedOptions = option as DropdownOption[];
-        const selectedValues = selectedOptions.map((opt) => opt.value);
-        onChange(selectedValues);
+        onChange((option as DropdownOption[]).map((opt) => opt.value));
       } else {
-        const selectedOption = option as DropdownOption;
-        onChange(selectedOption.value);
+        onChange((option as DropdownOption).value);
       }
     },
     [isMultiple]
   );
 
   return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field, fieldState }) => {
-        const selectedOption = getSelectedOption(
-          field.value,
-          commandProps.options
-        );
-
-        return (
-          <Field data-invalid={fieldState.invalid}>
-            {label && <FieldLabel htmlFor={field.name}>{label}</FieldLabel>}
-
-            <VirtualizedCombobox
-              selectedOption={selectedOption}
-              onValueChange={(option) =>
-                handleValueChange(option, field.onChange)
-              }
-              invalid={fieldState.invalid}
-              modal={modal}
-              {...commandProps}
-            />
-
-            {description && <FieldDescription>{description}</FieldDescription>}
-            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-          </Field>
-        );
-      }}
-    />
+    <FormFieldBase {...props}>
+      {({ onChange, value, "aria-invalid": ariaInvalid, ...field }) => (
+        <VirtualizedCombobox
+          {...(props as ComponentProps<typeof VirtualizedCombobox>)}
+          {...field}
+          selectedOption={getSelectedOption(value, props.options || [])}
+          onValueChange={(option) => handleValueChange(option, onChange)}
+          invalid={ariaInvalid}
+          modal={modal}
+        />
+      )}
+    </FormFieldBase>
   );
 };
 

@@ -1,6 +1,7 @@
 import type { PremiumQueryFormData } from "@/modules/insurance/lib/schemas/bank-induced-schema";
 import FormFieldCheckbox from "@/shared/components/form/form-fields/form-field-checkbox";
 import FormFieldCombobox from "@/shared/components/form/form-fields/form-field-combobox";
+import FormFieldDatePicker from "@/shared/components/form/form-fields/form-field-date-picker";
 import FormFieldInput from "@/shared/components/form/form-fields/form-field-input";
 import FormFieldTextarea from "@/shared/components/form/form-fields/form-field-textarea";
 import { Alert, AlertDescription } from "@/shared/components/ui/alert";
@@ -72,6 +73,22 @@ const PremiumQueryStep = ({ mode }: { mode?: string }) => {
             label="Insurance Premium"
             placeholder="2000"
             disabled={mode === "view"}
+          />
+        </div>
+
+        <div className="flex gap-4">
+          <FormFieldDatePicker
+            control={control}
+            name="riskStartDate"
+            label="Risk Start Date"
+            readonly={mode === "view"}
+          />
+
+          <FormFieldDatePicker
+            control={control}
+            name="maturityEndDate"
+            label="Maturity End Date"
+            readonly={mode === "view"}
           />
         </div>
       </FieldGroup>

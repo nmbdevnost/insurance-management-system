@@ -1,6 +1,7 @@
 import { DetailField } from "@/shared/components/details/detail-field";
 import { DetailsSection } from "@/shared/components/details/detail-section";
 import DetailSectionGroup from "@/shared/components/details/detail-section-group";
+import IconFrame from "@/shared/components/icon-frame";
 import InsuranceStatusBadge from "@/shared/components/status-badge";
 import { Button } from "@/shared/components/ui/button";
 import {
@@ -15,9 +16,9 @@ import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { TooltipContent, TooltipTrigger } from "@/shared/components/ui/tooltip";
 import { Typography } from "@/shared/components/ui/typography";
 import type { ExpiredLoan } from "@/shared/lib/types/loans";
+import { formatDate } from "@/shared/lib/utils";
 import { Tooltip } from "@base-ui/react";
 import { RiEyeLine, RiShieldCheckLine } from "@remixicon/react";
-import { format } from "date-fns";
 import { useState } from "react";
 
 type ExpiredLoanViewActionProps = {
@@ -44,9 +45,9 @@ const ExpiredLoanViewAction = ({ rowData }: ExpiredLoanViewActionProps) => {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-3xl! gap-0 overflow-hidden p-0">
           <DialogHeader className="flex flex-row items-center space-y-1 border-b px-6 py-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg border">
+            <IconFrame>
               <RiShieldCheckLine className="size-5" />
-            </div>
+            </IconFrame>
 
             <div>
               <DialogTitle className="flex items-center gap-3 text-lg font-semibold">
@@ -149,7 +150,7 @@ const ExpiredLoanViewAction = ({ rowData }: ExpiredLoanViewActionProps) => {
               >
                 <DetailField
                   label="Account Closed Date"
-                  value={`${format(rowData.accountClosedDate, "PP")}`}
+                  value={`${formatDate(rowData.accountClosedDate, "PP")}`}
                 />
               </DetailsSection>
 
@@ -163,7 +164,7 @@ const ExpiredLoanViewAction = ({ rowData }: ExpiredLoanViewActionProps) => {
                         Account Closed Date
                       </div>
                     }
-                    value={`${format(rowData.accountClosedDate, "PPP")}`}
+                    value={`${formatDate(rowData.accountClosedDate, "PPP")}`}
                     className="ml-4 font-medium"
                   />
                 )}

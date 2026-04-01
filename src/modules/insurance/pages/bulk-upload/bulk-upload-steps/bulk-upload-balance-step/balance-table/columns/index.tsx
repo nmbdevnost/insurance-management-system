@@ -1,4 +1,5 @@
 import type { BalanceCheckResult } from "@/modules/insurance/lib/types/insurances";
+import StatusBadge from "@/shared/components/status-badge";
 import type { ColumnDef } from "@tanstack/react-table";
 
 const balanceColumns: ColumnDef<BalanceCheckResult>[] = [
@@ -21,7 +22,7 @@ const balanceColumns: ColumnDef<BalanceCheckResult>[] = [
   {
     accessorKey: "amount",
     header: "Amount",
-    cell: ({ row }) => row.original.amount.toLocaleString(),
+    cell: ({ row }) => row.original.amount?.toLocaleString(),
   },
   {
     accessorKey: "balanceInfo.availablE_BALANCE",
@@ -33,15 +34,9 @@ const balanceColumns: ColumnDef<BalanceCheckResult>[] = [
     id: "status",
     header: "Status",
     cell: ({ row }) => (
-      <span
-        className={
-          row.original.hasEnoughBalance
-            ? "font-medium text-green-600"
-            : "text-destructive font-medium"
-        }
-      >
-        {row.original.hasEnoughBalance ? "Available" : "Insufficient"}
-      </span>
+      <StatusBadge
+        status={row.original.hasEnoughBalance ? "Available" : "Insufficient"}
+      />
     ),
   },
 ];

@@ -29,6 +29,11 @@ export function handleErrorResponse(
     return;
   }
 
+  if (error instanceof Error) {
+    toast.error(error.message);
+    return;
+  }
+
   const response = error.response;
   if (!isRecord(response)) {
     if (isString(error)) {

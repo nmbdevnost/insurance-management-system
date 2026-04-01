@@ -7,7 +7,7 @@ import type { TableParams } from "@/shared/providers/data-table-provider";
  */
 
 export function generateQueryParams(
-  tableParams: TableParams
+  tableParams: Omit<TableParams, "selections">
 ): Record<string, unknown> {
   const filterParams = tableParams.columnFilters.reduce(
     (acc, filter) => {

@@ -20,6 +20,7 @@ const ExpiredPolicyTab = ({
       isLoading={isLoading}
       totalRows={totalRows}
       error={error}
+      rowId="policyId"
     >
       <ExpiredPolicyTable />
     </DataTableProvider>

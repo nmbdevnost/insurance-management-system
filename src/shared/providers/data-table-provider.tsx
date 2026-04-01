@@ -10,20 +10,18 @@ import {
   type SortingState,
   type Table,
 } from "@tanstack/react-table";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, useCallback, useContext, useMemo } from "react";
+import useControlledState from "../hooks/use-controlled-state";
+import { DEFAULT_TABLE_PARAMS } from "../lib/constants";
+import { resolveUpdater } from "../lib/utils/resolver";
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 export type ColumnMetaWithPinning = {
   pin?: "left" | "right";
 };
 
 export type RowSelectionState = Record<string, boolean>;
-
 export type ControlledPaginationState = PaginationState & { page: number };
 
 export type TableParams = {
@@ -39,29 +37,18 @@ export type DataTableContextValue<TData> = {
   isLoading?: boolean;
   isPaginationLoading?: boolean;
   totalRows?: number;
-
-  // search
-  globalFilter?: string;
+  globalFilter: string;
   setGlobalFilter: (value: string) => void;
-
-  // filters
-  columnFilters?: ColumnFiltersState;
+  columnFilters: ColumnFiltersState;
   setColumnFilters: React.Dispatch<React.SetStateAction<ColumnFiltersState>>;
-
-  // sorting
-  sorting?: SortingState;
+  sorting: SortingState;
   setSorting: React.Dispatch<React.SetStateAction<SortingState>>;
-
-  // pagination
-  pagination?: ControlledPaginationState;
+  pagination: ControlledPaginationState;
   setPagination: React.Dispatch<
     React.SetStateAction<ControlledPaginationState>
   >;
-
-  // selection
-  rowSelection?: RowSelectionState;
+  rowSelection: RowSelectionState;
   setRowSelection: React.Dispatch<React.SetStateAction<RowSelectionState>>;
-
   isError?: boolean;
   error?: string;
 };
@@ -81,7 +68,28 @@ export type DataTableProviderProps<TData> = {
   totalRows?: number;
   isError?: boolean;
   error?: string;
+  rowId?: keyof TData;
 };
+
+// ─── Utilities ────────────────────────────────────────────────────────────────
+
+/**
+ * Extracts pinned column IDs from column definitions for a given direction.
+ */
+function getPinnedColumnIds<TData>(
+  columns: ColumnDef<TData>[],
+  direction: ColumnMetaWithPinning["pin"]
+): string[] {
+  return columns
+    .filter(
+      (col) =>
+        (col.meta as ColumnMetaWithPinning)?.pin === direction &&
+        ("accessorKey" in col || "id" in col)
+    )
+    .map((col) => ("accessorKey" in col ? String(col.accessorKey) : col.id!));
+}
+
+// ─── Context ──────────────────────────────────────────────────────────────────
 
 const DataTableContext = createContext<DataTableContextValue<unknown> | null>(
   null
@@ -95,13 +103,15 @@ export function useDataTable<TData>(): DataTableContextValue<TData> {
   return context as DataTableContextValue<TData>;
 }
 
+// ─── Provider ─────────────────────────────────────────────────────────────────
+
 export function DataTableProvider<TData>({
   columns,
   data = [],
   children,
   pageCount,
-  tableParams,
-  onTableParamsChange,
+  tableParams, // controlled value
+  onTableParamsChange, // controlled onChange
   enableRowSelection = true,
   enableMultiRowSelection,
   className,
@@ -110,271 +120,160 @@ export function DataTableProvider<TData>({
   totalRows,
   isError,
   error,
+  rowId = "id" as keyof TData,
 }: DataTableProviderProps<TData>) {
-  const {
-    columnFilters,
-    globalFilter,
-    pagination,
-    sorting,
-    selections: rowSelection = {},
-  } = tableParams || {};
-
-  // Local state for uncontrolled pagination
-  const [internalPagination, setInternalPagination] =
-    useState<ControlledPaginationState>({
-      pageIndex: 0,
-      pageSize: 10,
-      page: 1,
+  const { value: activeParams, onChange: setActiveParams } =
+    useControlledState<TableParams>({
+      value: tableParams,
+      onChange: onTableParamsChange,
+      defaultValue: DEFAULT_TABLE_PARAMS,
     });
 
-  /**
-   * Handles changes to the global search filter.
-   * Updates the global filter state and notifies parent component of parameter changes.
-   * @param value - The new global filter string to apply
-   */
-  const handleGlobalFilterChange = useCallback(
+  // Individual setters (much cleaner than createKeyDispatch)
+  const setGlobalFilter = useCallback(
     (value: string) => {
-      onTableParamsChange?.((prev) => ({
+      setActiveParams((prev) => ({ ...prev, globalFilter: value }));
+    },
+    [setActiveParams]
+  );
+
+  const setColumnFilters = useCallback(
+    (updater: React.SetStateAction<ColumnFiltersState>) => {
+      setActiveParams((prev) => ({
         ...prev,
-        globalFilter: value,
+        columnFilters: resolveUpdater(updater, prev.columnFilters),
       }));
     },
-    [onTableParamsChange]
+    [setActiveParams]
   );
 
-  /**
-   * Handles changes to column-specific filters.
-   * Accepts either a new filter state or an updater function for functional updates.
-   * Notifies parent component after updating the filter state.
-   * @param updater - New column filters state or function that receives old state and returns new state
-   */
-  const handleColumnFiltersChange = useCallback(
-    (
-      updater:
-        | ColumnFiltersState
-        | ((old: ColumnFiltersState) => ColumnFiltersState)
-    ) => {
-      if (!columnFilters || !onTableParamsChange) return;
-
-      const newColumnFilters =
-        typeof updater === "function" ? updater(columnFilters) : updater;
-
-      onTableParamsChange((prev) => ({
+  const setSorting = useCallback(
+    (updater: React.SetStateAction<SortingState>) => {
+      setActiveParams((prev) => ({
         ...prev,
-        columnFilters: newColumnFilters,
+        sorting: resolveUpdater(updater, prev.sorting),
       }));
     },
-    [onTableParamsChange, columnFilters]
+    [setActiveParams]
   );
 
-  /**
-   * Handles changes to table sorting configuration.
-   * Accepts either a new sorting state or an updater function for functional updates.
-   * Notifies parent component after updating the sorting state.
-   * @param updater - New sorting state or function that receives old state and returns new state
-   */
-  const handleSortingChange = useCallback(
-    (updater: SortingState | ((old: SortingState) => SortingState)) => {
-      if (!sorting || !onTableParamsChange) return;
-
-      const newSorting =
-        typeof updater === "function" ? updater(sorting) : updater;
-      onTableParamsChange((prev) => ({ ...prev, sorting: newSorting }));
+  const setRowSelection = useCallback(
+    (updater: React.SetStateAction<RowSelectionState>) => {
+      setActiveParams((prev) => ({
+        ...prev,
+        selections: resolveUpdater(updater, prev.selections),
+      }));
     },
-    [onTableParamsChange, sorting]
+    [setActiveParams]
   );
 
-  /**
-   * Handles changes to table pagination (page index and page size).
-   * Accepts either a new pagination state or an updater function for functional updates.
-   * Automatically calculates the page number (pageIndex + 1) and includes it in the state.
-   * Supports both controlled and uncontrolled modes.
-   * @param updater - New pagination state or function that receives old state and returns new state
-   */
+  const setPagination = useCallback(
+    (updater: React.SetStateAction<ControlledPaginationState>) => {
+      setActiveParams((prev) => ({
+        ...prev,
+        pagination: resolveUpdater(updater, prev.pagination),
+      }));
+    },
+    [setActiveParams]
+  );
+
+  // Internal handler for react-table's pagination (which uses PaginationState, not ControlledPaginationState)
   const handlePaginationChange = useCallback(
     (
-      updater: PaginationState | ((old: PaginationState) => PaginationState)
+      updater: PaginationState | ((prev: PaginationState) => PaginationState)
     ) => {
-      if (manualPagination && pagination && onTableParamsChange) {
-        // Controlled mode
-        const basePagination: PaginationState =
-          typeof updater === "function"
-            ? updater({
-                pageIndex: pagination.pageIndex,
-                pageSize: pagination.pageSize,
-              })
-            : updater;
-
-        const newPagination: ControlledPaginationState = {
-          ...basePagination,
-          page: basePagination.pageIndex + 1,
-        };
-
-        onTableParamsChange((prev) => ({ ...prev, pagination: newPagination }));
-      } else {
-        // Uncontrolled mode
-        setInternalPagination((prev) => {
-          const basePagination: PaginationState =
-            typeof updater === "function"
-              ? updater({
-                  pageIndex: prev.pageIndex,
-                  pageSize: prev.pageSize,
-                })
-              : updater;
-
-          return {
-            ...basePagination,
-            page: basePagination.pageIndex + 1,
-          };
+      setActiveParams((prev) => {
+        const resolved = resolveUpdater(updater, {
+          pageIndex: prev.pagination.pageIndex,
+          pageSize: prev.pagination.pageSize,
         });
-      }
-    },
-    [manualPagination, onTableParamsChange, pagination]
-  );
-
-  /**
-   * Wrapper for external consumers to set pagination with ControlledPaginationState.
-   * Converts ControlledPaginationState to PaginationState for React Table compatibility.
-   * Supports both controlled and uncontrolled modes.
-   * @param updater - New controlled pagination state or function that receives old state and returns new state
-   */
-  const handleControlledPaginationChange = useCallback(
-    (
-      updater:
-        | ControlledPaginationState
-        | ((old: ControlledPaginationState) => ControlledPaginationState)
-    ) => {
-      if (manualPagination) {
-        if (!pagination || !onTableParamsChange) return;
-
-        // Controlled mode
-        const newControlledPagination =
-          typeof updater === "function" ? updater(pagination) : updater;
-
-        onTableParamsChange((prev) => ({
+        return {
           ...prev,
-          pagination: newControlledPagination,
-        }));
-      } else {
-        // Uncontrolled mode
-        setInternalPagination((prev) => {
-          return typeof updater === "function" ? updater(prev) : updater;
-        });
-      }
-    },
-    [manualPagination, onTableParamsChange, pagination]
-  );
-
-  const handleSelectionChange = useCallback(
-    (
-      updater:
-        | RowSelectionState
-        | ((old: RowSelectionState) => RowSelectionState)
-    ) => {
-      if (!rowSelection || !onTableParamsChange) return;
-
-      const newSelections =
-        typeof updater === "function" ? updater(rowSelection) : updater;
-
-      onTableParamsChange((prev) => ({
-        ...prev,
-        selections: newSelections,
-      }));
-    },
-    [rowSelection, onTableParamsChange]
-  );
-
-  const filterPinned = useCallback(
-    (
-      pinnedDirection: ColumnMetaWithPinning["pin"],
-      columns: DataTableProviderProps<TData>["columns"]
-    ) => {
-      const filteredColumns =
-        columns?.filter(
-          (col) =>
-            (col.meta as ColumnMetaWithPinning)?.pin === pinnedDirection &&
-            ("accessorKey" in col || "id" in col)
-        ) || [];
-
-      return filteredColumns?.map((col) => {
-        return "accessorKey" in col ? col.accessorKey : col.id!;
+          pagination: { ...resolved, page: resolved.pageIndex + 1 },
+        };
       });
     },
-    []
+    [setActiveParams]
   );
 
-  const pinnedColumns = useMemo(() => {
-    const leftPinned = filterPinned("left", columns);
-    const rightPinned = filterPinned("right", columns);
+  const columnPinning = useMemo<ColumnPinningState>(
+    () => ({
+      left: getPinnedColumnIds(columns, "left"),
+      right: getPinnedColumnIds(columns, "right"),
+    }),
+    [columns]
+  );
 
-    return { left: leftPinned, right: rightPinned };
-  }, [filterPinned, columns]);
-
-  // Use controlled pagination if available, otherwise use internal state
-  const activePagination =
-    manualPagination && pagination ? pagination : internalPagination;
+  const computedPageCount = manualPagination
+    ? (pageCount ??
+      (totalRows != null
+        ? Math.ceil(totalRows / activeParams.pagination.pageSize)
+        : 1))
+    : undefined;
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns,
-    pageCount: manualPagination
-      ? (pageCount ??
-        (totalRows != null
-          ? Math.ceil(totalRows / activePagination.pageSize)
-          : 1))
-      : undefined,
-
-    getRowId: (row) => (row as { id: string }).id,
-
+    pageCount: computedPageCount,
+    getRowId: (row) => String(row[rowId]),
     state: {
-      globalFilter,
-      columnFilters,
-      sorting,
-      pagination: activePagination,
-      rowSelection,
-      columnPinning: pinnedColumns as ColumnPinningState,
+      globalFilter: activeParams.globalFilter,
+      columnFilters: activeParams.columnFilters,
+      sorting: activeParams.sorting,
+      pagination: activeParams.pagination,
+      rowSelection: activeParams.selections,
+      columnPinning,
     },
-
     enableColumnPinning: true,
-    enableRowSelection: (row) => (enableRowSelection ? !!row.id : false),
+    enableRowSelection,
     enableMultiRowSelection,
-
-    onGlobalFilterChange: handleGlobalFilterChange,
-    onColumnFiltersChange: handleColumnFiltersChange,
-    onSortingChange: handleSortingChange,
+    onGlobalFilterChange: setGlobalFilter,
+    onColumnFiltersChange: setColumnFilters,
+    onSortingChange: setSorting,
     onPaginationChange: handlePaginationChange,
-    onRowSelectionChange: handleSelectionChange,
+    onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
-    // Include pagination row model for uncontrolled mode
-    getPaginationRowModel: manualPagination
-      ? undefined
-      : getPaginationRowModel(),
-
-    // Manual controls based on mode
+    getPaginationRowModel: getPaginationRowModel(),
     manualPagination,
     manualSorting: true,
     manualFiltering: true,
   });
 
-  const contextValue: DataTableContextValue<TData> = {
-    table,
-    isLoading,
-    isPaginationLoading: isLoading && data && data.length > 0,
-    totalRows: totalRows ?? data?.length,
-    globalFilter,
-    setGlobalFilter: handleGlobalFilterChange,
-    columnFilters,
-    setColumnFilters: handleColumnFiltersChange,
-    sorting,
-    setSorting: handleSortingChange,
-    pagination: activePagination,
-    setPagination: handleControlledPaginationChange,
-    rowSelection,
-    setRowSelection: handleSelectionChange,
-    isError,
-    error,
-  };
+  const contextValue = useMemo<DataTableContextValue<TData>>(
+    () => ({
+      table,
+      isLoading,
+      isPaginationLoading: isLoading && data.length > 0,
+      totalRows: totalRows ?? data.length,
+      globalFilter: activeParams.globalFilter,
+      setGlobalFilter,
+      columnFilters: activeParams.columnFilters,
+      setColumnFilters,
+      sorting: activeParams.sorting,
+      setSorting,
+      pagination: activeParams.pagination,
+      setPagination,
+      rowSelection: activeParams.selections,
+      setRowSelection,
+      isError,
+      error,
+    }),
+    [
+      table,
+      isLoading,
+      data.length,
+      totalRows,
+      activeParams,
+      isError,
+      error,
+      setGlobalFilter,
+      setColumnFilters,
+      setSorting,
+      setPagination,
+      setRowSelection,
+    ]
+  );
 
   return (
     <DataTableContext.Provider

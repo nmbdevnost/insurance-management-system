@@ -15,11 +15,11 @@ export function mapColor(status: string) {
     return "bg-sky-100 text-sky-600 dark:bg-sky-600/10 dark:text-sky-300";
   }
 
-  if (matchStrings(status, ["error", "expired"])) {
+  if (matchStrings(status, ["error", "expired", "insufficient"])) {
     return "bg-red-100 text-red-600 dark:bg-red-600/10 dark:text-red-300";
   }
 
-  if (isStringMatch(status, "ok")) {
+  if (matchStrings(status, ["ok", "available"])) {
     return "bg-green-100 text-green-600 dark:bg-green-600/10 dark:text-green-300";
   }
 

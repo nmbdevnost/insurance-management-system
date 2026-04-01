@@ -16,6 +16,7 @@ import {
   provinceOptions,
   segmentOptions,
 } from "@/shared/lib/constants/options";
+import { RiBuildingLine, RiUserLine } from "@remixicon/react";
 import { useFormContext } from "react-hook-form";
 
 const AssetsDetailsStep = ({ mode }: { mode?: string }) => {
@@ -179,10 +180,18 @@ const AssetsDetailsStep = ({ mode }: { mode?: string }) => {
             {
               value: "individual",
               label: "Individual",
+              description: "Individual owner of the asset",
+              icon: RiUserLine,
             },
-            { value: "company", label: "Company" },
+            {
+              value: "company",
+              label: "Company",
+              description: "Company owner of the asset",
+              icon: RiBuildingLine,
+            },
           ]}
           orientation="horizontal"
+          variant="choice-card"
         />
 
         <FormFieldFileUpload

@@ -1,4 +1,5 @@
 import { POST } from "@/shared/lib/api/api";
+import { handleResponse } from "@/shared/lib/api/response";
 import type {
   LoanAccountDetailsBody,
   LoanAccountDetailsResponse,
@@ -12,11 +13,7 @@ export const loanAccountDetails = async (accounts: LoanAccountDetailsBody) => {
     LoanAccountDetailsResponse
   >(`${BASE}/account-loan-details`, accounts);
 
-  const responseCode = Number(response.data.response.responseCode);
-
-  if (responseCode < 200 || responseCode >= 300) {
-    throw new Error(response.data.response.responseMessage);
-  }
+  handleResponse(response.data.response);
 
   return response.data;
 };

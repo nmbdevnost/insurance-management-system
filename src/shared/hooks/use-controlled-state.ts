@@ -1,8 +1,14 @@
-import { useState } from "react";
+// useControlledState.ts
+import {
+  useCallback,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 
 type UseControlledStateReturn<T> = {
   value: T;
-  onChange: (value: T) => void;
+  onChange: Dispatch<SetStateAction<T>>;
 };
 
 type UseControlledStateProps<T> = {
@@ -21,17 +27,23 @@ const useControlledState = <T>({
   const isControlled = controlledValue !== undefined;
   const value = isControlled ? controlledValue : internalValue;
 
-  const onChange = (newValue: T) => {
-    if (!isControlled) {
-      setInternalValue(newValue);
-    }
-    controlledOnChange?.(newValue);
-  };
+  const onChange = useCallback(
+    (updater: SetStateAction<T>) => {
+      const newValue =
+        typeof updater === "function"
+          ? (updater as (prev: T) => T)(value)
+          : updater;
 
-  return {
-    value,
-    onChange,
-  };
+      if (!isControlled) {
+        setInternalValue(newValue);
+      }
+
+      controlledOnChange?.(newValue);
+    },
+    [isControlled, value, controlledOnChange]
+  );
+
+  return { value, onChange };
 };
 
 export default useControlledState;

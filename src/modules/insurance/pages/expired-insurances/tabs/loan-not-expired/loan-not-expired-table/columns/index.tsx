@@ -1,4 +1,4 @@
-import { Checkbox } from "@/shared/components/ui/checkbox";
+import DataTableSelect from "@/shared/components/data-table/data-table-select";
 import type { FormattedExpiredPolicy } from "@/shared/lib/types/policies";
 import { formatDate } from "@/shared/lib/utils/format";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -8,25 +8,8 @@ import LoanNotExpiredActions from "./actions";
 const loanNotExpiredColumns: ColumnDef<FormattedExpiredPolicy>[] = [
   {
     id: "select",
-    header: ({ table }) => (
-      <div>
-        <Checkbox
-          checked={table.getIsAllPageRowsSelected()}
-          indeterminate={table.getIsSomePageRowsSelected()}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div>
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      </div>
-    ),
+    header: ({ table }) => <DataTableSelect variant="multiple" table={table} />,
+    cell: ({ row }) => <DataTableSelect variant="single" row={row} />,
     size: 30,
   },
   {
@@ -77,7 +60,7 @@ const loanNotExpiredColumns: ColumnDef<FormattedExpiredPolicy>[] = [
     accessorKey: "riskStartDate",
     header: "Risk Start Date",
     cell: ({ row }) => {
-      const formattedDate = formatDate(row.getValue("riskStartDate"), "PPP");
+      const formattedDate = formatDate(row.getValue("riskStartDate"));
       return <>{formattedDate}</>;
     },
   },
@@ -85,7 +68,7 @@ const loanNotExpiredColumns: ColumnDef<FormattedExpiredPolicy>[] = [
     accessorKey: "riskMaturityDate",
     header: "Risk Maturity Date",
     cell: ({ row }) => {
-      const formattedDate = formatDate(row.getValue("riskMaturityDate"), "PPP");
+      const formattedDate = formatDate(row.getValue("riskMaturityDate"));
       return <>{formattedDate}</>;
     },
   },
@@ -106,10 +89,6 @@ const loanNotExpiredColumns: ColumnDef<FormattedExpiredPolicy>[] = [
     header: "Total Premium",
   },
   {
-    accessorKey: "totalPremium",
-    header: "Total Premium",
-  },
-  {
     accessorKey: "createdBy",
     header: "Created By",
   },
@@ -117,7 +96,7 @@ const loanNotExpiredColumns: ColumnDef<FormattedExpiredPolicy>[] = [
     accessorKey: "createdDate",
     header: "Created Date",
     cell: ({ row }) => {
-      const formattedDate = formatDate(row.getValue("createdDate"), "PPP");
+      const formattedDate = formatDate(row.getValue("createdDate"));
       return <>{formattedDate}</>;
     },
   },

@@ -1,51 +1,26 @@
-import {
-  Controller,
-  type Control,
-  type FieldValues,
-  type Path,
-} from "react-hook-form";
+import type { ComponentProps } from "react";
 import { Checkbox } from "../../ui/checkbox";
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldLabel,
-} from "../../ui/field";
+import { FormFieldBase, type FormControlFunction } from "./form-field-base";
 
-type FormFieldCheckboxProps<T extends FieldValues> = {
-  name: Path<T>;
-  label?: string;
-  description?: string;
-  control?: Control<T>;
-} & React.ComponentProps<typeof Checkbox>;
-
-const FormFieldCheckbox = <T extends FieldValues>({
-  name,
-  label,
-  description,
-  control,
-  ...props
-}: FormFieldCheckboxProps<T>) => {
+const FormFieldCheckbox: FormControlFunction<
+  ComponentProps<typeof Checkbox> & {
+    horizontal?: boolean;
+    controlFirst?: boolean;
+  }
+> = (props) => {
   return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field, fieldState }) => (
-        <Field data-invalid={fieldState.invalid} orientation={"horizontal"}>
-          <Checkbox
-            {...field}
-            checked={!!field.value}
-            onCheckedChange={(checked) => field.onChange(checked === true)}
-            id={field.name}
-            aria-invalid={fieldState.invalid}
-            {...props}
-          />
-          {label && <FieldLabel htmlFor={field.name}>{label}</FieldLabel>}
-          {description && <FieldDescription>{description}</FieldDescription>}
-          {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-        </Field>
+    <FormFieldBase horizontal controlFirst {...props}>
+      {(field) => (
+        <Checkbox
+          checked={!!field.value}
+          onCheckedChange={(checked) => field.onChange(checked === true)}
+          className="aspect-square max-w-max"
+          {...field}
+          {...props}
+          id={field.name}
+        />
       )}
-    />
+    </FormFieldBase>
   );
 };
 
