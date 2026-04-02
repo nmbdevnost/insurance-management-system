@@ -16,6 +16,16 @@ import type {
 import { useBulkUpload } from "@/modules/insurance/providers/bulk-upload-provider";
 import DataTable from "@/shared/components/data-table";
 import DataTablePagination from "@/shared/components/data-table/data-table-pagination";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/shared/components/ui/alert-dialog";
 import { Button } from "@/shared/components/ui/button";
 import { CardContent, CardFooter } from "@/shared/components/ui/card";
 import Spinner from "@/shared/components/ui/spinner";
@@ -34,6 +44,7 @@ import enrichedColumns from "./enriched-columns";
 const BulkUploadReviewStep = () => {
   const {
     enrichedRows,
+    setEnrichedRows,
     rowSelection,
     setRowSelection,
     activeTab,
@@ -46,6 +57,8 @@ const BulkUploadReviewStep = () => {
     sufficient: DEFAULT_TABLE_PARAMS,
     insufficient: DEFAULT_TABLE_PARAMS,
   });
+
+  const [showBatchDialog, setShowBatchDialog] = useState(false);
 
   const handleTableParamsChange = useCallback(
     (tabValue: ReviewTab) => (updater: React.SetStateAction<TableParams>) => {
@@ -151,7 +164,29 @@ const BulkUploadReviewStep = () => {
 
     await Promise.allSettled(mutations);
 
-    if (!anyFailed) setTab("done");
+    if (anyFailed) {
+      const hasRemainingRows = selectedRows.length < enrichedRows.length;
+      if (hasRemainingRows) {
+        setShowBatchDialog(true);
+      } else {
+        setTab("done");
+      }
+    }
+  };
+
+  const handleSelectMore = () => {
+    // Remove processed rows and clear selection
+    const processedIds = new Set(selectedRows.map((r) => r.reference_number));
+    setEnrichedRows((prev) =>
+      prev.filter((r) => !processedIds.has(r.reference_number))
+    );
+    setRowSelection({});
+    setShowBatchDialog(false);
+  };
+
+  const handleFinish = () => {
+    setShowBatchDialog(false);
+    setTab("done");
   };
 
   const filteredRowsByTab = useMemo(
@@ -221,6 +256,30 @@ const BulkUploadReviewStep = () => {
           {isProcessing ? "Processing..." : "Process Selected Rows"}
         </Button>
       </CardFooter>
+
+      <AlertDialog open={showBatchDialog} onOpenChange={setShowBatchDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Batch processed successfully</AlertDialogTitle>
+            <AlertDialogDescription>
+              {selectedRows.length} row
+              {selectedRows.length !== 1 ? "s were" : " was"} sent for
+              processing.
+              {enrichedRows.length - selectedRows.length > 0
+                ? ` There are ${enrichedRows.length - selectedRows.length} remaining rows. Would you like to select more to process?`
+                : " All rows have been processed."}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            {enrichedRows.length - selectedRows.length > 0 && (
+              <AlertDialogCancel onClick={handleSelectMore}>
+                Select More Rows
+              </AlertDialogCancel>
+            )}
+            <AlertDialogAction onClick={handleFinish}>Finish</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };

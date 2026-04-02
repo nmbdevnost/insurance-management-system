@@ -91,9 +91,14 @@ const FileUploadProvider = ({
     multiple: maxFiles ? maxFiles > 1 : true,
     initialFiles: [],
     onFilesAdded: (addedFiles) => {
-      const allFiles = [...fileUploadState.files, ...addedFiles];
-      const newUploadFiles = convertToUploadItems(allFiles);
-      onUploadFilesChange?.(newUploadFiles);
+      const newUploadFiles = convertToUploadItems(addedFiles);
+      const merged = [
+        ...uploadFiles.filter(
+          (f) => !newUploadFiles.some((n) => n.id === f.id)
+        ),
+        ...newUploadFiles,
+      ];
+      onUploadFilesChange?.(merged);
     },
   });
 

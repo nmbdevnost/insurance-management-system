@@ -10,6 +10,7 @@ import { RiArrowRightLine } from "@remixicon/react";
 import React, { Activity, useState } from "react";
 import type { FlowPhase } from "../../lib/types/bulk-transaction";
 import { BulkUploadProvider } from "../../providers/bulk-upload-provider";
+import BulkUploadDoneStep from "./bulk-upload-steps/bulk-upload-complete-step";
 import UploadPreviewStep from "./bulk-upload-steps/bulk-upload-preview-step";
 import BulkUploadReviewStep from "./bulk-upload-steps/bulk-upload-review-step";
 import BulkUploadSelectStep from "./bulk-upload-steps/bulk-upload-select-step";
@@ -60,9 +61,9 @@ const BulkUploadPage = () => {
         <Activity mode={tab === "balance_check" ? "visible" : "hidden"}>
           <BulkUploadReviewStep />
         </Activity>
-        {/*<Activity mode={tab === "done" ? "visible" : "hidden"}>
-          <DoneStep />
-        </Activity>*/}
+        <Activity mode={tab === "done" ? "visible" : "hidden"}>
+          <BulkUploadDoneStep />
+        </Activity>
       </Card>
     </BulkUploadProvider>
   );
