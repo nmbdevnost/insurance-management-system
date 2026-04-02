@@ -1,6 +1,7 @@
-import type { InsuranceBulkUploadRow } from "@/shared/lib/types/insurance";
+import { type RowSelectionState } from "@/shared/providers/data-table-provider";
 import {
   createContext,
+  useCallback,
   useContext,
   useMemo,
   useState,
@@ -8,21 +9,30 @@ import {
   type ReactNode,
   type SetStateAction,
 } from "react";
-import type { BalanceCheckResult } from "../lib/types/insurances";
-import type { BulkUploadSteps } from "../pages/bulk-upload";
+import type {
+  EnrichedRow,
+  ExtractedRow,
+  FlowPhase,
+  ReviewTab,
+} from "../lib/types/bulk-transaction";
 
 interface BulkUploadContextValue {
-  tab: BulkUploadSteps;
-  setTab: Dispatch<SetStateAction<BulkUploadSteps>>;
-  extractedRows: InsuranceBulkUploadRow[];
-  setExtractedRows: Dispatch<SetStateAction<InsuranceBulkUploadRow[]>>;
-  balanceResults: BalanceCheckResult[];
-  setBalanceResults: Dispatch<SetStateAction<BalanceCheckResult[]>>;
+  tab: FlowPhase;
+  setTab: Dispatch<SetStateAction<FlowPhase>>;
+  extractedRows: ExtractedRow[];
+  setExtractedRows: Dispatch<SetStateAction<ExtractedRow[]>>;
+  enrichedRows: EnrichedRow[];
+  setEnrichedRows: Dispatch<SetStateAction<EnrichedRow[]>>;
+  rowSelection: RowSelectionState;
+  setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
+  activeTab: ReviewTab;
+  setActiveTab: Dispatch<SetStateAction<ReviewTab>>;
+  reset: () => void;
 }
 
 interface BulkUploadProviderProps {
-  tab: BulkUploadSteps;
-  setTab: Dispatch<SetStateAction<BulkUploadSteps>>;
+  tab: FlowPhase;
+  setTab: Dispatch<SetStateAction<FlowPhase>>;
   children: ReactNode;
 }
 
@@ -33,12 +43,18 @@ export const BulkUploadProvider = ({
   setTab,
   children,
 }: BulkUploadProviderProps) => {
-  const [extractedRows, setExtractedRows] = useState<InsuranceBulkUploadRow[]>(
-    []
-  );
-  const [balanceResults, setBalanceResults] = useState<BalanceCheckResult[]>(
-    []
-  );
+  const [extractedRows, setExtractedRows] = useState<ExtractedRow[]>([]);
+  const [enrichedRows, setEnrichedRows] = useState<EnrichedRow[]>([]);
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [activeTab, setActiveTab] = useState<ReviewTab>("all");
+
+  const reset = useCallback(() => {
+    setExtractedRows([]);
+    setEnrichedRows([]);
+    setRowSelection({});
+    setActiveTab("all");
+    setTab("upload");
+  }, [setTab]);
 
   const value = useMemo(
     () => ({
@@ -46,10 +62,15 @@ export const BulkUploadProvider = ({
       setTab,
       extractedRows,
       setExtractedRows,
-      balanceResults,
-      setBalanceResults,
+      enrichedRows,
+      setEnrichedRows,
+      rowSelection,
+      setRowSelection,
+      activeTab,
+      setActiveTab,
+      reset,
     }),
-    [tab, setTab, extractedRows, balanceResults]
+    [tab, setTab, extractedRows, enrichedRows, rowSelection, activeTab, reset]
   );
 
   return (

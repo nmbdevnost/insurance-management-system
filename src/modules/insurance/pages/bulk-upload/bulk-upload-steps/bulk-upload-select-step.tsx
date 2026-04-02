@@ -1,3 +1,5 @@
+import { REQUIRED_COLUMNS } from "@/modules/insurance/lib/constants/bulk-transaction";
+import type { ExtractedRow } from "@/modules/insurance/lib/types/bulk-transaction";
 import { useBulkUpload } from "@/modules/insurance/providers/bulk-upload-provider";
 import ExcelFileUpload from "@/shared/components/file-upload/excel-file-upload";
 import FileUploadErrors from "@/shared/components/file-upload/excel-file-upload/file-upload-errors";
@@ -9,10 +11,6 @@ import {
 } from "@/shared/components/ui/alert";
 import { Button } from "@/shared/components/ui/button";
 import { CardContent, CardFooter } from "@/shared/components/ui/card";
-import type {
-  ExcelExtractedRow,
-  InsuranceBulkUploadRow,
-} from "@/shared/lib/types/insurance";
 import { parseExcelFile } from "@/shared/lib/utils/excel";
 import type { FileUploadItem } from "@/shared/providers/file-upload-provider";
 import FileUploadProvider from "@/shared/providers/file-upload-provider";
@@ -23,19 +21,6 @@ import {
 } from "@remixicon/react";
 import { useEffect, useRef, useState } from "react";
 
-const EXPECTED_COLUMNS = [
-  "reference_number",
-  "cif_id",
-  "policy_number",
-  "debit_account_number",
-  "credit_account_number",
-  "amount",
-  "tran_particular",
-  "tran_remarks",
-  "uploaded_by",
-  "uploaded_date",
-] as const;
-
 interface FileError {
   fileId: string;
   fileName: string;
@@ -44,6 +29,9 @@ interface FileError {
 
 const BulkUploadSelectStep = () => {
   const { setExtractedRows, setTab } = useBulkUpload();
+
+  // Track file → row IDs mapping
+  const fileRowIdsRef = useRef<Record<string, string[]>>({});
 
   const [uploadFiles, setUploadFiles] = useState<FileUploadItem[]>([]);
   const [fileErrors, setFileErrors] = useState<FileError[]>([]);
@@ -102,7 +90,7 @@ const BulkUploadSelectStep = () => {
       await new Promise((resolve) => setTimeout(resolve, 50));
 
       // parse Excel file
-      const result = await parseExcelFile(file.file as File, EXPECTED_COLUMNS);
+      const result = await parseExcelFile(file.file as File, REQUIRED_COLUMNS);
 
       // parsing complete - increase progress
       updateFileProgress(file.id, { progress: 70 });
@@ -121,14 +109,26 @@ const BulkUploadSelectStep = () => {
       // extract rows - 90% progress
       updateFileProgress(file.id, { progress: 90 });
 
-      const newRows = (result as ExcelExtractedRow[]).map((row) => ({
-        ...row,
-        fileName: file.file.name,
-        status: "draft",
-      }));
+      const newRows = (result as Record<string, unknown>[]).map(
+        (row) =>
+          ({
+            id: crypto.randomUUID(),
+            reference_number: String(row["reference_number"]),
+            cif_id: String(row["cif_id"]),
+            policy_number: String(row["policy_number"]),
+            debit_account_number: String(row["debit_account_number"]),
+            credit_account_number: String(row["credit_account_number"]),
+            amount: Number(row["amount"]),
+            tran_particular: String(row["tran_particular"]),
+            tran_remarks: String(row["tran_remarks"]),
+            uploaded_by: String(row["uploaded_by"]),
+            uploaded_date: String(row["uploaded_date"]),
+          }) satisfies ExtractedRow
+      );
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      setExtractedRows((prev) => [...prev, ...newRows] as any);
+      fileRowIdsRef.current[file.id] = newRows.map((r) => r.id);
+
+      setExtractedRows((prev) => [...prev, ...newRows]);
 
       // complete processing
       await new Promise((resolve) => setTimeout(resolve, 500));
@@ -170,14 +170,9 @@ const BulkUploadSelectStep = () => {
 
     removedFiles.forEach((file) => {
       removeFileError(file.id);
-      // Also remove extracted rows from this file
-      setExtractedRows((prev) =>
-        prev.filter(
-          (row) =>
-            (row as InsuranceBulkUploadRow & { fileName: string }).fileName !==
-            file.file.name
-        )
-      );
+      const rowIds = new Set(fileRowIdsRef.current[file.id] ?? []);
+      setExtractedRows((prev) => prev.filter((row) => !rowIds.has(row.id)));
+      delete fileRowIdsRef.current[file.id];
     });
 
     // Update state with new files

@@ -33,6 +33,7 @@ type TableRowItemProps<TData> = {
   rowIndex: number;
   measureRef?: (el: Element | null) => void;
   getCommonPinningStyles: (column: Column<TData>) => CSSProperties;
+  isSelected: boolean;
 };
 
 /**
@@ -45,9 +46,10 @@ const TableRowItem = memo(
     rowIndex,
     measureRef,
     getCommonPinningStyles,
+    isSelected,
   }: TableRowItemProps<TData>) => (
     <TableRow
-      data-state={row.getIsSelected() && "selected"}
+      data-state={isSelected && "selected"}
       data-index={rowIndex}
       ref={measureRef}
       className="group"
@@ -288,6 +290,7 @@ const DataTable: React.FC<DataTableProps> = ({
                       rowIndex={virtualRow.index}
                       measureRef={virtualizer.measureElement}
                       getCommonPinningStyles={getCommonPinningStyles}
+                      isSelected={rows[virtualRow.index].getIsSelected()}
                     />
                   ))}
                   {paddingBottom > 0 && (
@@ -306,6 +309,7 @@ const DataTable: React.FC<DataTableProps> = ({
                     row={row}
                     rowIndex={i}
                     getCommonPinningStyles={getCommonPinningStyles}
+                    isSelected={row.getIsSelected()}
                   />
                 ))
               )}

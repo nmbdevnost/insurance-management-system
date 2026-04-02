@@ -1,13 +1,13 @@
+import type { ExtractedRow } from "@/modules/insurance/lib/types/bulk-transaction";
 import DataTable from "@/shared/components/data-table";
 import DataTablePagination from "@/shared/components/data-table/data-table-pagination";
-import type { InsuranceBulkUploadRow } from "@/shared/lib/types/insurance";
 import { DataTableProvider } from "@/shared/providers/data-table-provider";
 import extractedColumns from "./columns";
 
 const ExtractedTable = ({
   extractedRows,
 }: {
-  extractedRows: InsuranceBulkUploadRow[];
+  extractedRows: ExtractedRow[];
 }) => {
   return (
     <DataTableProvider
@@ -15,7 +15,7 @@ const ExtractedTable = ({
       data={extractedRows}
       manualPagination={false}
     >
-      <DataTable />
+      <DataTable autoFillHeightOffset={170} />
       <DataTablePagination />
     </DataTableProvider>
   );

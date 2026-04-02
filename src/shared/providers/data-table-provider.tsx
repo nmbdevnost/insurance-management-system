@@ -59,6 +59,11 @@ export type DataTableProviderProps<TData> = {
   children: React.ReactNode;
   pageCount?: number;
   onTableParamsChange?: React.Dispatch<React.SetStateAction<TableParams>>;
+  onRowSelectionChange?: (selections: RowSelectionState) => void;
+  onPaginationChange?: (pagination: ControlledPaginationState) => void;
+  onSortingChange?: (sorting: SortingState) => void;
+  onColumnFiltersChange?: (filters: ColumnFiltersState) => void;
+  onGlobalFilterChange?: (filter: string) => void;
   enableRowSelection?: boolean;
   enableMultiRowSelection?: boolean;
   tableParams?: TableParams;
@@ -112,6 +117,11 @@ export function DataTableProvider<TData>({
   pageCount,
   tableParams, // controlled value
   onTableParamsChange, // controlled onChange
+  onColumnFiltersChange,
+  onGlobalFilterChange,
+  onPaginationChange,
+  onRowSelectionChange,
+  onSortingChange,
   enableRowSelection = true,
   enableMultiRowSelection,
   className,
@@ -129,52 +139,56 @@ export function DataTableProvider<TData>({
       defaultValue: DEFAULT_TABLE_PARAMS,
     });
 
-  // Individual setters (much cleaner than createKeyDispatch)
   const setGlobalFilter = useCallback(
     (value: string) => {
+      onGlobalFilterChange?.(value);
       setActiveParams((prev) => ({ ...prev, globalFilter: value }));
     },
-    [setActiveParams]
+    [setActiveParams, onGlobalFilterChange]
   );
 
   const setColumnFilters = useCallback(
     (updater: React.SetStateAction<ColumnFiltersState>) => {
-      setActiveParams((prev) => ({
-        ...prev,
-        columnFilters: resolveUpdater(updater, prev.columnFilters),
-      }));
+      setActiveParams((prev) => {
+        const next = resolveUpdater(updater, prev.columnFilters);
+        onColumnFiltersChange?.(next);
+        return { ...prev, columnFilters: next };
+      });
     },
-    [setActiveParams]
+    [setActiveParams, onColumnFiltersChange]
   );
 
   const setSorting = useCallback(
     (updater: React.SetStateAction<SortingState>) => {
-      setActiveParams((prev) => ({
-        ...prev,
-        sorting: resolveUpdater(updater, prev.sorting),
-      }));
+      setActiveParams((prev) => {
+        const next = resolveUpdater(updater, prev.sorting);
+        onSortingChange?.(next);
+        return { ...prev, sorting: next };
+      });
     },
-    [setActiveParams]
+    [setActiveParams, onSortingChange]
   );
 
   const setRowSelection = useCallback(
     (updater: React.SetStateAction<RowSelectionState>) => {
-      setActiveParams((prev) => ({
-        ...prev,
-        selections: resolveUpdater(updater, prev.selections),
-      }));
+      setActiveParams((prev) => {
+        const next = resolveUpdater(updater, prev.selections);
+        onRowSelectionChange?.(next);
+        return { ...prev, selections: next };
+      });
     },
-    [setActiveParams]
+    [setActiveParams, onRowSelectionChange]
   );
 
   const setPagination = useCallback(
     (updater: React.SetStateAction<ControlledPaginationState>) => {
-      setActiveParams((prev) => ({
-        ...prev,
-        pagination: resolveUpdater(updater, prev.pagination),
-      }));
+      setActiveParams((prev) => {
+        const next = resolveUpdater(updater, prev.pagination);
+        onPaginationChange?.(next);
+        return { ...prev, pagination: next };
+      });
     },
-    [setActiveParams]
+    [setActiveParams, onPaginationChange]
   );
 
   // Internal handler for react-table's pagination (which uses PaginationState, not ControlledPaginationState)

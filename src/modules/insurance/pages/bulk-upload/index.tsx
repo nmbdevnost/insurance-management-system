@@ -5,23 +5,21 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 import { Typography } from "@/shared/components/ui/typography";
+import useLeaveConfirmation from "@/shared/hooks/use-leave-confirmation";
 import { RiArrowRightLine } from "@remixicon/react";
 import React, { Activity, useState } from "react";
+import type { FlowPhase } from "../../lib/types/bulk-transaction";
 import { BulkUploadProvider } from "../../providers/bulk-upload-provider";
-import BulkUploadBalanceStep from "./bulk-upload-steps/bulk-upload-balance-step";
+import UploadPreviewStep from "./bulk-upload-steps/bulk-upload-preview-step";
+import BulkUploadReviewStep from "./bulk-upload-steps/bulk-upload-review-step";
 import BulkUploadSelectStep from "./bulk-upload-steps/bulk-upload-select-step";
-import UploadPreviewStep from "./bulk-upload-steps/upload-preview-step";
 
-export type BulkUploadSteps = "uploader" | "preview" | "balance";
-
-const UPLOAD_STEPS = [
-  "Upload Excel",
-  "Validate",
-  "Trigger Deduction + Force Loan + Eamil",
-];
+const UPLOAD_STEPS = ["Upload Excel", "Preview", "Review & Process"];
 
 const BulkUploadPage = () => {
-  const [tab, setTab] = useState<BulkUploadSteps>("uploader");
+  const [tab, setTab] = useState<FlowPhase>("upload");
+
+  useLeaveConfirmation(tab !== "upload");
 
   return (
     <BulkUploadProvider tab={tab} setTab={setTab}>
@@ -53,15 +51,18 @@ const BulkUploadPage = () => {
           </CardDescription>
         </CardHeader>
 
-        <Activity mode={tab === "uploader" ? "visible" : "hidden"}>
+        <Activity mode={tab === "upload" ? "visible" : "hidden"}>
           <BulkUploadSelectStep />
         </Activity>
         <Activity mode={tab === "preview" ? "visible" : "hidden"}>
           <UploadPreviewStep />
         </Activity>
-        <Activity mode={tab === "balance" ? "visible" : "hidden"}>
-          <BulkUploadBalanceStep />
+        <Activity mode={tab === "balance_check" ? "visible" : "hidden"}>
+          <BulkUploadReviewStep />
         </Activity>
+        {/*<Activity mode={tab === "done" ? "visible" : "hidden"}>
+          <DoneStep />
+        </Activity>*/}
       </Card>
     </BulkUploadProvider>
   );

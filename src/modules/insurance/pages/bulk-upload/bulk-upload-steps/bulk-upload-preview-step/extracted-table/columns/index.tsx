@@ -1,8 +1,8 @@
-import type { InsuranceBulkUploadRow } from "@/shared/lib/types/insurance";
+import type { ExtractedRow } from "@/modules/insurance/lib/types/bulk-transaction";
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 
-const extractedColumns: ColumnDef<InsuranceBulkUploadRow>[] = [
+const extractedColumns: ColumnDef<ExtractedRow>[] = [
   {
     accessorKey: "reference_number",
     header: "Reference Number",
@@ -33,7 +33,7 @@ const extractedColumns: ColumnDef<InsuranceBulkUploadRow>[] = [
   },
   {
     accessorKey: "tran_remarks",
-    header: "Transation Remarks",
+    header: "Transaction Remarks",
   },
   {
     accessorKey: "uploaded_by",
