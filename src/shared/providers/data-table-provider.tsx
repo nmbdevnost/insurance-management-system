@@ -115,8 +115,8 @@ export function DataTableProvider<TData>({
   data = [],
   children,
   pageCount,
-  tableParams, // controlled value
-  onTableParamsChange, // controlled onChange
+  tableParams,
+  onTableParamsChange,
   onColumnFiltersChange,
   onGlobalFilterChange,
   onPaginationChange,
@@ -197,13 +197,17 @@ export function DataTableProvider<TData>({
       updater: PaginationState | ((prev: PaginationState) => PaginationState)
     ) => {
       setActiveParams((prev) => {
-        const resolved = resolveUpdater(updater, {
+        const prevBase: PaginationState = {
           pageIndex: prev.pagination.pageIndex,
           pageSize: prev.pagination.pageSize,
-        });
+        };
+        const resolved = resolveUpdater(updater, prevBase);
+        const pageSizeChanged = resolved.pageSize !== prevBase.pageSize;
+        const pageIndex = pageSizeChanged ? 0 : resolved.pageIndex;
+
         return {
           ...prev,
-          pagination: { ...resolved, page: resolved.pageIndex + 1 },
+          pagination: { ...resolved, pageIndex, page: pageIndex + 1 },
         };
       });
     },
@@ -252,6 +256,7 @@ export function DataTableProvider<TData>({
     manualPagination,
     manualSorting: true,
     manualFiltering: true,
+    autoResetPageIndex: false,
   });
 
   const contextValue = useMemo<DataTableContextValue<TData>>(

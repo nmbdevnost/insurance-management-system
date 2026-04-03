@@ -1,6 +1,8 @@
 // useControlledState.ts
 import {
   useCallback,
+  useLayoutEffect,
+  useRef,
   useState,
   type Dispatch,
   type SetStateAction,
@@ -27,21 +29,28 @@ const useControlledState = <T>({
   const isControlled = controlledValue !== undefined;
   const value = isControlled ? controlledValue : internalValue;
 
-  const onChange = useCallback(
-    (updater: SetStateAction<T>) => {
-      const newValue =
-        typeof updater === "function"
-          ? (updater as (prev: T) => T)(value)
-          : updater;
+  const valueRef = useRef(value);
+  const controlledOnChangeRef = useRef(controlledOnChange);
+  const isControlledRef = useRef(isControlled);
 
-      if (!isControlled) {
-        setInternalValue(newValue);
-      }
+  const onChange = useCallback((updater: SetStateAction<T>) => {
+    const newValue =
+      typeof updater === "function"
+        ? (updater as (prev: T) => T)(valueRef.current)
+        : updater;
 
-      controlledOnChange?.(newValue);
-    },
-    [isControlled, value, controlledOnChange]
-  );
+    if (!isControlledRef.current) {
+      setInternalValue(newValue);
+    }
+
+    controlledOnChangeRef.current?.(newValue);
+  }, []);
+
+  useLayoutEffect(() => {
+    valueRef.current = value;
+    controlledOnChangeRef.current = controlledOnChange;
+    isControlledRef.current = isControlled;
+  });
 
   return { value, onChange };
 };

@@ -12,12 +12,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Typography } from "../ui/typography";
 import { Skeleton } from "../ui/skeleton";
+import { Typography } from "../ui/typography";
 
 const DataTablePagination = ({ className }: { className?: string }) => {
-  const { table, setPagination, isLoading, isPaginationLoading, totalRows } =
-    useDataTable();
+  const { table, isLoading, isPaginationLoading, totalRows } = useDataTable();
 
   const { pageIndex, pageSize } = table.getState().pagination;
 
@@ -139,12 +138,7 @@ const DataTablePagination = ({ className }: { className?: string }) => {
               }))}
               value={`${table.getState().pagination.pageSize}`}
               onValueChange={(value) => {
-                setPagination((prev) => ({
-                  ...prev,
-                  page: 1,
-                  pageIndex: 0,
-                  pageSize: Number(value),
-                }));
+                table.setPageSize(Number(value));
               }}
             >
               <SelectTrigger className="h-8">
